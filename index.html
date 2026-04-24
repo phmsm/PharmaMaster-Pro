@@ -2866,5 +2866,96 @@ console.log("🛡️ Heart Guard System: Activated & Protecting from negative va
 console.log("✒️ Creator credits successfully integrated into PharmaMaster Pro.");
 
 </script>
+<script>
+(function(){
+
+// تحديد المستخدم
+let userId = localStorage.getItem("userId");
+if(!userId){
+  userId = "user_" + Math.floor(Math.random()*10000);
+  localStorage.setItem("userId", userId);
+}
+
+// جلب الرسائل
+function getMessages(){
+  return JSON.parse(localStorage.getItem("chat_messages") || "[]");
+}
+
+// حفظ الرسائل
+function saveMessages(msgs){
+  localStorage.setItem("chat_messages", JSON.stringify(msgs));
+}
+
+// عرض الرسائل
+function render(){
+  const chatBox = document.getElementById("chat");
+  if(!chatBox) return;
+
+  const msgs = getMessages();
+  chatBox.innerHTML = "";
+
+  msgs.forEach((m, i) => {
+    const div = document.createElement("div");
+
+    div.innerHTML = `
+      <b>${m.user}</b>: ${m.text}
+      <br>
+      <small>
+        ${m.time} 
+        ${m.delivered ? "✔✔" : "✔"} 
+        ${m.edited ? "(تم التعديل)" : ""}
+      </small>
+    `;
+
+    // تحديث حالة الوصول
+    if(!m.delivered){
+      m.delivered = true;
+      saveMessages(msgs);
+    }
+
+    chatBox.appendChild(div);
+  });
+}
+
+// إرسال رسالة
+window.sendMessage = function(text){
+  if(!text) return;
+
+  const msgs = getMessages();
+
+  msgs.push({
+    id: Date.now(),
+    text: text,
+    user: userId,
+    time: new Date().toLocaleTimeString(),
+    delivered: false,
+    edited: false
+  });
+
+  saveMessages(msgs);
+  render();
+}
+
+// تعديل رسالة
+window.editMessage = function(id, newText){
+  const msgs = getMessages();
+
+  const msg = msgs.find(m => m.id == id);
+  if(msg){
+    msg.text = newText;
+    msg.edited = true;
+    saveMessages(msgs);
+    render();
+  }
+}
+
+// تحديث تلقائي (حتى لو المستخدم فتح تبويب ثاني)
+window.addEventListener("storage", render);
+
+// عرض أولي
+render();
+
+})();
+</script>
 </body>
 </html>
