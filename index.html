@@ -3114,6 +3114,128 @@ function render(){
 setInterval(render, 1000);
 
 })();
+  // ============================================================
+// 🚀 إصلاح قناة RX الشامل - محمد كمال
+// ============================================================
+(function() {
+    // التأكد من أن المسار ثابت لكل المستخدمين
+    const CHAT_PATH = 'rx_global_messages';
+
+    window.sendMsg = async function() {
+        const input = document.getElementById('chat-input');
+        const text = input.value.trim();
+        
+        if (!text || !firebaseReady || !rtdb) return;
+
+        const msgData = {
+            uid: user.uid,
+            from: user.fullname || user.email,
+            emoji: user.emoji || '👨‍⚕️',
+            text: text,
+            // التاريخ والوقت بتنسيق عراقي جميل
+            time: new Date().toLocaleString('ar-IQ', { 
+                hour: '2-digit', minute: '2-digit', 
+                day: '2-digit', month: '2-digit' 
+            }),
+            timestamp: firebase.database.ServerValue.TIMESTAMP,
+            edited: false
+        };
+
+        try {
+            input.value = ''; // مسح الحقل فوراً
+            await rtdb.ref(CHAT_PATH).push(msgData);
+            scrollChatBottom();
+        } catch (e) {
+            console.error("خطأ إرسال:", e);
+            input.value = text; 
+        }
+    };
+
+    // إعادة تعريف وظيفة جلب الرسائل لتعمل عند كل المستخدمين
+    window.initChatFirebase = function() {
+        if (!firebaseReady || !rtdb) return;
+
+        const messagesRef = rtdb.ref(CHAT_PATH);
+        
+        // تنظيف المستمعات القديمة لمنع التكرار
+        messagesRef.off();
+
+        messagesRef.orderByChild('timestamp').limitToLast(50).on('value', (snapshot) => {
+            const data = snapshot.val();
+            const msgs = [];
+            for (let key in data) {
+                msgs.push({ id: key, ...data[key] });
+            }
+            // ترتيب تصاعدي حسب الوقت
+            msgs.sort((a, b) => a.timestamp - b.timestamp);
+            renderChatMessages(msgs);
+        });
+    };
+
+    // تحديث دالة العرض لإظهار التاريخ وكلمة "عدلت"
+    window.renderChatMessages = function(msgs) {
+        const box = document.getElementById('chat-box');
+        if (!box) return;
+        
+        const wasAtBottom = box.scrollHeight - box.clientHeight <= box.scrollTop + 100;
+        box.innerHTML = '';
+
+        msgs.forEach(m => {
+            const isMe = m.uid === user.uid;
+            const msgId = m.id;
+            const editedTag = m.edited ? '<span style="font-size:9px; color:var(--blue); margin-right:5px;">(تم تعديلها)</span>' : '';
+            
+            const div = document.createElement('div');
+            div.className = `bubble-wrap ${isMe ? 'me' : ''}`;
+            div.dataset.msgid = msgId;
+            
+            div.innerHTML = `
+                <div class="bubble-avatar">${m.emoji}</div>
+                <div class="bubble-content">
+                    <div class="bubble-name">${m.from}</div>
+                    <div class="${isMe ? 'user-bubble' : 'bot-bubble'}" id="bubble-text-${msgId}">
+                        ${escapeHtml(m.text)}
+                    </div>
+                    <div class="bubble-time" style="font-size:9px; margin-top:4px;">
+                        ${m.time} ${editedTag}
+                    </div>
+                    ${isMe ? `
+                    <div class="bubble-actions">
+                        <button class="bubble-action-btn" onclick="startEditMsg('${msgId}')">✏️</button>
+                        <button class="bubble-action-btn del-btn" onclick="deleteMsg('${msgId}')">🗑️</button>
+                    </div>` : ''}
+                </div>
+            `;
+            box.appendChild(div);
+        });
+
+        if (wasAtBottom) scrollChatBottom();
+    };
+
+    // إصلاح وظيفة التعديل لتحدث الحالة في السيرفر
+    window.doEditMsg = async function(msgId, newText) {
+        if (!firebaseReady || !rtdb || !msgId) return;
+        try {
+            await rtdb.ref(`${CHAT_PATH}/${msgId}`).update({
+                text: newText,
+                edited: true,
+                editTime: new Date().toLocaleTimeString('ar-IQ')
+            });
+        } catch (e) { console.error("فشل التعديل:", e); }
+    };
+
+    // إصلاح وظيفة الحذف
+    window.deleteMsg = async function(msgId) {
+        if (!msgId || !confirm('هل تريد حذف رسالتك؟')) return;
+        try {
+            await rtdb.ref(`${CHAT_PATH}/${msgId}`).remove();
+        } catch (e) { alert("فشل الحذف"); }
+    };
+
+    // تشغيل الربط فوراً
+    initChatFirebase();
+})();
+
 </script>
 </body>
 </html>
