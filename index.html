@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -2177,6 +2178,693 @@ function launchConfetti(){
     setTimeout(()=>p.remove(),2000);
   }
 }
+// ==========================================
+// اصلاح مشكلة اختفاء الرسائل والوان الشات
+// ==========================================
+
+// 1. تصحيح CSS لضمان ظهور النص مهما كان وضع الشاشة
+const chatStyleFix = document.createElement('style');
+chatStyleFix.innerHTML = `
+  .user-bubble { 
+    background-color: #dcfce7 !important; 
+    color: #064e3b !important; 
+    display: block !important;
+    min-width: 50px;
+    word-wrap: break-word;
+  }
+  body.dark-mode .user-bubble {
+    background-color: #065f46 !important;
+    color: #ecfdf5 !important;
+  }
+  .bot-bubble {
+    background-color: #ffffff !important;
+    color: #1e293b !important;
+    display: block !important;
+  }
+  body.dark-mode .bot-bubble {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+    border: 1px solid #334155;
+  }
+  .chat-messages {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    gap: 12px;
+  }
+`;
+document.head.appendChild(chatStyleFix);
+
+// 2. إعادة تعريف دالة الإرسال لضمان الحفظ الدائم في Firebase
+window.sendMsg = async function() {
+    const input = document.getElementById('chat-input');
+    const text = input.value.trim();
+    
+    if (!text || !firebaseReady || !rtdb) {
+        if (!text) return;
+        alert("خطأ: قاعدة البيانات غير متصلة!");
+        return;
+    }
+
+    const msgData = {
+        uid: user.uid,
+        from: user.fullname || user.email,
+        emoji: user.emoji || '👨‍⚕️',
+        text: text,
+        time: new Date().toLocaleTimeString('ar-IQ', { hour: '2-digit', minute: '2-digit' }),
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+    };
+
+    try {
+        // مسح الحقل فوراً لتحسين تجربة المستخدم
+        input.value = '';
+        // الإرسال الفعلي للقاعدة (هذا يضمن بقاء الرسالة بعد التحديث)
+        await rtdb.ref('messages').push(msgData);
+        console.log("✅ تم حفظ الرسالة بنجاح");
+        scrollChatBottom();
+    } catch (e) {
+        console.error("❌ فشل الإرسال:", e);
+        input.value = text; // إعادة النص في حال فشل الإرسال
+    }
+};
+
+// 3. تأكيد جلب البيانات عند فتح التاب لضمان عدم ضياع المحادثة
+const originalSwitchTab = window.switchTab;
+window.switchTab = function(tab) {
+    if (tab === 'chat') {
+        if (firebaseReady && rtdb) {
+            // إعادة تفعيل المستمع في حال توقفه
+            initChatFirebase();
+        }
+    }
+    originalSwitchTab(tab);
+};
+
+console.log("🚀 PharmaMaster Chat Fix Applied!");
+
+// ==================================================
+// 🚀 التحويل النهائي لمحرك Groq AI - PharmaMaster Pro
+// المفتاح: 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
+// ==================================================
+
+(function() {
+    const GROQ_SECRET = "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";
+
+    window.runSearch = async function() {
+        const queryInput = document.getElementById('search-q');
+        const q = queryInput.value.trim();
+        
+        if (!q) return alert('يرجى كتابة اسم الدواء أولاً');
+
+        const resContainer = document.getElementById('search-results');
+        const sBtn = document.getElementById('main-search-btn');
+
+        // تجهيز واجهة المستخدم
+        sBtn.disabled = true;
+        sBtn.innerHTML = '⚡ جاري التحليل الذكي...';
+        resContainer.innerHTML = `
+            <div style="text-align:center; padding:30px; background:white; border-radius:20px; border:1px dashed #8b5cf6;">
+                <div class="spinner" style="border:3px solid #f3f3f3; border-top:3px solid #8b5cf6; border-radius:50%; width:24px; height:24px; animation:spin 0.8s linear infinite; margin:0 auto 10px;"></div>
+                <p style="color:#64748b; font-family:'Cairo'; font-size:14px;">يتم الآن جلب بيانات <b>${q}</b> عبر Groq Llama 3...</p>
+            </div>
+            <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+        `;
+
+        try {
+            const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${GROQ_SECRET}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    model: "llama-3.1-8b-instant",
+                    messages: [{
+                        role: "system",
+                        content: "أنت خبير صيدلاني متخصص. قدم المعلومات بدقة طبية عالية وباللغة العربية. يجب أن تكون الإجابة بصيغة JSON فقط."
+                    }, {
+                        role: "user",
+                        content: `أعطني معلومات دواء (${q}) حصراً بصيغة JSON: {"sci":"الاسم العلمي","trade":"الأسماء التجارية","class":"التصنيف","indication":"الاستخدامات","mech":"ميكانزم العمل","dose":"الجرعة","se":"الآثار الجانبية","warn":"تحذيرات"}`
+                    }],
+                    response_format: { type: "json_object" },
+                    temperature: 0.1
+                })
+            });
+
+            const data = await response.json();
+            
+            if (data.error) throw new Error(data.error.message);
+
+            // تحويل النص المستلم إلى كائن JSON
+            const info = JSON.parse(data.choices[0].message.content);
+            
+            // استدعاء دالة العرض الأصلية
+            if (typeof renderAIResult === "function") {
+                renderAIResult(info);
+            } else {
+                throw new Error("دالة العرض renderAIResult غير موجودة في الكود الأصلي.");
+            }
+
+        } catch (e) {
+            console.error('Groq Engine Error:', e);
+            resContainer.innerHTML = `
+                <div style="background:#fff1f2; border:1px solid #fecaca; padding:20px; border-radius:15px; text-align:center;">
+                    <p style="color:#e11d48; font-weight:bold;">⚠️ حدث خطأ في محرك البحث</p>
+                    <p style="font-size:12px; color:#64748b; margin-top:5px;">${e.message}</p>
+                    <button onclick="runSearch()" style="margin-top:15px; background:#8b5cf6; color:white; border:none; padding:10px 20px; border-radius:10px; cursor:pointer;">🔄 إعادة المحاولة</button>
+                </div>`;
+        } finally {
+            sBtn.disabled = false;
+            sBtn.innerHTML = '🔍 بحث بالذكاء الاصطناعي';
+        }
+    };
+})();
+
+console.log("🚀 Groq AI Engine is now controlling the PharmaMaster Search.");
+// ==================================================
+// 🚨 الإصلاح الشامل: الترتيب القديم + خيارات الشكل والقوة
+// ==================================================
+
+(function() {
+  const GROQ_ULTIMATE_KEY = "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";
+  
+  // 1. إضافة خانات "الشكل الدوائي" و "القوة" للواجهة برمجياً
+  function injectNewFields() {
+    if (document.getElementById('medical-extra-fields')) return;
+    
+    const searchBox = document.querySelector('.search-box');
+    if (!searchBox) return;
+    
+    const extraFields = document.createElement('div');
+    extraFields.id = 'medical-extra-fields';
+    extraFields.innerHTML = `
+            <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                <select id="drug-form" class="search-input" style="flex: 1; margin-bottom:0; padding: 10px; font-size: 13px; cursor: pointer; background: var(--bg);">
+                    <option value="">Form (الشكل)</option>
+                    <option value="Tablet">Tablet (حبوب)</option>
+                    <option value="Capsule">Capsule (كبسول)</option>
+                    <option value="Syrup">Syrup (شراب)</option>
+                    <option value="Vial / Ampoule">Vial / Ampoule (حقن)</option>
+                    <option value="Suppository">Suppository (تحميلة)</option>
+                    <option value="Ointment / Cream">Ointment / Cream (مرهم)</option>
+                    <option value="Sachet">Sachet (شيت/فوار)</option>
+                </select>
+                <input type="text" id="drug-strength" class="search-input" style="flex: 1; margin-bottom:0; padding: 10px; font-size: 13px;" placeholder="Strength (مثلاً: 500mg)">
+            </div>
+        `;
+    // إدخال الخانات قبل زر البحث
+    const searchInput = document.getElementById('search-q');
+    if (searchInput) searchInput.after(extraFields);
+  }
+  
+  // تشغيل الإضافة فوراً ودورياً
+  injectNewFields();
+  setInterval(injectNewFields, 1000);
+  
+  // 2. إخفاء كلمة Gemini
+  setInterval(() => {
+    document.querySelectorAll('.ai-badge, .search-box-header p, .ai-result-card span').forEach(el => {
+      if (el.textContent.includes('Gemini')) el.textContent = el.textContent.replace(/Gemini AI|مدعوم بـ Gemini AI/gi, 'PharmaMaster AI');
+    });
+  }, 1000);
+  
+  // 3. دالة البحث المحدثة مع الترتيب القديم
+  window.runSearch = async function() {
+    const q = document.getElementById('search-q').value.trim();
+    const form = document.getElementById('drug-form').value;
+    const strength = document.getElementById('drug-strength').value.trim();
+    
+    if (!q) return alert('يرجى كتابة اسم الدواء');
+    
+    const activeBtn = document.querySelector('.stype-btn.active');
+    const type = activeBtn ? activeBtn.getAttribute('data-type') : 'full';
+    const resBox = document.getElementById('search-results');
+    const sBtn = document.getElementById('main-search-btn');
+    
+    sBtn.disabled = true;
+    sBtn.innerHTML = '⏳ جاري التحقق الطبي...';
+    resBox.innerHTML = `<div class="ai-loading" style="text-align:center; padding:20px; color:var(--muted);"><div class="spinner"></div> جاري تحليل ${q} ${strength}...</div>`;
+    
+    let userPrompt = `أنت صيدلاني سريري. أعطني معلومات دواء (${q}) بتركيز (${strength}) وشكل (${form}). `;
+    userPrompt += (type === 'full') ? `الرد JSON حصراً: {"sci":"","trade":"","ind":"","class":"","mech":"","dose":"","se":"","warn":""}` : `الرد JSON حصراً: {"res":"اكتب المعلومات المطلوبة هنا بناءً على نوع البحث المختار"}`;
+    
+    try {
+      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${GROQ_ULTIMATE_KEY}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "llama-3.1-8b-instant",
+          messages: [{ role: "system", content: "صيدلاني متخصص، دقة 100%، حرارة 0." }, { role: "user", content: userPrompt }],
+          response_format: { type: "json_object" },
+          temperature: 0
+        })
+      });
+      
+      const data = await response.json();
+      const info = JSON.parse(data.choices[0].message.content);
+      
+      // 4. إعادة الترتيب القديم (البطاقات المنفصلة)
+      let html = `<div class="ai-result-card" style="background:transparent; padding:0; box-shadow:none;">
+                            <h3 style="color:var(--blue); text-align:center; margin-bottom:5px;">${info.sci || q}</h3>
+                            <div style="color:var(--orange); text-align:center; font-weight:700; font-size:14px; margin-bottom:20px;">🏷️ ${info.trade || ''}</div>`;
+      
+      const createSection = (title, content, icon, isWarn = false) => {
+        if (!content) return '';
+        return `
+                    <div style="background:var(--card); padding:15px; border-radius:18px; margin-bottom:12px; border: 1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                        <div style="font-size:11px; font-weight:700; color:var(--muted); margin-bottom:8px; display:flex; align-items:center; gap:5px;">
+                            <span>${icon}</span> ${title}
+                        </div>
+                        <div style="color:var(--text); font-size:13.5px; line-height:1.6; ${isWarn ? 'color:#991b1b; background:#fff1f2; padding:10px; border-radius:10px;' : ''}">
+                            ${content}
+                        </div>
+                    </div>`;
+      };
+      
+      if (type !== 'full') {
+        html += createSection('نتائج البحث المخصصة', info.res, '🔍');
+      } else {
+        html += createSection('متى يُصرف', info.ind, '✅');
+        html += createSection('التصنيف', info.class, '📦');
+        html += createSection('ميكانزم العمل', info.mech, '⚙️');
+        html += createSection('الجرعة النموذجية', info.dose, '💊');
+        html += createSection('الآثار الجانبية', info.se, '⚡');
+        html += createSection('تحذيرات هامة', info.warn, '⚠️', true);
+      }
+      
+      html += `<div style="font-size:10px; color:var(--muted); text-align:center; padding:10px;">PharmaMaster Medical Engine v3.5</div></div>`;
+      resBox.innerHTML = html;
+      
+    } catch (e) {
+      resBox.innerHTML = `<p style="color:var(--red); text-align:center;">حدث خطأ. يرجى المحاولة مرة أخرى.</p>`;
+    } finally {
+      sBtn.disabled = false;
+      sBtn.innerHTML = '🔍 بحث بالذكاء الاصطناعي';
+    }
+  };
+})();
+// ==================================================
+// 🛡️ الإصلاح النهائي للدقة الطبية القصوى (Llama 70B)
+// ==================================================
+
+(function() {
+    const GROQ_MAX_ACCURACY_KEY = "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";
+
+    window.runSearch = async function() {
+        const q = document.getElementById('search-q').value.trim();
+        const form = document.getElementById('drug-form').value;
+        const strength = document.getElementById('drug-strength').value.trim();
+        
+        if (!q) return alert('يرجى كتابة اسم الدواء');
+
+        const activeBtn = document.querySelector('.stype-btn.active');
+        const type = activeBtn ? activeBtn.getAttribute('data-type') : 'full';
+        const resBox = document.getElementById('search-results');
+        const sBtn = document.getElementById('main-search-btn');
+
+        sBtn.disabled = true;
+        sBtn.innerHTML = '🛡️ جاري التحقق الطبي الدقيق...';
+        resBox.innerHTML = `<div class="ai-loading" style="text-align:center; padding:20px; color:var(--muted);"><div class="spinner"></div> جاري فحص المراجع العلمية لـ ${q}...</div>`;
+
+        // تعليمات صارمة جداً: البحث بالانجليزي والترجمة للعربي لضمان الدقة
+        let systemMsg = "You are a highly accurate Clinical Pharmacist. You must provide medical information based on FDA and BNF standards. Do not hallucinate. If you don't know the drug, say so. Answer in Arabic language only.";
+        
+        let userMsg = `Drug Name: ${q}, Form: ${form}, Strength: ${strength}. Type of search: ${type}. 
+        Please provide accurate: Scientific Name, Trade Names in Iraq, Class, Indication, Mechanism, Correct Dose for this form/strength, Side Effects, and serious Warnings. 
+        Return ONLY a JSON object: {"sci":"","trade":"","ind":"","class":"","mech":"","dose":"","se":"","warn":""}`;
+
+        try {
+            const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                method: "POST",
+                headers: { "Authorization": `Bearer ${GROQ_MAX_ACCURACY_KEY}`, "Content-Type": "application/json" },
+                body: JSON.stringify({ 
+                    model: "llama-3.3-70b-versatile", // تبديل للنموذج العملاق والأكثر دقة
+                    messages: [
+                        { role: "system", content: systemMsg },
+                        { role: "user", content: userMsg }
+                    ], 
+                    response_format: { type: "json_object" }, 
+                    temperature: 0, // منع أي تخيل أو إبداع
+                    top_p: 1
+                })
+            });
+
+            const data = await response.json();
+            const info = JSON.parse(data.choices[0].message.content);
+
+            // عرض النتائج بالترتيب القديم (البطاقات)
+            let html = `<div class="ai-result-card" style="background:transparent; padding:0; box-shadow:none;">
+                            <h3 style="color:var(--blue); text-align:center; margin-bottom:5px;">${info.sci || q}</h3>
+                            <div style="color:var(--orange); text-align:center; font-weight:700; font-size:14px; margin-bottom:20px;">🏷️ ${info.trade || ''}</div>`;
+
+            const createSection = (title, content, icon, isWarn = false) => {
+                if (!content || content.length < 3) return '';
+                return `
+                    <div style="background:var(--card); padding:15px; border-radius:18px; margin-bottom:12px; border: 1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                        <div style="font-size:11px; font-weight:700; color:var(--muted); margin-bottom:8px; display:flex; align-items:center; gap:5px;">
+                            <span>${icon}</span> ${title}
+                        </div>
+                        <div style="color:var(--text); font-size:13.5px; line-height:1.6; ${isWarn ? 'color:#991b1b; background:#fff1f2; padding:10px; border-radius:10px;' : ''}">
+                            ${content}
+                        </div>
+                    </div>`;
+            };
+
+            html += createSection('متى يُصرف (Indication)', info.ind, '✅');
+            html += createSection('التصنيف (Class)', info.class, '📦');
+            html += createSection('ميكانزم العمل (Mechanism)', info.mech, '⚙️');
+            html += createSection('الجرعة الصحيحة (Dose)', info.dose, '💊');
+            html += createSection('الآثار الجانبية (Side Effects)', info.se, '⚡');
+            html += createSection('تحذيرات طبية (Warnings)', info.warn, '⚠️', true);
+
+            html += `<div style="font-size:10px; color:var(--muted); text-align:center; padding:10px;">🛡️ Verified Medical Content · PharmaMaster Pro</div></div>`;
+            resBox.innerHTML = html;
+
+        } catch (e) {
+            resBox.innerHTML = `<p style="color:var(--red); text-align:center;">حدث خطأ في جلب البيانات الدقيقة. حاول مجدداً.</p>`;
+        } finally {
+            sBtn.disabled = false;
+            sBtn.innerHTML = '🔍 بحث بالذكاء الاصطناعي';
+        }
+    };
+})();
+// ==================================================
+// 🛡️ التحديث النهائي: فلترة النتائج + نص إخلاء المسؤولية
+// ==================================================
+
+(function() {
+    const GROQ_PRO_KEY = "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";
+
+    window.runSearch = async function() {
+        const q = document.getElementById('search-q').value.trim();
+        const form = document.getElementById('drug-form').value;
+        const strength = document.getElementById('drug-strength').value.trim();
+        
+        if (!q) return alert('يرجى كتابة اسم الدواء');
+
+        const activeBtn = document.querySelector('.stype-btn.active');
+        const type = activeBtn ? activeBtn.getAttribute('data-type') : 'full';
+        const resBox = document.getElementById('search-results');
+        const sBtn = document.getElementById('main-search-btn');
+
+        sBtn.disabled = true;
+        sBtn.innerHTML = '🛡️ جاري التحقق الطبي...';
+        resBox.innerHTML = `<div class="ai-loading" style="text-align:center; padding:20px; color:var(--muted);"><div class="spinner"></div> جاري تدقيق المعلومات لـ ${q}...</div>`;
+
+        let userMsg = `Drug: ${q}, Form: ${form}, Strength: ${strength}. Search Type: ${type}. 
+        Provide Clinical Pharmacy data. Result must be JSON: {"sci":"","trade":"","ind":"","class":"","mech":"","dose":"","se":"","warn":""}`;
+
+        try {
+            const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                method: "POST",
+                headers: { "Authorization": `Bearer ${GROQ_PRO_KEY}`, "Content-Type": "application/json" },
+                body: JSON.stringify({ 
+                    model: "llama-3.3-70b-versatile", 
+                    messages: [
+                        { role: "system", content: "You are an expert Clinical Pharmacist. Accuracy is life-critical. Answer in Arabic JSON only." },
+                        { role: "user", content: userMsg }
+                    ], 
+                    response_format: { type: "json_object" }, 
+                    temperature: 0 
+                })
+            });
+
+            const data = await response.json();
+            const info = JSON.parse(data.choices[0].message.content);
+
+            // ترويسة النتيجة (الاسم العلمي والتجاري يظهران دائماً)
+            let html = `<div class="ai-result-card" style="background:transparent; padding:0; box-shadow:none;">
+                            <h3 style="color:var(--blue); text-align:center; margin-bottom:5px;">${info.sci || q}</h3>
+                            <div style="color:var(--orange); text-align:center; font-weight:700; font-size:14px; margin-bottom:20px;">🏷️ ${info.trade || ''}</div>`;
+
+            const createSection = (title, content, icon, isWarn = false) => {
+                if (!content || content.length < 2) return '';
+                return `
+                    <div style="background:var(--card); padding:15px; border-radius:18px; margin-bottom:12px; border: 1px solid var(--border); box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                        <div style="font-size:11px; font-weight:700; color:var(--muted); margin-bottom:8px; display:flex; align-items:center; gap:5px;">
+                            <span>${icon}</span> ${title}
+                        </div>
+                        <div style="color:var(--text); font-size:13.5px; line-height:1.6; ${isWarn ? 'color:#991b1b; background:#fff1f2; padding:10px; border-radius:10px;' : ''}">
+                            ${content}
+                        </div>
+                    </div>`;
+            };
+
+            // منطق الفلترة بناءً على نوع البحث المختار
+            if (type === 'dose') {
+                html += createSection('الجرعة الصحيحة (Dose)', info.dose, '💊');
+            } else if (type === 'inter') {
+                html += createSection('التداخلات والتحذيرات', info.warn || 'لا توجد تداخلات خطيرة مسجلة لهذا التركيز.', '🔗');
+            } else if (type === 'compare') {
+                html += createSection('المقارنة والبدائل', `ينتمي هذا الدواء لفئة ${info.class}. ${info.mech}`, '⚖️');
+            } else {
+                // العرض الكامل
+                html += createSection('متى يُصرف (Indication)', info.ind, '✅');
+                html += createSection('التصنيف (Class)', info.class, '📦');
+                html += createSection('ميكانزم العمل (Mechanism)', info.mech, '⚙️');
+                html += createSection('الجرعة الصحيحة (Dose)', info.dose, '💊');
+                html += createSection('الآثار الجانبية (Side Effects)', info.se, '⚡');
+                html += createSection('تحذيرات طبية (Warnings)', info.warn, '⚠️', true);
+            }
+
+            // نص إخلاء المسؤولية القانوني (Legal Disclaimer)
+            html += `
+                <div style="margin-top:20px; padding:12px; background:rgba(0,0,0,0.03); border:1px dashed var(--border); border-radius:12px; text-align:center;">
+                    <p style="color:var(--red); font-size:10px; font-weight:700; line-height:1.5; margin-bottom:5px;">⚠️ إخلاء مسؤولية (Disclaimer)</p>
+                    <p style="color:var(--muted); font-size:9.5px; line-height:1.4;">
+                        هذه المعلومات مستخرجة بواسطة تقنيات الذكاء الاصطناعي لأغراض تعليمية وتدريبية فقط. 
+                        قد تحتوي النتائج على أخطاء؛ لذا يجب دائماً مراجعة المراجع الطبية الرسمية (BNF) واستشارة الطبيب المختص قبل اتخاذ أي قرار علاجي.
+                    </p>
+                </div>
+                <div style="font-size:10px; color:var(--muted); text-align:center; padding:15px;">PharmaMaster Medical Engine v4.0</div>
+            </div>`;
+
+            resBox.innerHTML = html;
+
+        } catch (e) {
+            resBox.innerHTML = `<p style="color:var(--red); text-align:center;">حدث خطأ. حاول مجدداً.</p>`;
+        } finally {
+            sBtn.disabled = false;
+            sBtn.innerHTML = '🔍 بحث بالذكاء الاصطناعي';
+        }
+    };
+})();
+// ==================================================
+// 🚨 نظام حماية القلوب النهائي (يُوضع في آخر الملف)
+// يمنع القلوب السالبة ويغلق الدرس فوراً عند النفاد
+// ==================================================
+
+(function() {
+    // 1. مراقبة مستمرة لعدد القلوب ومنع السالب في الواجهة
+    setInterval(() => {
+        if (user.lives < 0) {
+            user.lives = 0;
+            saveUserToDb();
+            updateUI();
+        }
+        
+        // تحديث الرقم في الناف بار لضمان عدم ظهور سالب
+        const livesEl = document.getElementById('ui-lives');
+        if (livesEl && parseInt(livesEl.textContent) < 0) {
+            livesEl.textContent = '0';
+        }
+    }, 500);
+
+    // 2. تعديل دالة بدء الاختبار (Final Quiz) لمنع الدخول بـ 0 قلب
+    const originalStartFinalQuiz = window.startFinalQuiz;
+    window.startFinalQuiz = function(sysIdx, secIdx) {
+        if (user.lives <= 0) {
+            alert('💔 لا يمكنك بدء الاختبار، رصيد القلوب 0. انتظر الاستعادة أو اشترِ بالجواهر.');
+            return; // منع تشغيل الدالة الأصلية
+        }
+        originalStartFinalQuiz(sysIdx, secIdx);
+    };
+
+    // 3. تعديل دالة بدء الدروس العادية لمنع الدخول بـ 0 قلب
+    const originalStartLesson = window.startLessonStudy;
+    window.startLessonStudy = function(sysIdx, secIdx, lessonIdx) {
+        if (user.lives <= 0) {
+            alert('💔 نفدت القلوب! لا يمكنك بدء درس جديد الآن.');
+            return;
+        }
+        originalStartLesson(sysIdx, secIdx, lessonIdx);
+    };
+
+    // 4. حقن "حارس" داخل دالة التعامل مع الإجابات (handleAnswer)
+    // هذا الجزء يراقب لحظة الخطأ ويغلق الدرس إذا وصل القلب لصفر
+    const originalHandleAnswer = window.handleAnswer;
+    window.handleAnswer = function(el, isCorrect, container, correctIdx, answers) {
+        // تشغيل الدالة الأصلية أولاً
+        originalHandleAnswer(el, isCorrect, container, correctIdx, answers);
+        
+        // فحص النتيجة بعد الخصم
+        if (!isCorrect && user.lives <= 0) {
+            setTimeout(() => {
+                alert('💔 انتهت محاولاتك! سيتم إغلاق الدرس الآن.');
+                closeLesson(); // إغلاق نافذة الدرس فوراً
+            }, 1500); // تأخير بسيط ليتمكن الطالب من رؤية الإجابة الصحيحة أولاً
+        }
+    };
+
+})();
+
+console.log("🛡️ Heart Guard System: Activated & Protecting from negative values.");
+// ==================================================
+// 🚨 الحارس الذكي (المصلح): إعادة الاختبار بدون الخروج من التطبيق
+// ==================================================
+
+(function() {
+    const originalFinishSession = window.finishSession;
+    
+    window.finishSession = function() {
+        const correct = quizAnswers.filter(Boolean).length;
+        const total = quizAnswers.length;
+        const pct = Math.round((correct / total) * 100);
+        const passed = pct >= 70;
+
+        if (isFinalQuiz) {
+            if (!passed) {
+                renderFailScreen(correct, total, pct, "يجب النجاح في الاختبار الشامل بـ 70% لفتح الصنف التالي.");
+                return; 
+            }
+        } 
+        else if (currentLessonIdx >= 0) {
+            if (!passed) {
+                renderFailScreen(correct, total, pct, "لم تتقن هذا الدرس بعد. يجب أن تحصل على 70% ليُحتسب الدرس مكتمل.");
+                return;
+            }
+        }
+
+        originalFinishSession();
+    };
+
+    // دالة عرض شاشة الرسوب مع تصحيح أزرار الإعادة
+    function renderFailScreen(correct, total, pct, msg) {
+        document.getElementById('lesson-body').innerHTML = `
+            <div class="quiz-score-card" style="background:linear-gradient(135deg, #450a0a, #7f1d1d); border: 2px solid #ef4444; padding: 30px; border-radius: 20px; text-align: center;">
+                <div style="font-size: 50px; margin-bottom: 10px;">📉</div>
+                <div style="font-size: 2.5rem; font-weight: 900; color: #fca5a5;">${correct}/${total}</div>
+                <div style="color: #fee2e2; font-size: 1.2rem; margin-bottom: 10px;">النتيجة: ${pct}%</div>
+                <p style="color: #fecaca; font-size: 13px; line-height: 1.5;">${msg}</p>
+                
+                <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+                    <button id="btn-retry-now" style="padding: 14px; background: #ef4444; color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-family:'Cairo';">🔄 إعادة المحاولة</button>
+                    <button id="btn-exit-lesson" style="padding: 12px; background: transparent; color: #fca5a5; border: 1px solid #ef4444; border-radius: 12px; cursor: pointer; font-family:'Cairo';">🔙 العودة للمراجعة</button>
+                </div>
+            </div>`;
+        
+        document.getElementById('action-btn').style.display = 'none';
+        document.getElementById('progress-fill').style.width = '100%';
+
+        // برمجة زر الإعادة ليعيد تشغيل الاختبار برمجياً دون تحديث الصفحة
+        document.getElementById('btn-retry-now').onclick = function() {
+            if (isFinalQuiz) {
+                startFinalQuiz(currentSystemIdx, currentSectionIdx);
+            } else {
+                startLessonStudy(currentSystemIdx, currentSectionIdx, currentLessonIdx);
+            }
+        };
+
+        // برمجة زر الخروج
+        document.getElementById('btn-exit-lesson').onclick = function() {
+            closeLesson();
+        };
+
+        if(appSettings.sound) playTone(150, 0.3, 'sawtooth');
+    }
+
+    // تأمين زر الاختبار الشامل
+    const originalOpenLessonList = window.openLessonList;
+    window.openLessonList = function(sysIdx, secIdx) {
+        originalOpenLessonList(sysIdx, secIdx);
+        setTimeout(() => {
+            const allDone = isAllLessonsDone(sysIdx, secIdx);
+            const fqCard = document.querySelector('.final-quiz-card');
+            if (fqCard && !allDone) {
+                fqCard.classList.add('locked-quiz');
+                fqCard.onclick = (e) => {
+                    e.stopPropagation();
+                    alert("🔒 لا يمكنك دخول الاختبار الشامل حتى تنجح في جميع دروس هذا الصنف بـ 70% على الأقل.");
+                };
+            }
+        }, 200);
+    };
+
+})();
+// ==================================================
+// ✍️ إضافة بصمة المطور وحفظ الحقوق الفكرية
+// محمد كمال - PharmaMaster Pro Creator
+// ==================================================
+
+(function() {
+    // 1. إضافة اسمك في شاشة "ملفي" (Profile) بشكل احترافي
+    function addCreatorCredits() {
+        const profileTab = document.getElementById('tab-profile');
+        if (!profileTab || document.getElementById('creator-credit')) return;
+
+        const creditDiv = document.createElement('div');
+        creditDiv.id = 'creator-credit';
+        creditDiv.style.cssText = `
+            margin: 20px 15px;
+            padding: 15px;
+            background: linear-gradient(135deg, #0f172a, #1e3a8a);
+            border-radius: 18px;
+            color: white;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        `;
+        
+        creditDiv.innerHTML = `
+            <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Founder & Lead Developer</div>
+            <div style="font-size: 16px; font-weight: 900; color: #fbbf24;">Mohammed Kamal</div>
+            <div style="font-size: 11px; color: #cbd5e1; margin-top: 4px;">Student of Pharmacy | Tech Innovator</div>
+            <div style="margin-top: 10px; display: flex; justify-content: center; gap: 15px; font-size: 18px;">
+                <span title="Pharmacy">💊</span>
+                <span title="Code">💻</span>
+                <span title="Iraq">🇮🇶</span>
+            </div>
+        `;
+        
+        // إضافتها قبل زر تسجيل الخروج
+        const logoutBtn = document.getElementById('profile-logout-btn');
+        if (logoutBtn) logoutBtn.before(creditDiv);
+    }
+
+    // 2. إضافة توقيع صغير (Watermark) يظهر في كل الصفحات بأسفل القائمة
+    function addWatermark() {
+        if (document.getElementById('app-watermark')) return;
+        const bottomNav = document.getElementById('main-bottom-nav');
+        if (!bottomNav) return;
+
+        const watermark = document.createElement('div');
+        watermark.id = 'app-watermark';
+        watermark.style.cssText = `
+            position: fixed;
+            bottom: 75px; /* فوق القائمة السفلية */
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            color: var(--muted);
+            opacity: 0.6;
+            pointer-events: none;
+            z-index: 999;
+            font-family: 'Cairo';
+        `;
+        watermark.innerHTML = "Designed & Developed by <b>Mohammed Kamal</b>";
+        document.body.appendChild(watermark);
+    }
+
+    // تشغيل الإضافات
+    setInterval(() => {
+        addCreatorCredits();
+        addWatermark();
+    }, 2000);
+
+})();
+
+console.log("✒️ Creator credits successfully integrated into PharmaMaster Pro.");
+
 </script>
 </body>
 </html>
