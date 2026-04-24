@@ -2957,5 +2957,81 @@ render();
 
 })();
 </script>
+<script>
+(function(){
+
+// نخزن المستخدم
+let userId = localStorage.getItem("userId_fix");
+if(!userId){
+  userId = "user_" + Math.floor(Math.random()*10000);
+  localStorage.setItem("userId_fix", userId);
+}
+
+// مراقبة أي ضغط زر إرسال
+document.addEventListener("click", function(e){
+  const btn = e.target.closest("button");
+  if(!btn) return;
+
+  if(btn.innerText.includes("ارسال") || btn.innerText.includes("Send")){
+    const input = document.querySelector("input, textarea");
+    if(!input || !input.value) return;
+
+    let msgs = JSON.parse(localStorage.getItem("chat_fix") || "[]");
+
+    msgs.push({
+      id: Date.now(),
+      text: input.value,
+      user: userId,
+      time: new Date().toLocaleTimeString(),
+      edited: false
+    });
+
+    localStorage.setItem("chat_fix", JSON.stringify(msgs));
+  }
+});
+
+// عرض الرسائل (يحاول يسيطر على chat الموجود)
+function renderFix(){
+  const chat = document.getElementById("chat");
+  if(!chat) return;
+
+  let msgs = JSON.parse(localStorage.getItem("chat_fix") || "[]");
+
+  chat.innerHTML = "";
+
+  msgs.forEach(m => {
+    const div = document.createElement("div");
+
+    div.innerHTML = `
+      <b>${m.user}</b>: ${m.text}
+      <br>
+      <small>${m.time} ${m.edited ? "(تم التعديل)" : ""}</small>
+    `;
+
+    // تعديل بالضغط
+    div.onclick = function(){
+      if(m.user !== userId) return;
+
+      let newText = prompt("تعديل:", m.text);
+      if(newText && newText !== m.text){
+        m.text = newText;
+        m.edited = true;
+        localStorage.setItem("chat_fix", JSON.stringify(msgs));
+        renderFix();
+      }
+    };
+
+    chat.appendChild(div);
+  });
+}
+
+// تشغيل تلقائي
+setInterval(renderFix, 1000);
+
+// تحديث بين التبويبات
+window.addEventListener("storage", renderFix);
+
+})();
+</script>
 </body>
 </html>
