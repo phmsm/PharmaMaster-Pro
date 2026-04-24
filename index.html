@@ -1,3 +1,4 @@
+cat > /home/claude/pharmamaster_fixed.html << 'ENDOFFILE'
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -8,6 +9,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 <style>
 :root {
   --primary:#0a0f1e;--navy:#0f172a;--blue:#3b82f6;--blue-light:#60a5fa;
@@ -269,7 +271,15 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-h
 
 /* QUIZ */
 .quiz-wrap{padding:10px 0;}
-.quiz-q{font-size:1.05rem;font-weight:700;margin-bottom:20px;line-height:1.6;color:var(--text);background:linear-gradient(135deg,#f0f9ff,#e0f2fe);padding:16px;border-radius:14px;border-right:4px solid var(--blue);}
+/* =====================================================
+   FIX #2: إصلاح لون نص الأسئلة في الوضع الداكن
+   ===================================================== */
+.quiz-q{
+  font-size:1.05rem;font-weight:700;margin-bottom:20px;line-height:1.6;
+  color:#1e293b;  /* لون داكن افتراضي */
+  background:linear-gradient(135deg,#f0f9ff,#e0f2fe);
+  padding:16px;border-radius:14px;border-right:4px solid var(--blue);
+}
 .quiz-progress-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
 .quiz-dots{display:flex;gap:5px;flex:1;flex-wrap:wrap;}
 .quiz-dot{width:10px;height:10px;border-radius:50%;background:#e2e8f0;transition:0.3s;}
@@ -394,11 +404,34 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-h
 #global-loading p{color:#94a3b8;font-size:14px;}
 .saving-indicator{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(34,197,94,0.9);color:white;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;z-index:9000;transition:opacity 0.3s;pointer-events:none;}
 
-/* DARK MODE */
+/* =====================================================
+   FIX #2 (DARK MODE): إصلاح شامل للوضع المعتم
+   ===================================================== */
 body.dark-mode{--bg:#0f172a;--card:#1e293b;--border:#334155;--text:#f1f5f9;--muted:#94a3b8;}
-body.dark-mode .profile-bar,body.dark-mode .system-card,body.dark-mode .section-item,body.dark-mode .lesson-card,body.dark-mode .search-box,body.dark-mode .ai-result-card,body.dark-mode .board-card,body.dark-mode .pstat,body.dark-mode .profile-info-card{background:#1e293b;border-color:#334155;}
+body.dark-mode .profile-bar,
+body.dark-mode .system-card,
+body.dark-mode .section-item,
+body.dark-mode .lesson-card,
+body.dark-mode .search-box,
+body.dark-mode .ai-result-card,
+body.dark-mode .board-card,
+body.dark-mode .pstat,
+body.dark-mode .profile-info-card{background:#1e293b;border-color:#334155;}
+
+/* إصلاح صندوق الأسئلة: خلفية داكنة ونص أبيض واضح */
+body.dark-mode .quiz-q{
+  background:#1e1e2e !important;
+  color:#f1f5f9 !important;
+  border-right-color:var(--blue-light);
+}
 body.dark-mode .opt{background:#1e293b;border-color:#334155;color:#f1f5f9;}
+body.dark-mode .opt.correct{background:#166534;border-color:#22c55e;color:#dcfce7;}
+body.dark-mode .opt.wrong{background:#7f1d1d;border-color:#ef4444;color:#fee2e2;}
+body.dark-mode .opt:not(.disabled):hover{background:#263352;border-color:var(--blue-light);}
+body.dark-mode .explanation-box{background:#0f2e1a;border-right-color:#22c55e;color:#86efac;}
+
 body.dark-mode .info-row{background:#1e293b;border-color:#334155;}
+body.dark-mode .info-row.highlight-row{background:linear-gradient(135deg,#1e2e4a,#1a2744);}
 body.dark-mode .pharma-card{background:#0f172a;}
 body.dark-mode #lesson-screen{background:#0f172a;}
 body.dark-mode .lesson-header{background:#0f172a;border-color:#334155;}
@@ -419,7 +452,12 @@ body.dark-mode .sections-topbar{background:#1e293b;border-color:#334155;}
 body.dark-mode .fsize-btn{background:#334155;border-color:#475569;color:#f1f5f9;}
 body.dark-mode .logout-btn{background:linear-gradient(135deg,#3f0f0f,#450a0a);border-color:#7f1d1d;}
 body.dark-mode .edit-profile-btn{background:#1e293b;}
-body.dark-mode .ai-section-body{background:#0f172a;}
+body.dark-mode .ai-section-body{background:#0f172a;color:#e2e8f0;}
+body.dark-mode .stype-btn{background:#1e293b;border-color:#334155;color:#94a3b8;}
+body.dark-mode .stype-btn.active{background:var(--blue);color:white;border-color:var(--blue);}
+body.dark-mode .rank-name{color:#f1f5f9;}
+body.dark-mode .lesson-card-name{color:#f1f5f9;}
+body.dark-mode .sec-name{color:#f1f5f9;}
 </style>
 </head>
 <body>
@@ -718,7 +756,7 @@ body.dark-mode .ai-section-body{background:#0f172a;}
       </div>
     </div>
   </div>
-  <div style="text-align:center;color:var(--muted);font-size:11px;padding:10px 0 5px;">PharmaMaster Pro v3.2 · أكاديمية الصيدلة التفاعلية</div>
+  <div style="text-align:center;color:var(--muted);font-size:11px;padding:10px 0 5px;">PharmaMaster Pro v3.3 · أكاديمية الصيدلة التفاعلية</div>
 </div>
 
 <!-- BOTTOM NAV -->
@@ -816,22 +854,27 @@ const firebaseConfig = {
   storageBucket: "pharmamaster-pro.firebasestorage.app",
   messagingSenderId: "59936874446",
   appId: "1:59936874446:web:51498bdffba56004da159f",
-  measurementId: "G-P0YKDR45JZ"
+  measurementId: "G-P0YKDR45JZ",
+  // =====================================================
+  //  FIX #1: إضافة databaseURL لـ Realtime Database
+  // =====================================================
+  databaseURL: "https://pharmamaster-pro-default-rtdb.firebaseio.com"
 };
 
 // ============================================================
-//  🤖 GEMINI API KEY
+//  🤖 FIX #4: Gemini API — المفتاح والرابط الصحيح
 // ============================================================
-const GEMINI_API_KEY = "AIzaSyAxlPvv6jJ11lLYwA_0vrpgBLt1ipnTasY";
+const GEMINI_API_KEY = "AIzaSyAxlPvv6jJ11LYwA_0vrpgBLt1ipnTasY";
 const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
 
-let db = null, auth = null, firebaseReady = false;
+let db = null, auth = null, rtdb = null, firebaseReady = false;
 try {
   firebase.initializeApp(firebaseConfig);
   db = firebase.firestore();
   auth = firebase.auth();
+  rtdb = firebase.database();   // Realtime Database للدردشة
   firebaseReady = true;
-  console.log('✅ Firebase connected');
+  console.log('✅ Firebase connected (Firestore + RTDB)');
 } catch(e) {
   console.warn('Firebase init error:', e);
 }
@@ -903,18 +946,134 @@ async function signInWithGoogle() {
 function showAuthMsg(msg) { document.getElementById('auth-msg').textContent = msg; }
 
 // ============================================================
-//  DATA
+//  DATA — FIX #3: الأسئلة الشاملة (15 سؤال + حالات سريرية)
 // ============================================================
 const SYSTEMS = [
   {
     id:'git', title:'الجهاز الهضمي', subtitle:'GIT', icon:'🫀', available:true,
     sections:[
-      { id:'ulcer', name:'أدوية القرحة وحموضة المعدة', icon:'🧯', color:'#3b82f6', desc:'Antacids · PPI · H2 Blockers · Sucralfate · H. pylori', lessons:[ { id:'gaviscon', name:'Gaviscon', emoji:'🛡️', slide:{ sci:"Sodium Alginate", trade:"Gaviscon (غافيسكون)", indication:"حرقة المعدة وارتجاع الحمض (GERD) · الحموضة في الحمل · التجشؤ الحامضي.", mech:"يكوّن طبقة رغوية (Raft) تطفو فوق محتويات المعدة وتمنع صعود الحمض للمريء.", dose:"10-20 مل بعد الأكل مباشرة وعند النوم.", warn:"آمن للحوامل ✅. افصل عن الحديد 2 ساعة.", sciAudio:"Sodium Alginate", tradeAudio:"Gaviscon" }, quizzes:[ { q:"ما الحالة الرئيسية التي يُصرف لها Gaviscon؟", a:["القرحة الهضمية","ارتجاع حمض المعدة والحموضة","الإمساك","الإسهال"], c:1, exp:"Gaviscon يُستخدم لعلاج ارتجاع الحمض (GERD) والحموضة خاصةً في الحمل." }, { q:"آلية عمل Gaviscon؟", a:["يعادل الحمض كيميائياً","يكون طبقة رغوية تطفو فوق المعدة","يغلق مضخة البروتون","يمنع مستقبلات H2"], c:1, exp:"Gaviscon يشكّل Raft فوق محتويات المعدة." }, { q:"متى أفضل وقت لأخذ Gaviscon؟", a:["قبل الأكل","مع الأكل","بعد الأكل مباشرة وعند النوم","على الريق صباحاً"], c:2, exp:"يُؤخذ بعد الأكل." }, { q:"هل Gaviscon آمن للحوامل؟", a:["ممنوع تماماً","آمن ✅","يحتاج وصفة طبية","آمن في الثلث الثالث فقط"], c:1, exp:"Gaviscon يُعدّ من أأمن العلاجات للحوامل." } ] }, { id:'maalox', name:'Maalox', emoji:'🧪', slide:{ sci:"Aluminum & Magnesium Hydroxide", trade:"Maalox (مالوكس)", indication:"حموضة المعدة الحادة · الهضم المتعسر · تخفيف أعراض القرحة.", mech:"يعادل الحمض فوراً كيميائياً برفع pH المعدة.", dose:"بعد الأكل بـ 20 دقيقة أو عند اللزوم.", warn:"الألمنيوم → إمساك. المغنيسيوم → إسهال. افصل عن الحديد 4 ساعات (Chelation)!", sciAudio:"Aluminum Magnesium Hydroxide", tradeAudio:"Maalox" }, quizzes:[ { q:"أي مكوّن في المالوكس مسؤول عن الإمساك؟", a:["المغنيسيوم","الألمنيوم","الصوديوم","الكالسيوم"], c:1, exp:"هيدروكسيد الألمنيوم يسبب الإمساك." }, { q:"ما اسم التداخل الدوائي بين المالوكس والحديد؟", a:["Synergism","Chelation","Antagonism","Displacement"], c:1, exp:"Chelation." }, { q:"متى يُعطى المالوكس؟", a:["قبل الأكل بـ 30 دقيقة","أثناء الأكل","بعد الأكل بـ 20 دقيقة","عند النوم فقط"], c:2, exp:"بعد 20 دقيقة من الأكل." }, { q:"Maalox يجمع بين؟", a:["PPI + H2 Blocker","Aluminum + Magnesium Hydroxide","5-ASA + Antibiotics","Loperamide + Probiotic"], c:1, exp:"المالوكس يحتوي على هيدروكسيد الألمنيوم والمغنيسيوم." } ] }, { id:'nexium', name:'Nexium', emoji:'💙', slide:{ sci:"Esomeprazole", trade:"Nexium (نكسيوم)", indication:"القرحة الهضمية · GERD · الوقاية من قرحة الـ NSAID · علاج H. pylori.", mech:"يغلق مضخة البروتون (H+/K+ ATPase) بشكل لا رجعة فيه.", dose:"20-40 ملغم قبل الفطور بـ 30-60 دقيقة.", warn:"⚠️ تداخل خطر مع Plavix! الاستخدام الطويل → نقص B12 وهشاشة عظام.", sciAudio:"Esomeprazole", tradeAudio:"Nexium" }, quizzes:[ { q:"متى يُؤخذ Nexium لأفضل نتيجة؟", a:["بعد العشاء","قبل الفطور بـ 30-60 دقيقة","مع الأكل","على الريق ليلاً"], c:1, exp:"PPI يجب أن يؤخذ 30-60 دقيقة قبل الأكل." }, { q:"آلية عمل PPI على مستوى الخلية؟", a:["يثبط H+/K+ ATPase","يمنع H2 receptor","يعادل الحمض","يكوّن طبقة واقية"], c:0, exp:"PPI يرتبط بمضخة البروتون ويثبطها." }, { q:"الاستخدام الطويل للـ PPI يسبب نقص؟", a:["فيتامين C","فيتامين B12 والكالسيوم","الحديد فقط","فيتامين D"], c:1, exp:"تقليل الحمض يؤثر على امتصاص B12 والكالسيوم." }, { q:"لماذا يُتجنب Nexium مع Plavix؟", a:["يقلل فعاليته","يزيد نزيف المعدة","يسبب جلطات","يرفع ضغط الدم"], c:0, exp:"Esomeprazole يثبط CYP2C19." } ] }, { id:'controloc', name:'Controloc', emoji:'💚', slide:{ sci:"Pantoprazole", trade:"Controloc (كونترولوك)", indication:"القرحة الهضمية · GERD · قرحة المريء التآكلية.", mech:"PPI مع أقل تداخلات دوائية.", dose:"40 ملغم قبل الأكل بـ 30 دقيقة.", warn:"الخيار الأول لمرضى القلب الآخذين Plavix ✅.", sciAudio:"Pantoprazole", tradeAudio:"Controloc" }, quizzes:[ { q:"أي PPI الأأمن لمريض يستخدم Plavix؟", a:["Nexium","Omeprazole","Controloc","Rabeprazole"], c:2, exp:"Pantoprazole أقل تأثيراً على CYP2C19." }, { q:"الجرعة المعتادة لـ Pantoprazole؟", a:["20 ملغم","40 ملغم","60 ملغم","80 ملغم"], c:1, exp:"40 ملغم مرة يومياً." }, { q:"Pantoprazole ينتمي لعائلة؟", a:["H2 Blockers","Antacids","PPI","5-ASA"], c:2, exp:"من عائلة PPI." }, { q:"لماذا يُفضل Controloc على Nexium لمريض Plavix؟", a:["أرخص ثمناً","أقل تأثيراً على CYP2C19","أقوى","أسرع مفعولاً"], c:1, exp:"Pantoprazole أدنى قدرة على تثبيط CYP2C19." } ] }, { id:'famotidine', name:'Famotidine', emoji:'🟡', slide:{ sci:"Famotidine", trade:"Famodin", indication:"حرقة المعدة الليلية · القرحة الهضمية.", mech:"H2 Blocker: يحجب مستقبلات الهيستامين H2.", dose:"20-40 ملغم مرتين يومياً أو عند النوم.", warn:"أضعف من PPI لكن أسرع مفعولاً.", sciAudio:"Famotidine", tradeAudio:"Famodin" }, quizzes:[ { q:"ما آلية عمل H2 Blocker؟", a:["يغلق مضخة البروتون","يحجب مستقبلات الهيستامين H2","يعادل الحمض","يكوّن Raft"], c:1, exp:"H2 Blockers تمنع الهيستامين." }, { q:"متى يكون Famotidine أفضل من PPI؟", a:["في القرحة المزمنة","للأعراض الليلية قصيرة الأمد","في إطالة العلاج","في علاج H. pylori"], c:1, exp:"Famotidine أسرع مفعولاً." }, { q:"جرعة Famotidine القياسية؟", a:["10 ملغم مرة","20-40 ملغم مرتين","80 ملغم مرة","5 ملغم ثلاث مرات"], c:1, exp:"20-40 ملغم مرتين يومياً." }, { q:"مقارنةً بـ PPI، الـ H2 Blocker؟", a:["أقوى وأبطأ","أقوى وأسرع","أضعف وأسرع","أضعف وأبطأ"], c:2, exp:"H2 Blockers أضعف لكن أسرع." } ] }, { id:'sucralfate', name:'Sucralfate', emoji:'🏺', slide:{ sci:"Sucralfate", trade:"Ulcogant", indication:"علاج القرحة الهضمية الفعّالة.", mech:"يلتصق ببروتينات القرحة ويكوّن طبقة واقية.", dose:"على معدة فارغة: ساعة قبل الأكل وعند النوم.", warn:"⚠️ يحتاج وسط حامضي — لا تأخذه مع Antacid! إمساك.", sciAudio:"Sucralfate", tradeAudio:"Ulcogant" }, quizzes:[ { q:"لماذا يُمنع أخذ Sucralfate مع Antacid؟", a:["يسبب تحسساً","يحتاج وسط حامضي للتنشيط","يسبب صداعاً","يزيد الإمساك"], c:1, exp:"Sucralfate يتحول في البيئة الحامضية." }, { q:"متى يُؤخذ Sucralfate؟", a:["مع الأكل","بعد الأكل","على معدة فارغة قبل الأكل بساعة","عند النوم فقط"], c:2, exp:"على معدة فارغة." }, { q:"آلية عمل Sucralfate؟", a:["PPI","Cytoprotective","H2 Blocker","Neutralization"], c:1, exp:"Sucralfate cytoprotective." }, { q:"أبرز أثر جانبي لـ Sucralfate؟", a:["إسهال","إمساك","غثيان","صداع"], c:1, exp:"الإمساك من أبرز آثاره." } ] }, { id:'hpylori', name:'علاج H. pylori', emoji:'🦠', slide:{ sci:"Triple Therapy", trade:"PPI + Amoxicillin + Clarithromycin", indication:"القضاء على جرثومة H. pylori.", mech:"PPI يرفع الـ pH. Amoxicillin 1g + Clarithromycin 500mg.", dose:"مرتين يومياً × 14 يوماً.", warn:"⚠️ الكلاريثروميسين → طعم معدني. حساسية بنسلين → Metronidazole.", sciAudio:"Triple Therapy", tradeAudio:"PPI Amoxicillin Clarithromycin" }, quizzes:[ { q:"لماذا ندخل PPI في كورس الجرثومة؟", a:["لقتل الجرثومة مباشرة","لتحسين عمل المضادات برفع الـ pH","لتسكين الألم","لمنع الغثيان"], c:1, exp:"pH المرتفع يزيد فعالية المضادات." }, { q:"مدة كورس Triple Therapy؟", a:["5 أيام","7 أيام","14 يوماً","شهر"], c:2, exp:"14 يوماً." }, { q:"بديل Amoxicillin في حساسية البنسلين؟", a:["Clarithromycin","Metronidazole","Tetracycline","Azithromycin"], c:1, exp:"Metronidazole بديل Amoxicillin." }, { q:"أثر جانبي شائع من Clarithromycin؟", a:["صداع","طعم معدني","إسهال مائي","ارتفاع ضغط"], c:1, exp:"طعم معدني شائع." } ] } ], finalQuiz:[ { q:"أفضل دواء حرقة آمن للحوامل؟", a:["Nexium","Gaviscon","Controloc","Famotidine"], c:1 }, { q:"أي مادة مسؤولة عن الإمساك في المالوكس؟", a:["المغنيسيوم","الألمنيوم","الصوديوم","الكالسيوم"], c:1 }, { q:"أي PPI الأأمن لمريض يستخدم Plavix؟", a:["Nexium","Omeprazole","Controloc","Rabeprazole"], c:2 }, { q:"لماذا يمنع Sucralfate مع Antacid؟", a:["يسبب تحسساً","يحتاج وسط حامضي","يسبب صداعاً","يزيد الإمساك"], c:1 }, { q:"مدة كورس H. pylori؟", a:["5 أيام","7 أيام","14 يوماً","شهر"], c:2 } ] },
-      { id:'nausea', name:'أدوية الغثيان والتقيؤ', icon:'🤢', color:'#8b5cf6', desc:'Metoclopramide · Domperidone · Ondansetron', lessons:[ { id:'pramin', name:'Pramin (برامين)', emoji:'💜', slide:{ sci:"Metoclopramide", trade:"Pramin / Maxolon", indication:"غثيان الحمل · ما بعد العمليات · تسريع تفريغ المعدة.", mech:"يغلق D2 ويزيد حركة الجهاز الهضمي (Prokinetic).", dose:"10 ملغم قبل الأكل بـ 15-30 دقيقة.", warn:"⚠️ ممنوع في Parkinson! يسبب EPS.", sciAudio:"Metoclopramide", tradeAudio:"Pramin" }, quizzes:[ { q:"لماذا يُمنع Metoclopramide في Parkinson؟", a:["يرفع الضغط","يحجب D2 فيزيد الأعراض","يسبب غيبوبة","تداخل دوائي فقط"], c:1, exp:"يحجب D2 مما يقلل الدوبامين." }, { q:"ما معنى Prokinetic؟", a:["يقلل الحمض","يسرع تفريغ المعدة","يقتل البكتيريا","يسبب النوم"], c:1, exp:"يسرع حركة الجهاز الهضمي." }, { q:"جرعة Metoclopramide؟", a:["5 ملغم بعد الأكل","10 ملغم قبل الأكل 15-30 دقيقة","20 ملغم صباحاً","10 ملغم عند النوم"], c:1, exp:"10 ملغم قبل الوجبة." }, { q:"EPS اختصار لـ؟", a:["Extra Pain Syndrome","Extrapyramidal Symptoms","Extra Peristalsis","Extended PPI Scale"], c:1, exp:"Extrapyramidal Symptoms." } ] }, { id:'motilium', name:'Motilium', emoji:'🟣', slide:{ sci:"Domperidone", trade:"Motilium / Gastromotil", indication:"الغثيان · Gastroparesis.", mech:"D2 Antagonist محيطي فقط — لا يعبر الحاجز الدموي الدماغي.", dose:"10 ملغم قبل الأكل 15-30 دقيقة.", warn:"⚠️ خطر QT prolongation. لا تتجاوز 30 ملغم/يوم.", sciAudio:"Domperidone", tradeAudio:"Motilium" }, quizzes:[ { q:"الفرق الرئيسي بين Domperidone و Metoclopramide؟", a:["الدومبيريدون أقوى","الميتوكلوبراميد لا يعبر BBB","الدومبيريدون لا يعبر BBB","لا فرق"], c:2, exp:"Domperidone محيطي لا يعبر BBB." }, { q:"الحد الأقصى لـ Domperidone يومياً؟", a:["10 ملغم","20 ملغم","30 ملغم","40 ملغم"], c:2, exp:"30 ملغم/يوم." }, { q:"ما خطر QT prolongation؟", a:["ارتفاع الضغط","اضطراب إيقاع القلب","ارتفاع السكر","فشل كلوي"], c:1, exp:"يزيد خطر اضطراب بالقلب." }, { q:"أفضل استخدام لـ Domperidone؟", a:["للأطفال فقط","تجنب الآثار العصبية","ارتجاع المريء","القولون"], c:1, exp:"يُفضل عند الحاجة لتأثير محيطي." } ] }, { id:'zofran', name:'Zofran', emoji:'💊', slide:{ sci:"Ondansetron", trade:"Zofran / Onsia", indication:"غثيان العلاج الكيميائي والإشعاعي.", mech:"يغلق مستقبلات السيروتونين 5-HT3.", dose:"4-8 ملغم قبل الكيماوي بـ 30 دقيقة.", warn:"⚠️ يسبب إمساكاً. احذر QT prolongation.", sciAudio:"Ondansetron", tradeAudio:"Zofran" }, quizzes:[ { q:"أفضل دواء لقيء الكيماوي؟", a:["Metoclopramide","Domperidone","Ondansetron","Gaviscon"], c:2, exp:"Ondansetron الخيار الأول." }, { q:"آلية عمل Ondansetron؟", a:["D2 Antagonist","5-HT3 Antagonist","H2 Blocker","Opioid Agonist"], c:1, exp:"يحجب 5-HT3." }, { q:"أثر جانبي شائع لـ Ondansetron؟", a:["إسهال","نعاس","إمساك","ارتفاع الضغط"], c:2, exp:"الإمساك من أبرز الآثار." }, { q:"متى يُعطى Zofran قبل الكيماوي؟", a:["قبل ساعة","قبل 30 دقيقة","مباشرةً","بعده بساعة"], c:1, exp:"30 دقيقة قبل الكيماوي." } ] } ], finalQuiz:[ { q:"الفرق الرئيسي بين Domperidone و Metoclopramide؟", a:["الدومبيريدون أقوى","الميتوكلوبراميد لا يعبر BBB","الدومبيريدون لا يعبر BBB","لا فرق"], c:2 }, { q:"أفضل دواء لقيء الكيماوي؟", a:["Metoclopramide","Domperidone","Ondansetron","Gaviscon"], c:2 }, { q:"لماذا يمنع Metoclopramide في Parkinson؟", a:["يرفع الضغط","يغلق D2 ويزيد الأعراض","يسبب غيبوبة","تداخل دوائي"], c:1 }, { q:"آلية Ondansetron؟", a:["D2 Antagonist","5-HT3 Antagonist","H2 Blocker","Opioid Agonist"], c:1 } ] },
-      { id:'colon', name:'أدوية القولون والتقلصات', icon:'🌀', color:'#14b8a6', desc:'Buscopan · Mebeverine · IBS', lessons:[ { id:'buscopan', name:'Buscopan', emoji:'🌀', slide:{ sci:"Hyoscine Butylbromide", trade:"Buscopan", indication:"مغص البطن · تقلصات القولون.", mech:"Antimuscarinic: يمنع الأسيتيل كولين على العضلات الملساء.", dose:"10-20 ملغم حبوب أو حقن.", warn:"⚠️ ممنوع في الجلوكوما وتضخم البروستاتا.", sciAudio:"Hyoscine Butylbromide", tradeAudio:"Buscopan" }, quizzes:[ { q:"آلية عمل Buscopan؟", a:["Direct Muscle Relaxant","5-HT3 Antagonist","Antimuscarinic","D2 Antagonist"], c:2, exp:"Antimuscarinic." }, { q:"الموانع الرئيسية لـ Buscopan؟", a:["السكري والضغط","الجلوكوما وتضخم البروستاتا","القصور الكلوي","الحمل"], c:1, exp:"Antimuscarinic يزيد ضغط العين." } ] }, { id:'duspatalin', name:'Duspatalin', emoji:'💚', slide:{ sci:"Mebeverine", trade:"Duspatalin / Colofac", indication:"متلازمة القولون العصبي (IBS).", mech:"باسط مباشر للعضلات الملساء موضعياً.", dose:"135-200 ملغم قبل الأكل بـ 20 دقيقة.", warn:"لا توجد تداخلات مهمة. الخيار الأول في IBS ✅.", sciAudio:"Mebeverine", tradeAudio:"Duspatalin" }, quizzes:[ { q:"لماذا يُفضَّل Mebeverine على Buscopan في IBS؟", a:["أرخص","يعمل موضعياً بلا آثار جانبية جهازية","أقوى","يقلل الحمض"], c:1, exp:"Mebeverine موضعي بلا آثار Antimuscarinic." }, { q:"متى يُؤخذ Duspatalin؟", a:["بعد الأكل","قبل الأكل بـ 20 دقيقة","مع الأكل","عند النوم"], c:1, exp:"20 دقيقة قبل الأكل." } ] } ], finalQuiz:[ { q:"لماذا يُفضَّل Mebeverine على Buscopan في IBS؟", a:["أرخص","يعمل موضعياً بلا آثار جانبية","أقوى","يقلل الحمض"], c:1 }, { q:"الموانع الرئيسية لـ Buscopan؟", a:["السكري والضغط","الجلوكوما وتضخم البروستاتا","القصور الكلوي","الحمل"], c:1 } ] },
-      { id:'diarrhea', name:'أدوية الإسهال والإمساك', icon:'💧', color:'#22c55e', desc:'Loperamide · Probiotics · Bisacodyl · Lactulose · Movicol', lessons:[ { id:'imodium', name:'Imodium', emoji:'💧', slide:{ sci:"Loperamide", trade:"Imodium", indication:"الإسهال الحاد غير المعقد.", mech:"مستقبلات الأوبيويد في الأمعاء → يبطئ الحركة.", dose:"4 ملغم بداية، ثم 2 ملغم بعد كل خروج. الحد الأقصى 16 ملغم/يوم.", warn:"⚠️ ممنوع في إسهال دموي وللأطفال دون 6 سنوات.", sciAudio:"Loperamide", tradeAudio:"Imodium" }, quizzes:[ { q:"الحد الأقصى لجرعة Loperamide يومياً؟", a:["8 ملغم","12 ملغم","16 ملغم","20 ملغم"], c:2, exp:"16 ملغم/يوم." }, { q:"متى يُمنع Imodium؟", a:["الإسهال الحاد","الإسهال الدموي والتهاب القولون","الإسهال المزمن","الأطفال فوق 6 سنوات"], c:1, exp:"في الدموي إيقاف الحركة يحبس السموم." } ] }, { id:'movicol', name:'Movicol', emoji:'💙', slide:{ sci:"Polyethylene Glycol (PEG)", trade:"Movicol", indication:"الإمساك المزمن · إمساك الحمل والأطفال.", mech:"ملين اسموزي قوي — يحتجز الماء في الأمعاء.", dose:"ساشيه في 125 مل ماء. 1-3 مرات يومياً.", warn:"آمن للاستخدام المزمن ✅.", sciAudio:"Polyethylene Glycol", tradeAudio:"Movicol" }, quizzes:[ { q:"أفضل ملين للحامل والأطفال؟", a:["Bisacodyl","Lactulose","Movicol","Senna"], c:2, exp:"PEG آمن للمزمن." }, { q:"آلية عمل Movicol؟", a:["Stimulant","Osmotic","Bulk Forming","Stool Softener"], c:1, exp:"Osmotic Laxative." } ] } ], finalQuiz:[ { q:"الحد الأقصى لجرعة Loperamide يومياً؟", a:["8 ملغم","12 ملغم","16 ملغم","20 ملغم"], c:2 }, { q:"أفضل ملين للحامل والأطفال؟", a:["Bisacodyl","Lactulose","Movicol","Senna"], c:2 } ] },
-      { id:'ibd', name:'أدوية القولون التقرحي (IBD)', icon:'🛡️', color:'#ef4444', desc:'Mesalazine · Sulfasalazine · 5-ASA', lessons:[ { id:'pentasa', name:'Pentasa', emoji:'🛡️', slide:{ sci:"Mesalazine (Mesalamine)", trade:"Pentasa / Asacol", indication:"التهاب القولون التقرحي · داء كرون.", mech:"5-ASA: يثبط البروستاجلاندينات موضعياً.", dose:"1-4 غرام يومياً.", warn:"⚠️ قد يقلل امتصاص الفوليك — أعطِ Folic Acid.", sciAudio:"Mesalazine", tradeAudio:"Pentasa Asacol" }, quizzes:[ { q:"آلية عمل Mesalazine؟", a:["يقتل البكتيريا","مضاد التهاب موضعي","يغلق مضخة البروتون","يسرع الأمعاء"], c:1, exp:"5-ASA يثبط البروستاجلاندينات." }, { q:"الفيتامين الذي يقل مع Mesalazine؟", a:["فيتامين C","فيتامين B12","حمض الفوليك","فيتامين D"], c:2, exp:"Mesalazine تقلل امتصاص الفوليك." } ] } ], finalQuiz:[ { q:"آلية عمل Mesalazine؟", a:["يقتل البكتيريا","مضاد التهاب موضعي","يغلق مضخة البروتون","يسرع الأمعاء"], c:1 }, { q:"الفيتامين الذي يقل مع Mesalazine؟", a:["فيتامين C","فيتامين B12","حمض الفوليك","فيتامين D"], c:2 } ] },
-      { id:'enzymes', name:'الإنزيمات وفاتح الشهية', icon:'⚗️', color:'#f59e0b', desc:'Creon · Pancreatin · Cyproheptadine', lessons:[ { id:'creon', name:'Creon', emoji:'⚗️', slide:{ sci:"Pancreatin", trade:"Creon / Pankreoflat", indication:"التليف الكيسي · التهاب البنكرياس المزمن.", mech:"يعوّض إنزيمات البنكرياس (Lipase, Protease, Amylase).", dose:"أثناء الأكل أو بعده مباشرة.", warn:"⚠️ ممنوع في التهاب البنكرياس الحاد. لا تكسر الكبسولات.", sciAudio:"Pancreatin", tradeAudio:"Creon" }, quizzes:[ { q:"متى يُؤخذ Creon؟", a:["قبل الأكل بساعة","أثناء الأكل أو بعده","على معدة فارغة","عند النوم"], c:1, exp:"مع الأكل." }, { q:"Creon ممنوع في؟", a:["القصور الكلوي","التهاب البنكرياس الحاد","القرحة","الإسهال"], c:1, exp:"الإنزيمات تهاجم البنكرياس المتأجج." } ] } ], finalQuiz:[ { q:"متى يُؤخذ Creon؟", a:["قبل الأكل بساعة","أثناء الأكل أو بعده","على معدة فارغة","عند النوم"], c:1 }, { q:"Creon ممنوع في؟", a:["القصور الكلوي","التهاب البنكرياس الحاد","القرحة","الإسهال"], c:1 } ] }
+      { id:'ulcer', name:'أدوية القرحة وحموضة المعدة', icon:'🧯', color:'#3b82f6', desc:'Antacids · PPI · H2 Blockers · Sucralfate · H. pylori',
+        lessons:[
+          { id:'gaviscon', name:'Gaviscon', emoji:'🛡️', slide:{ sci:"Sodium Alginate", trade:"Gaviscon (غافيسكون)", indication:"حرقة المعدة وارتجاع الحمض (GERD) · الحموضة في الحمل · التجشؤ الحامضي.", mech:"يكوّن طبقة رغوية (Raft) تطفو فوق محتويات المعدة وتمنع صعود الحمض للمريء.", dose:"10-20 مل بعد الأكل مباشرة وعند النوم.", warn:"آمن للحوامل ✅. افصل عن الحديد 2 ساعة.", sciAudio:"Sodium Alginate", tradeAudio:"Gaviscon" }, quizzes:[ { q:"ما الحالة الرئيسية التي يُصرف لها Gaviscon؟", a:["القرحة الهضمية","ارتجاع حمض المعدة والحموضة","الإمساك","الإسهال"], c:1, exp:"Gaviscon يُستخدم لعلاج ارتجاع الحمض (GERD) والحموضة خاصةً في الحمل." }, { q:"آلية عمل Gaviscon؟", a:["يعادل الحمض كيميائياً","يكون طبقة رغوية تطفو فوق المعدة","يغلق مضخة البروتون","يمنع مستقبلات H2"], c:1, exp:"Gaviscon يشكّل Raft فوق محتويات المعدة." }, { q:"متى أفضل وقت لأخذ Gaviscon؟", a:["قبل الأكل","مع الأكل","بعد الأكل مباشرة وعند النوم","على الريق صباحاً"], c:2, exp:"يُؤخذ بعد الأكل." }, { q:"هل Gaviscon آمن للحوامل؟", a:["ممنوع تماماً","آمن ✅","يحتاج وصفة طبية","آمن في الثلث الثالث فقط"], c:1, exp:"Gaviscon يُعدّ من أأمن العلاجات للحوامل." } ] },
+          { id:'maalox', name:'Maalox', emoji:'🧪', slide:{ sci:"Aluminum & Magnesium Hydroxide", trade:"Maalox (مالوكس)", indication:"حموضة المعدة الحادة · الهضم المتعسر · تخفيف أعراض القرحة.", mech:"يعادل الحمض فوراً كيميائياً برفع pH المعدة.", dose:"بعد الأكل بـ 20 دقيقة أو عند اللزوم.", warn:"الألمنيوم → إمساك. المغنيسيوم → إسهال. افصل عن الحديد 4 ساعات (Chelation)!", sciAudio:"Aluminum Magnesium Hydroxide", tradeAudio:"Maalox" }, quizzes:[ { q:"أي مكوّن في المالوكس مسؤول عن الإمساك؟", a:["المغنيسيوم","الألمنيوم","الصوديوم","الكالسيوم"], c:1, exp:"هيدروكسيد الألمنيوم يسبب الإمساك." }, { q:"ما اسم التداخل الدوائي بين المالوكس والحديد؟", a:["Synergism","Chelation","Antagonism","Displacement"], c:1, exp:"Chelation." }, { q:"متى يُعطى المالوكس؟", a:["قبل الأكل بـ 30 دقيقة","أثناء الأكل","بعد الأكل بـ 20 دقيقة","عند النوم فقط"], c:2, exp:"بعد 20 دقيقة من الأكل." }, { q:"Maalox يجمع بين؟", a:["PPI + H2 Blocker","Aluminum + Magnesium Hydroxide","5-ASA + Antibiotics","Loperamide + Probiotic"], c:1, exp:"المالوكس يحتوي على هيدروكسيد الألمنيوم والمغنيسيوم." } ] },
+          { id:'nexium', name:'Nexium', emoji:'💙', slide:{ sci:"Esomeprazole", trade:"Nexium (نكسيوم)", indication:"القرحة الهضمية · GERD · الوقاية من قرحة الـ NSAID · علاج H. pylori.", mech:"يغلق مضخة البروتون (H+/K+ ATPase) بشكل لا رجعة فيه.", dose:"20-40 ملغم قبل الفطور بـ 30-60 دقيقة.", warn:"⚠️ تداخل خطر مع Plavix! الاستخدام الطويل → نقص B12 وهشاشة عظام.", sciAudio:"Esomeprazole", tradeAudio:"Nexium" }, quizzes:[ { q:"متى يُؤخذ Nexium لأفضل نتيجة؟", a:["بعد العشاء","قبل الفطور بـ 30-60 دقيقة","مع الأكل","على الريق ليلاً"], c:1, exp:"PPI يجب أن يؤخذ 30-60 دقيقة قبل الأكل." }, { q:"آلية عمل PPI على مستوى الخلية؟", a:["يثبط H+/K+ ATPase","يمنع H2 receptor","يعادل الحمض","يكوّن طبقة واقية"], c:0, exp:"PPI يرتبط بمضخة البروتون ويثبطها." }, { q:"الاستخدام الطويل للـ PPI يسبب نقص؟", a:["فيتامين C","فيتامين B12 والكالسيوم","الحديد فقط","فيتامين D"], c:1, exp:"تقليل الحمض يؤثر على امتصاص B12 والكالسيوم." }, { q:"لماذا يُتجنب Nexium مع Plavix؟", a:["يقلل فعاليته","يزيد نزيف المعدة","يسبب جلطات","يرفع ضغط الدم"], c:0, exp:"Esomeprazole يثبط CYP2C19." } ] },
+          { id:'controloc', name:'Controloc', emoji:'💚', slide:{ sci:"Pantoprazole", trade:"Controloc (كونترولوك)", indication:"القرحة الهضمية · GERD · قرحة المريء التآكلية.", mech:"PPI مع أقل تداخلات دوائية.", dose:"40 ملغم قبل الأكل بـ 30 دقيقة.", warn:"الخيار الأول لمرضى القلب الآخذين Plavix ✅.", sciAudio:"Pantoprazole", tradeAudio:"Controloc" }, quizzes:[ { q:"أي PPI الأأمن لمريض يستخدم Plavix؟", a:["Nexium","Omeprazole","Controloc","Rabeprazole"], c:2, exp:"Pantoprazole أقل تأثيراً على CYP2C19." }, { q:"الجرعة المعتادة لـ Pantoprazole؟", a:["20 ملغم","40 ملغم","60 ملغم","80 ملغم"], c:1, exp:"40 ملغم مرة يومياً." }, { q:"Pantoprazole ينتمي لعائلة؟", a:["H2 Blockers","Antacids","PPI","5-ASA"], c:2, exp:"من عائلة PPI." }, { q:"لماذا يُفضل Controloc على Nexium لمريض Plavix؟", a:["أرخص ثمناً","أقل تأثيراً على CYP2C19","أقوى","أسرع مفعولاً"], c:1, exp:"Pantoprazole أدنى قدرة على تثبيط CYP2C19." } ] },
+          { id:'famotidine', name:'Famotidine', emoji:'🟡', slide:{ sci:"Famotidine", trade:"Famodin", indication:"حرقة المعدة الليلية · القرحة الهضمية.", mech:"H2 Blocker: يحجب مستقبلات الهيستامين H2.", dose:"20-40 ملغم مرتين يومياً أو عند النوم.", warn:"أضعف من PPI لكن أسرع مفعولاً.", sciAudio:"Famotidine", tradeAudio:"Famodin" }, quizzes:[ { q:"ما آلية عمل H2 Blocker؟", a:["يغلق مضخة البروتون","يحجب مستقبلات الهيستامين H2","يعادل الحمض","يكوّن Raft"], c:1, exp:"H2 Blockers تمنع الهيستامين." }, { q:"متى يكون Famotidine أفضل من PPI؟", a:["في القرحة المزمنة","للأعراض الليلية قصيرة الأمد","في إطالة العلاج","في علاج H. pylori"], c:1, exp:"Famotidine أسرع مفعولاً." }, { q:"جرعة Famotidine القياسية؟", a:["10 ملغم مرة","20-40 ملغم مرتين","80 ملغم مرة","5 ملغم ثلاث مرات"], c:1, exp:"20-40 ملغم مرتين يومياً." }, { q:"مقارنةً بـ PPI، الـ H2 Blocker؟", a:["أقوى وأبطأ","أقوى وأسرع","أضعف وأسرع","أضعف وأبطأ"], c:2, exp:"H2 Blockers أضعف لكن أسرع." } ] },
+          { id:'sucralfate', name:'Sucralfate', emoji:'🏺', slide:{ sci:"Sucralfate", trade:"Ulcogant", indication:"علاج القرحة الهضمية الفعّالة.", mech:"يلتصق ببروتينات القرحة ويكوّن طبقة واقية.", dose:"على معدة فارغة: ساعة قبل الأكل وعند النوم.", warn:"⚠️ يحتاج وسط حامضي — لا تأخذه مع Antacid! إمساك.", sciAudio:"Sucralfate", tradeAudio:"Ulcogant" }, quizzes:[ { q:"لماذا يُمنع أخذ Sucralfate مع Antacid؟", a:["يسبب تحسساً","يحتاج وسط حامضي للتنشيط","يسبب صداعاً","يزيد الإمساك"], c:1, exp:"Sucralfate يتحول في البيئة الحامضية." }, { q:"متى يُؤخذ Sucralfate؟", a:["مع الأكل","بعد الأكل","على معدة فارغة قبل الأكل بساعة","عند النوم فقط"], c:2, exp:"على معدة فارغة." }, { q:"آلية عمل Sucralfate؟", a:["PPI","Cytoprotective","H2 Blocker","Neutralization"], c:1, exp:"Sucralfate cytoprotective." }, { q:"أبرز أثر جانبي لـ Sucralfate؟", a:["إسهال","إمساك","غثيان","صداع"], c:1, exp:"الإمساك من أبرز آثاره." } ] },
+          { id:'hpylori', name:'علاج H. pylori', emoji:'🦠', slide:{ sci:"Triple Therapy", trade:"PPI + Amoxicillin + Clarithromycin", indication:"القضاء على جرثومة H. pylori.", mech:"PPI يرفع الـ pH. Amoxicillin 1g + Clarithromycin 500mg.", dose:"مرتين يومياً × 14 يوماً.", warn:"⚠️ الكلاريثروميسين → طعم معدني. حساسية بنسلين → Metronidazole.", sciAudio:"Triple Therapy", tradeAudio:"PPI Amoxicillin Clarithromycin" }, quizzes:[ { q:"لماذا ندخل PPI في كورس الجرثومة؟", a:["لقتل الجرثومة مباشرة","لتحسين عمل المضادات برفع الـ pH","لتسكين الألم","لمنع الغثيان"], c:1, exp:"pH المرتفع يزيد فعالية المضادات." }, { q:"مدة كورس Triple Therapy؟", a:["5 أيام","7 أيام","14 يوماً","شهر"], c:2, exp:"14 يوماً." }, { q:"بديل Amoxicillin في حساسية البنسلين؟", a:["Clarithromycin","Metronidazole","Tetracycline","Azithromycin"], c:1, exp:"Metronidazole بديل Amoxicillin." }, { q:"أثر جانبي شائع من Clarithromycin؟", a:["صداع","طعم معدني","إسهال مائي","ارتفاع ضغط"], c:1, exp:"طعم معدني شائع." } ] }
+        ],
+        // =====================================================
+        //  FIX #3: الاختبار الشامل — 15 سؤال + حالات سريرية
+        // =====================================================
+        finalQuiz:[
+          { q:"أفضل دواء حرقة آمن للحوامل؟", a:["Nexium","Gaviscon","Controloc","Famotidine"], c:1, exp:"Gaviscon آمن للحوامل." },
+          { q:"أي مادة مسؤولة عن الإمساك في المالوكس؟", a:["المغنيسيوم","الألمنيوم","الصوديوم","الكالسيوم"], c:1, exp:"الألمنيوم يسبب الإمساك." },
+          { q:"أي PPI الأأمن لمريض يستخدم Plavix؟", a:["Nexium","Omeprazole","Controloc","Rabeprazole"], c:2, exp:"Pantoprazole أقل تأثيراً على CYP2C19." },
+          { q:"لماذا يمنع Sucralfate مع Antacid؟", a:["يسبب تحسساً","يحتاج وسط حامضي","يسبب صداعاً","يزيد الإمساك"], c:1, exp:"Sucralfate يحتاج وسطاً حامضياً." },
+          { q:"مدة كورس H. pylori؟", a:["5 أيام","7 أيام","14 يوماً","شهر"], c:2, exp:"14 يوماً." },
+          { q:"آلية عمل Gaviscon؟", a:["يعادل الحمض مباشرة","يكوّن طبقة رغوية Raft","يغلق مضخة البروتون","يثبط H2"], c:1, exp:"Gaviscon يشكّل Raft فوق المعدة." },
+          { q:"متى يُؤخذ Nexium لأفضل تأثير؟", a:["بعد العشاء","قبل الفطور بـ 30-60 دقيقة","مع الأكل","عشوائياً"], c:1, exp:"قبل الوجبة بـ 30-60 دقيقة." },
+          { q:"الاستخدام الطويل للـ PPI يسبب نقص؟", a:["فيتامين C","فيتامين B12 والكالسيوم","الحديد فقط","فيتامين D"], c:1, exp:"يقلل امتصاص B12 والكالسيوم." },
+          { q:"آلية عمل Famotidine؟", a:["يغلق مضخة البروتون","يحجب H2 receptor","يعادل الحمض","يكوّن طبقة واقية"], c:1, exp:"H2 Blocker يحجب مستقبلات الهيستامين." },
+          // --- حالات سريرية ---
+          { q:"🏥 حالة سريرية: مريضة حامل (الثلث الأول) تشكو من حموضة متكررة وحرقة بعد الأكل. ما الخيار الأنسب؟", a:["Nexium 40mg","Gaviscon 20ml بعد الأكل","Controloc 40mg","Famotidine 40mg"], c:1, exp:"Gaviscon الأآمن في الحمل لأنه لا يمتص جهازياً." },
+          { q:"🏥 حالة سريرية: مريض يأخذ Plavix لحالة قلبية ويحتاج حماية معدية. ما الـ PPI الأنسب؟", a:["Esomeprazole","Omeprazole","Pantoprazole","Lansoprazole"], c:2, exp:"Pantoprazole أقل تثبيطاً للـ CYP2C19 فلا يقلل فعالية Plavix." },
+          { q:"🏥 حالة سريرية: مريض يأخذ Sucralfate لعلاج قرحة وطلب مضاداً للحموضة. ما الفارق الزمني الصحيح؟", a:["يمكن أخذهما معاً","30 دقيقة على الأقل بين الدوائين","ساعة على الأقل فاصلة","يمنع الجمع تماماً"], c:2, exp:"Sucralfate يحتاج وسطاً حامضياً لتفعيله، لذا يُفصل عن المضادات ساعة." },
+          { q:"🏥 حالة سريرية: مريض مُصاب بـ H. pylori وعنده حساسية من البنسلين. ما بديل Amoxicillin في الكورس؟", a:["Azithromycin","Ciprofloxacin","Metronidazole","Doxycycline"], c:2, exp:"Metronidazole يحل محل Amoxicillin في حالة حساسية البنسلين." },
+          { q:"🏥 حالة سريرية: مريض يأخذ مكمل حديد وطلب مضاداً للحموضة. كم يجب أن يفصل بين Maalox والحديد؟", a:["30 دقيقة","ساعة واحدة","ساعتان","4 ساعات"], c:3, exp:"فاصل 4 ساعات بين المالوكس والحديد تجنباً لظاهرة Chelation." },
+          { q:"ما الفرق بين H2 Blocker و PPI من حيث السرعة والقوة؟", a:["H2 أقوى وأبطأ، PPI أضعف وأسرع","H2 أضعف وأسرع، PPI أقوى وأبطأ في البداية","متساويان في كليهما","PPI أسرع دائماً"], c:1, exp:"H2 Blockers أسرع ولكن أضعف. PPI أقوى لكن يحتاج أياماً للوصول للذروة." }
+        ]
+      },
+      { id:'nausea', name:'أدوية الغثيان والتقيؤ', icon:'🤢', color:'#8b5cf6', desc:'Metoclopramide · Domperidone · Ondansetron',
+        lessons:[
+          { id:'pramin', name:'Pramin (برامين)', emoji:'💜', slide:{ sci:"Metoclopramide", trade:"Pramin / Maxolon", indication:"غثيان الحمل · ما بعد العمليات · تسريع تفريغ المعدة.", mech:"يغلق D2 ويزيد حركة الجهاز الهضمي (Prokinetic).", dose:"10 ملغم قبل الأكل بـ 15-30 دقيقة.", warn:"⚠️ ممنوع في Parkinson! يسبب EPS.", sciAudio:"Metoclopramide", tradeAudio:"Pramin" }, quizzes:[ { q:"لماذا يُمنع Metoclopramide في Parkinson؟", a:["يرفع الضغط","يحجب D2 فيزيد الأعراض","يسبب غيبوبة","تداخل دوائي فقط"], c:1, exp:"يحجب D2 مما يقلل الدوبامين." }, { q:"ما معنى Prokinetic؟", a:["يقلل الحمض","يسرع تفريغ المعدة","يقتل البكتيريا","يسبب النوم"], c:1, exp:"يسرع حركة الجهاز الهضمي." }, { q:"جرعة Metoclopramide؟", a:["5 ملغم بعد الأكل","10 ملغم قبل الأكل 15-30 دقيقة","20 ملغم صباحاً","10 ملغم عند النوم"], c:1, exp:"10 ملغم قبل الوجبة." }, { q:"EPS اختصار لـ؟", a:["Extra Pain Syndrome","Extrapyramidal Symptoms","Extra Peristalsis","Extended PPI Scale"], c:1, exp:"Extrapyramidal Symptoms." } ] },
+          { id:'motilium', name:'Motilium', emoji:'🟣', slide:{ sci:"Domperidone", trade:"Motilium / Gastromotil", indication:"الغثيان · Gastroparesis.", mech:"D2 Antagonist محيطي فقط — لا يعبر الحاجز الدموي الدماغي.", dose:"10 ملغم قبل الأكل 15-30 دقيقة.", warn:"⚠️ خطر QT prolongation. لا تتجاوز 30 ملغم/يوم.", sciAudio:"Domperidone", tradeAudio:"Motilium" }, quizzes:[ { q:"الفرق الرئيسي بين Domperidone و Metoclopramide؟", a:["الدومبيريدون أقوى","الميتوكلوبراميد لا يعبر BBB","الدومبيريدون لا يعبر BBB","لا فرق"], c:2, exp:"Domperidone محيطي لا يعبر BBB." }, { q:"الحد الأقصى لـ Domperidone يومياً؟", a:["10 ملغم","20 ملغم","30 ملغم","40 ملغم"], c:2, exp:"30 ملغم/يوم." }, { q:"ما خطر QT prolongation؟", a:["ارتفاع الضغط","اضطراب إيقاع القلب","ارتفاع السكر","فشل كلوي"], c:1, exp:"يزيد خطر اضطراب بالقلب." }, { q:"أفضل استخدام لـ Domperidone؟", a:["للأطفال فقط","تجنب الآثار العصبية","ارتجاع المريء","القولون"], c:1, exp:"يُفضل عند الحاجة لتأثير محيطي." } ] },
+          { id:'zofran', name:'Zofran', emoji:'💊', slide:{ sci:"Ondansetron", trade:"Zofran / Onsia", indication:"غثيان العلاج الكيميائي والإشعاعي.", mech:"يغلق مستقبلات السيروتونين 5-HT3.", dose:"4-8 ملغم قبل الكيماوي بـ 30 دقيقة.", warn:"⚠️ يسبب إمساكاً. احذر QT prolongation.", sciAudio:"Ondansetron", tradeAudio:"Zofran" }, quizzes:[ { q:"أفضل دواء لقيء الكيماوي؟", a:["Metoclopramide","Domperidone","Ondansetron","Gaviscon"], c:2, exp:"Ondansetron الخيار الأول." }, { q:"آلية عمل Ondansetron؟", a:["D2 Antagonist","5-HT3 Antagonist","H2 Blocker","Opioid Agonist"], c:1, exp:"يحجب 5-HT3." }, { q:"أثر جانبي شائع لـ Ondansetron؟", a:["إسهال","نعاس","إمساك","ارتفاع الضغط"], c:2, exp:"الإمساك من أبرز الآثار." }, { q:"متى يُعطى Zofran قبل الكيماوي؟", a:["قبل ساعة","قبل 30 دقيقة","مباشرةً","بعده بساعة"], c:1, exp:"30 دقيقة قبل الكيماوي." } ] }
+        ],
+        // =====================================================
+        //  FIX #3: اختبار شامل للغثيان — 15 سؤال
+        // =====================================================
+        finalQuiz:[
+          { q:"الفرق الرئيسي بين Domperidone و Metoclopramide؟", a:["الدومبيريدون أقوى","الميتوكلوبراميد لا يعبر BBB","الدومبيريدون لا يعبر BBB","لا فرق"], c:2, exp:"Domperidone محيطي." },
+          { q:"أفضل دواء لقيء الكيماوي؟", a:["Metoclopramide","Domperidone","Ondansetron","Gaviscon"], c:2, exp:"Ondansetron الخيار الأول." },
+          { q:"لماذا يمنع Metoclopramide في Parkinson؟", a:["يرفع الضغط","يغلق D2 ويزيد الأعراض","يسبب غيبوبة","تداخل دوائي"], c:1, exp:"يحجب D2." },
+          { q:"آلية Ondansetron؟", a:["D2 Antagonist","5-HT3 Antagonist","H2 Blocker","Opioid Agonist"], c:1, exp:"يحجب 5-HT3." },
+          { q:"الحد الأقصى لجرعة Domperidone يومياً؟", a:["10 ملغم","20 ملغم","30 ملغم","40 ملغم"], c:2, exp:"30 ملغم/يوم." },
+          { q:"جرعة Metoclopramide القياسية؟", a:["5 ملغم بعد الأكل","10 ملغم قبل الأكل 15-30 دقيقة","20 ملغم صباحاً","10 ملغم عند النوم"], c:1, exp:"10 ملغم قبل الوجبة." },
+          { q:"ما خطر QT prolongation الناتج عن Domperidone؟", a:["ارتفاع الضغط","اضطراب إيقاع القلب","ارتفاع السكر","فشل كلوي"], c:1, exp:"اضطراب إيقاع القلب." },
+          { q:"EPS تعني؟", a:["Extra Pain Syndrome","Extrapyramidal Symptoms","Extra Peristalsis","Extended PPI Scale"], c:1, exp:"Extrapyramidal Symptoms." },
+          { q:"أثر جانبي شائع لـ Ondansetron؟", a:["إسهال","نعاس","إمساك","ارتفاع الضغط"], c:2, exp:"الإمساك." },
+          // --- حالات سريرية ---
+          { q:"🏥 حالة سريرية: مريض بـ Parkinson يعاني من غثيان. أي دواء يُختار؟", a:["Metoclopramide","Domperidone","Ondansetron","Prochlorperazine"], c:1, exp:"Domperidone لا يعبر BBB فلا يفاقم أعراض Parkinson." },
+          { q:"🏥 حالة سريرية: مريض يتلقى كيماوياً ويشكو من غثيان شديد. ما الخيار الأمثل؟", a:["Metoclopramide","Gaviscon","Ondansetron","Domperidone"], c:2, exp:"Ondansetron الأقوى لغثيان الكيماوي." },
+          { q:"🏥 حالة سريرية: طفل عمره 3 سنوات يعاني من غثيان وتقيؤ. أي دواء يُصرف؟", a:["Metoclopramide 10mg","Domperidone بحذر","Ondansetron IV","Pramin tablets"], c:1, exp:"Domperidone محيطي وأأمن للأطفال من Metoclopramide." },
+          { q:"🏥 حالة سريرية: مريضة حامل في الثلث الأول تعاني من غثيان الصباح. ما الأولوية؟", a:["Ondansetron أولاً","Metoclopramide 10mg","تعديل النظام الغذائي أولاً ثم Metoclopramide","Domperidone 30mg"], c:2, exp:"في الحمل تبدأ الأدوية غير الدوائية أولاً ثم Metoclopramide بجرعة منخفضة." },
+          { q:"أي دواء يُصنّف كـ Prokinetic؟", a:["Ondansetron","Domperidone","Gaviscon","Omeprazole"], c:1, exp:"Domperidone و Metoclopramide كلاهما Prokinetic." },
+          { q:"متى يُعطى Zofran قبل الكيماوي؟", a:["قبل ساعة","قبل 30 دقيقة","مباشرةً","بعده بساعة"], c:1, exp:"30 دقيقة قبل الكيماوي." }
+        ]
+      },
+      { id:'colon', name:'أدوية القولون والتقلصات', icon:'🌀', color:'#14b8a6', desc:'Buscopan · Mebeverine · IBS',
+        lessons:[
+          { id:'buscopan', name:'Buscopan', emoji:'🌀', slide:{ sci:"Hyoscine Butylbromide", trade:"Buscopan", indication:"مغص البطن · تقلصات القولون.", mech:"Antimuscarinic: يمنع الأسيتيل كولين على العضلات الملساء.", dose:"10-20 ملغم حبوب أو حقن.", warn:"⚠️ ممنوع في الجلوكوما وتضخم البروستاتا.", sciAudio:"Hyoscine Butylbromide", tradeAudio:"Buscopan" }, quizzes:[ { q:"آلية عمل Buscopan؟", a:["Direct Muscle Relaxant","5-HT3 Antagonist","Antimuscarinic","D2 Antagonist"], c:2, exp:"Antimuscarinic." }, { q:"الموانع الرئيسية لـ Buscopan؟", a:["السكري والضغط","الجلوكوما وتضخم البروستاتا","القصور الكلوي","الحمل"], c:1, exp:"Antimuscarinic يزيد ضغط العين." } ] },
+          { id:'duspatalin', name:'Duspatalin', emoji:'💚', slide:{ sci:"Mebeverine", trade:"Duspatalin / Colofac", indication:"متلازمة القولون العصبي (IBS).", mech:"باسط مباشر للعضلات الملساء موضعياً.", dose:"135-200 ملغم قبل الأكل بـ 20 دقيقة.", warn:"لا توجد تداخلات مهمة. الخيار الأول في IBS ✅.", sciAudio:"Mebeverine", tradeAudio:"Duspatalin" }, quizzes:[ { q:"لماذا يُفضَّل Mebeverine على Buscopan في IBS؟", a:["أرخص","يعمل موضعياً بلا آثار جانبية جهازية","أقوى","يقلل الحمض"], c:1, exp:"Mebeverine موضعي بلا آثار Antimuscarinic." }, { q:"متى يُؤخذ Duspatalin؟", a:["بعد الأكل","قبل الأكل بـ 20 دقيقة","مع الأكل","عند النوم"], c:1, exp:"20 دقيقة قبل الأكل." } ] }
+        ],
+        finalQuiz:[
+          { q:"لماذا يُفضَّل Mebeverine على Buscopan في IBS؟", a:["أرخص","يعمل موضعياً بلا آثار جانبية","أقوى","يقلل الحمض"], c:1, exp:"Mebeverine موضعي." },
+          { q:"الموانع الرئيسية لـ Buscopan؟", a:["السكري والضغط","الجلوكوما وتضخم البروستاتا","القصور الكلوي","الحمل"], c:1, exp:"Antimuscarinic يزيد ضغط العين." },
+          { q:"آلية عمل Buscopan؟", a:["Direct Muscle Relaxant","5-HT3 Antagonist","Antimuscarinic","D2 Antagonist"], c:2, exp:"Antimuscarinic." },
+          { q:"متى يُؤخذ Duspatalin؟", a:["بعد الأكل","قبل الأكل بـ 20 دقيقة","مع الأكل","عند النوم"], c:1, exp:"20 دقيقة قبل الأكل." },
+          { q:"تصنيف Mebeverine؟", a:["Antimuscarinic","Direct Smooth Muscle Relaxant","Prokinetic","5-HT3 Antagonist"], c:1, exp:"باسط مباشر للعضلات الملساء." },
+          // حالات سريرية
+          { q:"🏥 حالة سريرية: مريض بـ IBS يشكو من تقلصات متكررة. ما الخيار الأول؟", a:["Buscopan 20mg","Mebeverine 135mg قبل الأكل","Ondansetron","Loperamide"], c:1, exp:"Mebeverine الخيار الأول في IBS بلا آثار جانبية جهازية." },
+          { q:"🏥 حالة سريرية: مريض بزرق (Glaucoma) يعاني من مغص. أي دواء يُمنع؟", a:["Mebeverine","Buscopan","Loperamide","Probiotics"], c:1, exp:"Buscopan (Antimuscarinic) يزيد ضغط العين ويمنع في الجلوكوما." },
+          { q:"🏥 حالة سريرية: مريض متقدم في السن مع تضخم البروستاتا ومغص. ما البديل الآمن لـ Buscopan؟", a:["Hyoscine بجرعة أعلى","Mebeverine","Metoclopramide","Domperidone"], c:1, exp:"Mebeverine آمن لأنه موضعي ولا يؤثر على البروستاتا." }
+        ]
+      },
+      { id:'diarrhea', name:'أدوية الإسهال والإمساك', icon:'💧', color:'#22c55e', desc:'Loperamide · Probiotics · Bisacodyl · Lactulose · Movicol',
+        lessons:[
+          { id:'imodium', name:'Imodium', emoji:'💧', slide:{ sci:"Loperamide", trade:"Imodium", indication:"الإسهال الحاد غير المعقد.", mech:"مستقبلات الأوبيويد في الأمعاء → يبطئ الحركة.", dose:"4 ملغم بداية، ثم 2 ملغم بعد كل خروج. الحد الأقصى 16 ملغم/يوم.", warn:"⚠️ ممنوع في إسهال دموي وللأطفال دون 6 سنوات.", sciAudio:"Loperamide", tradeAudio:"Imodium" }, quizzes:[ { q:"الحد الأقصى لجرعة Loperamide يومياً؟", a:["8 ملغم","12 ملغم","16 ملغم","20 ملغم"], c:2, exp:"16 ملغم/يوم." }, { q:"متى يُمنع Imodium؟", a:["الإسهال الحاد","الإسهال الدموي والتهاب القولون","الإسهال المزمن","الأطفال فوق 6 سنوات"], c:1, exp:"في الدموي إيقاف الحركة يحبس السموم." } ] },
+          { id:'movicol', name:'Movicol', emoji:'💙', slide:{ sci:"Polyethylene Glycol (PEG)", trade:"Movicol", indication:"الإمساك المزمن · إمساك الحمل والأطفال.", mech:"ملين اسموزي قوي — يحتجز الماء في الأمعاء.", dose:"ساشيه في 125 مل ماء. 1-3 مرات يومياً.", warn:"آمن للاستخدام المزمن ✅.", sciAudio:"Polyethylene Glycol", tradeAudio:"Movicol" }, quizzes:[ { q:"أفضل ملين للحامل والأطفال؟", a:["Bisacodyl","Lactulose","Movicol","Senna"], c:2, exp:"PEG آمن للمزمن." }, { q:"آلية عمل Movicol؟", a:["Stimulant","Osmotic","Bulk Forming","Stool Softener"], c:1, exp:"Osmotic Laxative." } ] }
+        ],
+        finalQuiz:[
+          { q:"الحد الأقصى لجرعة Loperamide يومياً؟", a:["8 ملغم","12 ملغم","16 ملغم","20 ملغم"], c:2, exp:"16 ملغم/يوم." },
+          { q:"أفضل ملين للحامل والأطفال؟", a:["Bisacodyl","Lactulose","Movicol","Senna"], c:2, exp:"PEG (Movicol) آمن." },
+          { q:"آلية عمل Movicol؟", a:["Stimulant","Osmotic","Bulk Forming","Stool Softener"], c:1, exp:"Osmotic Laxative." },
+          { q:"متى يُمنع Imodium؟", a:["الإسهال الحاد","الإسهال الدموي والتهاب القولون","الإسهال المزمن","الأطفال فوق 6 سنوات"], c:1, exp:"الإسهال الدموي." },
+          { q:"آلية عمل Loperamide؟", a:["Osmotic","Opioid receptor agonist في الأمعاء","Stimulant Laxative","H2 Blocker"], c:1, exp:"يعمل على مستقبلات الأوبيويد في الأمعاء." },
+          // حالات سريرية
+          { q:"🏥 حالة سريرية: مريض يعاني من إسهال دموي حاد. ما قرارك بخصوص Imodium؟", a:["أعطيه 4mg فوراً","أمنعه تماماً وأحول المريض","أعطيه بجرعة مخفضة","أجمعه مع مضاد حيوي"], c:1, exp:"Imodium ممنوع في الإسهال الدموي لأنه يحبس السموم داخل القولون." },
+          { q:"🏥 حالة سريرية: سيدة حامل في الشهر السابع تعاني من إمساك مزمن. ما الملين الأنسب؟", a:["Bisacodyl","Senna","Movicol (PEG)","Castor Oil"], c:2, exp:"Movicol آمن ومناسب للحمل والاستخدام المزمن." },
+          { q:"🏥 حالة سريرية: طفل عمره 4 سنوات يعاني من إسهال حاد. هل يصلح Loperamide؟", a:["نعم بجرعة مخفضة","لا، ممنوع دون 6 سنوات","نعم بجرعة بالغين","نعم فقط لليوم الأول"], c:1, exp:"Loperamide ممنوع للأطفال دون 6 سنوات." }
+        ]
+      },
+      { id:'ibd', name:'أدوية القولون التقرحي (IBD)', icon:'🛡️', color:'#ef4444', desc:'Mesalazine · Sulfasalazine · 5-ASA',
+        lessons:[
+          { id:'pentasa', name:'Pentasa', emoji:'🛡️', slide:{ sci:"Mesalazine (Mesalamine)", trade:"Pentasa / Asacol", indication:"التهاب القولون التقرحي · داء كرون.", mech:"5-ASA: يثبط البروستاجلاندينات موضعياً.", dose:"1-4 غرام يومياً.", warn:"⚠️ قد يقلل امتصاص الفوليك — أعطِ Folic Acid.", sciAudio:"Mesalazine", tradeAudio:"Pentasa Asacol" }, quizzes:[ { q:"آلية عمل Mesalazine؟", a:["يقتل البكتيريا","مضاد التهاب موضعي","يغلق مضخة البروتون","يسرع الأمعاء"], c:1, exp:"5-ASA يثبط البروستاجلاندينات." }, { q:"الفيتامين الذي يقل مع Mesalazine؟", a:["فيتامين C","فيتامين B12","حمض الفوليك","فيتامين D"], c:2, exp:"Mesalazine تقلل امتصاص الفوليك." } ] }
+        ],
+        finalQuiz:[
+          { q:"آلية عمل Mesalazine؟", a:["يقتل البكتيريا","مضاد التهاب موضعي","يغلق مضخة البروتون","يسرع الأمعاء"], c:1, exp:"5-ASA يثبط البروستاجلاندينات." },
+          { q:"الفيتامين الذي يقل مع Mesalazine؟", a:["فيتامين C","فيتامين B12","حمض الفوليك","فيتامين D"], c:2, exp:"Mesalazine تقلل الفوليك." },
+          { q:"ما هو 5-ASA؟", a:["Mesalazine","Pantoprazole","Loperamide","Ondansetron"], c:0, exp:"5-ASA هو الاسم العلمي لـ Mesalazine." },
+          { q:"الجرعة اليومية لـ Mesalazine؟", a:["250-500 ملغم","1-4 غرام","5-10 غرام","100 ملغم"], c:1, exp:"1-4 غرام يومياً." },
+          // حالات سريرية
+          { q:"🏥 حالة سريرية: مريض بالتهاب قولون تقرحي ويُعطى Mesalazine. ما الفيتامين الذي تضيفه؟", a:["فيتامين D","فيتامين C","حمض الفوليك","فيتامين B12"], c:2, exp:"Mesalazine يقلل امتصاص الفوليك لذا يضاف Folic Acid." },
+          { q:"🏥 حالة سريرية: مريض بداء كرون خفيف معتدل. أي عائلة دوائية تبدأ بها؟", a:["Steroids","5-ASA مثل Mesalazine","Biologics","Immunosuppressants"], c:1, exp:"5-ASA الخط الأول للالتهابات المعوية الخفيفة المعتدلة." }
+        ]
+      },
+      { id:'enzymes', name:'الإنزيمات وفاتح الشهية', icon:'⚗️', color:'#f59e0b', desc:'Creon · Pancreatin · Cyproheptadine',
+        lessons:[
+          { id:'creon', name:'Creon', emoji:'⚗️', slide:{ sci:"Pancreatin", trade:"Creon / Pankreoflat", indication:"التليف الكيسي · التهاب البنكرياس المزمن.", mech:"يعوّض إنزيمات البنكرياس (Lipase, Protease, Amylase).", dose:"أثناء الأكل أو بعده مباشرة.", warn:"⚠️ ممنوع في التهاب البنكرياس الحاد. لا تكسر الكبسولات.", sciAudio:"Pancreatin", tradeAudio:"Creon" }, quizzes:[ { q:"متى يُؤخذ Creon؟", a:["قبل الأكل بساعة","أثناء الأكل أو بعده","على معدة فارغة","عند النوم"], c:1, exp:"مع الأكل." }, { q:"Creon ممنوع في؟", a:["القصور الكلوي","التهاب البنكرياس الحاد","القرحة","الإسهال"], c:1, exp:"الإنزيمات تهاجم البنكرياس المتأجج." } ] }
+        ],
+        finalQuiz:[
+          { q:"متى يُؤخذ Creon؟", a:["قبل الأكل بساعة","أثناء الأكل أو بعده","على معدة فارغة","عند النوم"], c:1, exp:"مع الأكل." },
+          { q:"Creon ممنوع في؟", a:["القصور الكلوي","التهاب البنكرياس الحاد","القرحة","الإسهال"], c:1, exp:"التهاب البنكرياس الحاد." },
+          { q:"ما الإنزيمات التي يحتوي عليها Creon؟", a:["Lipase فقط","Lipase + Protease + Amylase","Amylase فقط","Protease + Lipase"], c:1, exp:"يحتوي على Lipase و Protease و Amylase." },
+          { q:"لماذا يُمنع تكسير كبسولات Creon؟", a:["طعم مرّ","الإنزيمات تتحلل بالمعدة","خطر التحسس","الجرعة تتضاعف"], c:1, exp:"الكبسولة معوية تحمي الإنزيمات من الحمض." },
+          // حالات سريرية
+          { q:"🏥 حالة سريرية: مريض بالتليف الكيسي يحتاج لدعم هضمي. ما الدواء المناسب؟", a:["Mesalazine","Creon (Pancreatin)","Buscopan","Loperamide"], c:1, exp:"Creon يعوّض نقص إنزيمات البنكرياس في التليف الكيسي." },
+          { q:"🏥 حالة سريرية: مريض يعاني من التهاب بنكرياس حاد. هل يُعطى Creon؟", a:["نعم فوراً","لا، يُمنع تماماً في الحاد","نعم بجرعة مخفضة","نعم مع كورتيزون"], c:1, exp:"Creon ممنوع في التهاب البنكرياس الحاد لأن الإنزيمات تفاقم التأجج." }
+        ]
+      }
     ]
   },
   { id:'cardio', title:'الجهاز القلبي الوعائي', subtitle:'Cardiology', icon:'❤️', available:false, sections:[] },
@@ -994,14 +1153,10 @@ function showSavingToast() {
   setTimeout(()=>{ t.style.opacity='0'; setTimeout(()=>t.style.display='none',300); },1500);
 }
 
-// ============================================================
-//  saveUserToDb — يحفظ في users collection (مطلوب للوحة الشرف)
-// ============================================================
 async function saveUserToDb() {
   if (!user.uid) { localStorage.setItem('pharma_user_'+user.email, JSON.stringify(user)); showSavingToast(); return; }
   if (!firebaseReady) { localStorage.setItem('pharma_user_'+user.uid, JSON.stringify(user)); showSavingToast(); return; }
   try {
-    // نحفظ الحقول الأساسية المطلوبة للوحة الشرف صراحةً
     await db.collection('users').doc(user.uid).set({
       ...user,
       uid: user.uid,
@@ -1280,7 +1435,7 @@ function renderSections(sysIdx){
     let actionBtns;
     if (unlocked) {
       const quizBtn = allLessonsDone
-        ? `<button class="sec-btn quiz-btn" onclick="startFinalQuiz(${sysIdx},${secIdx})">🏆 اختبار شامل</button>`
+        ? `<button class="sec-btn quiz-btn" onclick="startFinalQuiz(${sysIdx},${secIdx})">🏆 اختبار شامل (${sec.finalQuiz.length} سؤال)</button>`
         : `<button class="sec-btn locked-btn" title="أكمل جميع الدروس أولاً" disabled>🔒 الاختبار الشامل</button>`;
       actionBtns = `<div class="sec-action"><button class="sec-btn study-btn" onclick="openLessonList(${sysIdx},${secIdx})">📖 الدروس (${prog.doneLessons}/${prog.total})</button>${quizBtn}</div>`;
     } else {
@@ -1310,7 +1465,7 @@ function openLessonList(sysIdx, secIdx) {
   const allDone = isAllLessonsDone(sysIdx, secIdx);
   const fqCard=document.createElement('div');
   fqCard.className='final-quiz-card' + (allDone ? '' : ' locked-quiz');
-  fqCard.innerHTML=`<div class="final-quiz-card-icon">🏆</div><div class="final-quiz-card-info"><div class="final-quiz-card-name">الاختبار الشامل</div><div class="final-quiz-card-sub">${allDone ? sec.finalQuiz.length+' سؤال — جاهز!' : 'أكمل جميع الدروس أولاً (' + sec.lessons.filter(l=>isLessonDone(sys.id,sec.id,l.id)).length + '/' + sec.lessons.length + ')'}</div></div><span class="final-quiz-card-badge">${allDone?'✅ متاح':'🔒 مقفل'}</span>`;
+  fqCard.innerHTML=`<div class="final-quiz-card-icon">🏆</div><div class="final-quiz-card-info"><div class="final-quiz-card-name">الاختبار الشامل</div><div class="final-quiz-card-sub">${allDone ? sec.finalQuiz.length+' سؤال شامل مع حالات سريرية — جاهز!' : 'أكمل جميع الدروس أولاً (' + sec.lessons.filter(l=>isLessonDone(sys.id,sec.id,l.id)).length + '/' + sec.lessons.length + ')'}</div></div><span class="final-quiz-card-badge">${allDone?'✅ متاح':'🔒 مقفل'}</span>`;
   if (allDone) fqCard.onclick=()=>startFinalQuiz(sysIdx,secIdx);
   body.appendChild(fqCard);
   document.getElementById('lesson-list-screen').style.display='block';
@@ -1351,7 +1506,7 @@ function startFinalQuiz(sysIdx,secIdx){
   lessonSteps=shuffled.map(q=>({type:'quiz',...q}));
   stepIdx=0; quizAnswers=[];
   document.getElementById('lesson-section-badge').textContent='🏆 اختبار شامل: '+sec.name;
-  document.getElementById('lesson-mode-label').textContent='🎯 اختبار شامل';
+  document.getElementById('lesson-mode-label').textContent=`🎯 ${sec.finalQuiz.length} سؤال شامل + حالات سريرية`;
   document.getElementById('action-btn').style.display='block';
   document.getElementById('lesson-screen').style.display='block';
   renderStep();
@@ -1452,9 +1607,6 @@ function finishSession(){
       markSectionDone(sys.id,sec.id);
       user.gems+=30; user.xp+=80;
       saveUserToDb(); updateUI();
-      // =====================================================
-      //  🏆 حفظ النتيجة في Firestore لتظهر في لوحة الشرف
-      // =====================================================
       saveScoreToLeaderboard();
     }
     const emoji=pct===100?'🏆':pct>=80?'🎉':pct>=70?'👍':pct>=50?'😐':'😞';
@@ -1472,9 +1624,6 @@ function finishSession(){
   }
 }
 
-// ============================================================
-//  🏆 حفظ النتيجة في مجموعة users للوحة الشرف
-// ============================================================
 async function saveScoreToLeaderboard() {
   if (!firebaseReady || !user.uid) return;
   try {
@@ -1489,10 +1638,7 @@ async function saveScoreToLeaderboard() {
       completedSections: user.completedSections || {},
       _scoreUpdated: new Date()
     }, { merge: true });
-    console.log('✅ تم حفظ النقاط في لوحة الشرف');
-  } catch(e) {
-    console.warn('فشل حفظ النقاط:', e);
-  }
+  } catch(e) { console.warn('فشل حفظ النقاط:', e); }
 }
 
 function retryFinalQuiz(){
@@ -1570,7 +1716,8 @@ function playTone(freq,vol,type){
 }
 
 // ============================================================
-//  🔍 AI SEARCH — Gemini API (gemini-1.5-flash)
+//  🔍 FIX #4: AI SEARCH — Gemini API المُصحَّح
+//  URL صحيح + هيكل contents -> parts -> text
 // ============================================================
 function setSearchType(btn,type){
   searchType=type;
@@ -1587,11 +1734,8 @@ async function runSearch(){
   searchBtn.disabled = true;
   searchBtn.textContent = '⏳ جاري البحث...';
 
-  res.innerHTML = `<div class="ai-loading"><div class="spinner"></div><p>🤖 يحلل Gemini AI دواء <b>"${q}"</b>...</p></div>`;
+  res.innerHTML = `<div class="ai-loading"><div class="spinner"></div><p>🤖 يحلل Gemini AI دواء <b>"${escapeHtml(q)}"</b>...</p></div>`;
 
-  // -------------------------------------------------------
-  //  بروميتات Gemini مصاغة باللغة العربية
-  // -------------------------------------------------------
   const typePrompts = {
     full: `أنت صيدلاني خبير. قدّم معلومات شاملة عن دواء "${q}" باللغة العربية الطبية. أجِب بـ JSON فقط بدون أي نص أو markdown خارج الـ JSON:
 {"sci":"الاسم العلمي","trade":"الأسماء التجارية","class":"التصنيف الدوائي","indication":"الاستخدامات والمؤشرات العلاجية","mech":"ميكانزم العمل","dose":"الجرعات والتوقيت وطريقة الاستخدام","se":"الآثار الجانبية الشائعة والخطيرة","interactions":"التداخلات الدوائية المهمة","warn":"تحذيرات وموانع الاستخدام","storage":"شروط التخزين","notes":"ملاحظات صيدلانية مهمة"}`,
@@ -1605,15 +1749,19 @@ async function runSearch(){
 
   try {
     // -------------------------------------------------------
-    //  استدعاء Gemini API
+    //  FIX #4: الرابط الصحيح + هيكل contents -> parts -> text
     // -------------------------------------------------------
     const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        contents: [{
-          parts: [{ text: typePrompts[searchType] || typePrompts.full }]
-        }],
+        contents: [
+          {
+            parts: [
+              { text: typePrompts[searchType] || typePrompts.full }
+            ]
+          }
+        ],
         generationConfig: {
           temperature: 0.3,
           maxOutputTokens: 1500
@@ -1623,19 +1771,19 @@ async function runSearch(){
 
     if (!response.ok) {
       const errData = await response.json().catch(()=>({}));
-      throw new Error(errData?.error?.message || `HTTP ${response.status}`);
+      throw new Error(errData?.error?.message || `HTTP ${response.status}: ${response.statusText}`);
     }
 
     const data = await response.json();
 
     // استخراج النص من رد Gemini
     const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    if (!rawText) throw new Error('لم يعد Gemini بأي نتيجة');
+    if (!rawText) throw new Error('لم يعد Gemini بأي نتيجة — تحقق من المفتاح أو المحاولة لاحقاً');
 
     // تنظيف وتحليل JSON
-    const cleaned = rawText.replace(/```json|```/g, '').trim();
+    const cleaned = rawText.replace(/```json\s*/gi,'').replace(/```/g,'').trim();
     const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('تعذّر تحليل البيانات المُعادة');
+    if (!jsonMatch) throw new Error('تعذّر تحليل بيانات Gemini — حاول مرة أخرى');
 
     const info = JSON.parse(jsonMatch[0]);
     renderAIResult(info);
@@ -1643,7 +1791,7 @@ async function runSearch(){
   } catch(e) {
     console.error('Gemini Search error:', e);
     res.innerHTML = `<div class="ai-error-box">
-      <p>⚠️ حدث خطأ أثناء البحث:<br><small>${escapeHtml(e.message)}</small></p>
+      <p>⚠️ حدث خطأ أثناء البحث:<br><small style="word-break:break-all">${escapeHtml(e.message)}</small></p>
       <p style="margin-top:8px;font-size:12px;color:#64748b">تأكد من الاتصال بالإنترنت وصحة مفتاح Gemini API</p>
       <button class="retry-btn" onclick="runSearch()">🔄 إعادة المحاولة</button>
     </div>`;
@@ -1673,59 +1821,87 @@ function renderAIResult(info){
 }
 
 // ============================================================
-//  💬 RX CHAT — Firestore collection: "messages" + onSnapshot
+//  💬 FIX #1: RX CHAT — Firebase Realtime Database
+//  يستخدم onChildAdded لجلب الرسائل القديمة والجديدة
+//  ويحفظ الرسائل في node اسمه "messages"
 // ============================================================
 function initChatFirebase(){
-  if(!firebaseReady){ initChatLocal(); return; }
+  if(!firebaseReady || !rtdb){
+    console.warn('RTDB غير متصل — استخدام localStorage');
+    initChatLocal();
+    return;
+  }
+
+  const messagesRef = rtdb.ref('messages');
+
+  // إلغاء المستمع القديم إن وُجد
+  if (chatUnsubscribe) { chatUnsubscribe(); chatUnsubscribe = null; }
+
+  // مصفوفة لتجميع الرسائل
+  let allMessages = [];
 
   // -------------------------------------------------------
-  //  الاستماع لمجموعة "messages" بشكل فعلي مع onSnapshot
+  //  onChildAdded — يجلب الرسائل القديمة ثم يستمع للجديدة
   // -------------------------------------------------------
-  const messagesRef = db.collection('messages')
-    .orderBy('timestamp', 'asc')
-    .limitToLast(100);
+  const handler = messagesRef.orderByChild('timestamp').limitToLast(100).on('child_added', (snapshot) => {
+    const msg = { id: snapshot.key, ...snapshot.val() };
 
-  if (chatUnsubscribe) chatUnsubscribe(); // إلغاء المستمع القديم
+    // تجنب التكرار
+    if (!allMessages.find(m => m.id === msg.id)) {
+      allMessages.push(msg);
+      // فرز بالوقت
+      allMessages.sort((a,b) => (a.timestamp||0) - (b.timestamp||0));
+      chatMsgMap[msg.id] = msg;
+      renderChatMessages(allMessages);
+    }
 
-  chatUnsubscribe = messagesRef.onSnapshot(snapshot => {
-    const msgs = [];
-    snapshot.forEach(doc => {
-      msgs.push({ id: doc.id, ...doc.data() });
-    });
-    chatMsgMap = {};
-    msgs.forEach(m => chatMsgMap[m.id] = m);
-    renderChatMessages(msgs);
-
-    // حساب عدد المستخدمين النشطين (آخر 5 دقائق)
+    // حساب المستخدمين النشطين
     const fiveMinAgo = Date.now() - 5 * 60 * 1000;
     const activeUsers = new Set(
-      msgs
-        .filter(m => !m.system && m.uid && m.timestamp?.seconds && m.timestamp.seconds * 1000 > fiveMinAgo)
+      allMessages
+        .filter(m => !m.system && m.uid && m.timestamp && m.timestamp > fiveMinAgo)
         .map(m => m.uid)
     );
     const el = document.getElementById('online-count');
     if (el) el.textContent = activeUsers.size > 0 ? `${activeUsers.size} نشط الآن` : 'قناة RX';
-
   }, err => {
     console.error('Chat listener error:', err);
   });
 
+  // دالة لإلغاء الاشتراك
+  chatUnsubscribe = () => messagesRef.off('child_added', handler);
+
+  // مستمع للتعديل (onChildChanged)
+  messagesRef.on('child_changed', (snapshot) => {
+    const updated = { id: snapshot.key, ...snapshot.val() };
+    const idx = allMessages.findIndex(m => m.id === updated.id);
+    if (idx !== -1) {
+      allMessages[idx] = updated;
+      chatMsgMap[updated.id] = updated;
+      renderChatMessages(allMessages);
+    }
+  });
+
+  // مستمع للحذف (onChildRemoved)
+  messagesRef.on('child_removed', (snapshot) => {
+    allMessages = allMessages.filter(m => m.id !== snapshot.key);
+    delete chatMsgMap[snapshot.key];
+    renderChatMessages(allMessages);
+  });
+
   // إضافة رسالة ترحيب إذا كانت القناة فارغة
-  setTimeout(async () => {
-    try {
-      const snap = await db.collection('messages').limit(1).get();
-      if (snap.empty) {
-        await db.collection('messages').add({
-          from: 'نظام PharmaMaster',
-          uid: 'system',
-          emoji: '💊',
-          text: 'مرحباً في قناة RX! 🩺 هذه القناة تربط جميع المتدربين المسجلين لمناقشة الوصفات الطبية.',
-          system: true,
-          timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        });
-      }
-    } catch(e) { console.warn('Welcome msg:', e); }
-  }, 1200);
+  messagesRef.limitToFirst(1).once('value', (snap) => {
+    if (!snap.exists()) {
+      messagesRef.push({
+        from: 'نظام PharmaMaster',
+        uid: 'system',
+        emoji: '💊',
+        text: 'مرحباً في قناة RX! 🩺 هذه القناة تربط جميع المتدربين المسجلين لمناقشة الوصفات الطبية.',
+        system: true,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      });
+    }
+  });
 }
 
 function initChatLocal(){
@@ -1800,8 +1976,8 @@ function startEditMsg(msgId){
 }
 
 async function doEditMsg(msgId, newText){
-  if(firebaseReady && msgId && !msgId.startsWith('local_')){
-    try { await db.collection('messages').doc(msgId).update({text: newText}); }
+  if(firebaseReady && rtdb && msgId && !msgId.startsWith('local_')){
+    try { await rtdb.ref('messages/' + msgId).update({ text: newText }); }
     catch(e) { console.warn('Edit failed:', e); }
   } else {
     const msgs = getChatLocal();
@@ -1812,8 +1988,8 @@ async function doEditMsg(msgId, newText){
 
 async function deleteMsg(msgId){
   if(!msgId || !confirm('حذف هذه الرسالة؟')) return;
-  if(firebaseReady && msgId && !msgId.startsWith('local_')){
-    try { await db.collection('messages').doc(msgId).delete(); }
+  if(firebaseReady && rtdb && msgId && !msgId.startsWith('local_')){
+    try { await rtdb.ref('messages/' + msgId).remove(); }
     catch(e) { console.warn('Delete failed:', e); alert('❌ فشل الحذف: ' + e.message); }
   } else {
     const msgs = getChatLocal().filter(m => m._localId !== msgId && m.id !== msgId);
@@ -1824,7 +2000,7 @@ async function deleteMsg(msgId){
 }
 
 // -------------------------------------------------------
-//  إرسال رسالة إلى مجموعة "messages"
+//  إرسال رسالة إلى RTDB node "messages"
 // -------------------------------------------------------
 async function sendMsg(){
   const i = document.getElementById('chat-input');
@@ -1835,20 +2011,19 @@ async function sendMsg(){
     from: user.fullname || user.email || 'مجهول',
     emoji: user.emoji,
     text: t,
-    time: nowTime()
+    time: nowTime(),
+    timestamp: firebase.database ? firebase.database.ServerValue.TIMESTAMP : Date.now()
   };
   i.value = '';
-  if(firebaseReady){
+  if(firebaseReady && rtdb){
     try {
-      await db.collection('messages').add({
-        ...msgData,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      });
+      await rtdb.ref('messages').push(msgData);
     } catch(e) {
-      saveMsgLocal({...msgData, _localId: 'local_' + Date.now()});
+      console.warn('RTDB send failed, fallback to local:', e);
+      saveMsgLocal({...msgData, _localId: 'local_' + Date.now(), timestamp: Date.now()});
     }
   } else {
-    saveMsgLocal({...msgData, _localId: 'local_' + Date.now()});
+    saveMsgLocal({...msgData, _localId: 'local_' + Date.now(), timestamp: Date.now()});
     loadChatLocal();
   }
 }
@@ -1865,14 +2040,18 @@ async function triggerImageUpload(){
         from: user.fullname || user.email,
         emoji: user.emoji,
         img: ev.target.result,
-        time: nowTime()
+        time: nowTime(),
+        timestamp: firebase.database ? firebase.database.ServerValue.TIMESTAMP : Date.now()
       };
-      if(firebaseReady){
+      if(firebaseReady && rtdb){
         try {
-          await db.collection('messages').add({...imgData, timestamp: firebase.firestore.FieldValue.serverTimestamp()});
-        } catch(er) { saveMsgLocal({...imgData, _localId: 'local_' + Date.now()}); loadChatLocal(); }
+          await rtdb.ref('messages').push(imgData);
+        } catch(er) {
+          saveMsgLocal({...imgData, _localId: 'local_' + Date.now(), timestamp: Date.now()});
+          loadChatLocal();
+        }
       } else {
-        saveMsgLocal({...imgData, _localId: 'local_' + Date.now()});
+        saveMsgLocal({...imgData, _localId: 'local_' + Date.now(), timestamp: Date.now()});
         loadChatLocal();
       }
     };
@@ -1885,7 +2064,7 @@ function scrollChatBottom(){ const b=document.getElementById('chat-box'); if(b) 
 function nowTime(){ return new Date().toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'}); }
 
 // ============================================================
-//  🏆 LEADERBOARD — أفضل 10 من مجموعة users مرتبين تنازلياً
+//  🏆 LEADERBOARD
 // ============================================================
 async function updateBoard(){
   const list = document.getElementById('board-list'); if(!list) return;
@@ -1895,7 +2074,6 @@ async function updateBoard(){
 
   if(firebaseReady){
     try {
-      // جلب أفضل 10 مستخدمين مرتبين حسب XP تنازلياً
       const snap = await db.collection('users')
         .orderBy('xp', 'desc')
         .limit(10)
