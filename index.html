@@ -21,58 +21,30 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
 
-/* ===== GEMS CAPSULE SYSTEM ===== */
 .gem-capsule {
   display:inline-flex;align-items:center;gap:6px;
-  background:var(--gem-grad);
-  border-radius:50px;
-  padding:5px 14px 5px 10px;
-  box-shadow:var(--gem-shadow);
-  border:1px solid rgba(255,255,255,0.25);
-  position:relative;overflow:hidden;
-  animation:gemShimmer 3s ease-in-out infinite;
-  cursor:default;
-  transition:transform 0.2s,box-shadow 0.2s;
+  background:var(--gem-grad);border-radius:50px;padding:5px 14px 5px 10px;
+  box-shadow:var(--gem-shadow);border:1px solid rgba(255,255,255,0.25);
+  position:relative;overflow:hidden;animation:gemShimmer 3s ease-in-out infinite;
+  cursor:default;transition:transform 0.2s,box-shadow 0.2s;
 }
 .gem-capsule:hover{transform:scale(1.05);box-shadow:0 4px 20px rgba(99,102,241,0.6);}
-.gem-capsule::before{
-  content:'';position:absolute;top:-50%;left:-50%;width:50%;height:200%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent);
-  animation:gemSweep 3s ease-in-out infinite;
-}
+.gem-capsule::before{content:'';position:absolute;top:-50%;left:-50%;width:50%;height:200%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent);animation:gemSweep 3s ease-in-out infinite;}
 @keyframes gemShimmer{0%,100%{box-shadow:0 2px 12px rgba(99,102,241,0.4)}50%{box-shadow:0 4px 24px rgba(99,102,241,0.7)}}
 @keyframes gemSweep{0%{transform:translateX(-100%)}50%,100%{transform:translateX(300%)}}
 .gem-capsule .gem-icon{font-size:14px;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.3));}
 .gem-capsule .gem-count{color:white;font-weight:900;font-size:13px;letter-spacing:0.5px;text-shadow:0 1px 3px rgba(0,0,0,0.3);}
-.gem-capsule .gem-label{color:rgba(255,255,255,0.8);font-size:10px;letter-spacing:0.3px;}
 
-/* Lives capsule */
-.lives-capsule{
-  display:inline-flex;align-items:center;gap:5px;
-  background:linear-gradient(135deg,#f87171,#ef4444,#dc2626);
-  border-radius:50px;padding:5px 12px 5px 10px;
-  box-shadow:0 2px 10px rgba(239,68,68,0.4);
-  border:1px solid rgba(255,255,255,0.2);
-  transition:transform 0.2s;
-}
+.lives-capsule{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,#f87171,#ef4444,#dc2626);border-radius:50px;padding:5px 12px 5px 10px;box-shadow:0 2px 10px rgba(239,68,68,0.4);border:1px solid rgba(255,255,255,0.2);transition:transform 0.2s;}
 .lives-capsule.pulse-warn{animation:heartWarn 0.5s ease-in-out 3;}
 @keyframes heartWarn{0%,100%{transform:scale(1)}50%{transform:scale(1.15);box-shadow:0 4px 20px rgba(239,68,68,0.8);}}
 .lives-capsule .life-icon{font-size:14px;}
 .lives-capsule .life-count{color:white;font-weight:900;font-size:13px;}
 .lives-capsule .life-timer{color:rgba(255,255,255,0.75);font-size:9px;margin-top:1px;}
 
-/* XP capsule */
-.xp-capsule{
-  display:inline-flex;align-items:center;gap:5px;
-  background:linear-gradient(135deg,#34d399,#10b981,#059669);
-  border-radius:50px;padding:5px 12px 5px 10px;
-  box-shadow:0 2px 10px rgba(16,185,129,0.4);
-  border:1px solid rgba(255,255,255,0.2);
-}
-.xp-capsule .xp-icon{font-size:14px;}
-.xp-capsule .xp-count{color:white;font-weight:900;font-size:13px;}
+.xp-capsule{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,#34d399,#10b981,#059669);border-radius:50px;padding:5px 12px 5px 10px;box-shadow:0 2px 10px rgba(16,185,129,0.4);border:1px solid rgba(255,255,255,0.2);}
 
-/* ===== INTRO ===== */
+/* INTRO */
 #intro-screen{position:fixed;inset:0;z-index:10000;background:#0a0f1e;display:none;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;}
 #intro-screen::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(59,130,246,0.08),transparent 60%),radial-gradient(ellipse at 70% 50%,rgba(139,92,246,0.08),transparent 60%);}
 #intro-screen.fade-out{animation:fadeOutIntro 0.6s forwards;}
@@ -86,11 +58,10 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-h
 .intro-stat-num{font-size:1.2rem;font-weight:900;color:var(--orange);}
 .intro-stat-lbl{font-size:10px;color:#64748b;margin-top:1px;}
 .intro-enter-btn{margin-top:28px;padding:15px 48px;border:none;border-radius:50px;background:linear-gradient(135deg,#f59e0b,#f97316);color:white;font-family:'Cairo',sans-serif;font-size:16px;font-weight:900;cursor:pointer;box-shadow:0 0 40px rgba(245,158,11,0.4);letter-spacing:1px;transition:0.2s;position:relative;overflow:hidden;}
-.intro-enter-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.1),transparent);border-radius:50px;}
 .intro-enter-btn:hover{transform:scale(1.05);box-shadow:0 0 60px rgba(245,158,11,0.6);}
 @keyframes nodeReveal{to{opacity:1;transform:scale(1);}}
 
-/* ===== AUTH ===== */
+/* AUTH */
 #auth-screen{position:fixed;inset:0;background:linear-gradient(135deg,#0a0f1e 0%,#1e3a5f 100%);z-index:9000;display:flex;align-items:center;justify-content:center;}
 .auth-card{background:rgba(255,255,255,0.06);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.12);border-radius:24px;padding:35px 28px;width:92%;max-width:400px;color:white;}
 .auth-tabs{display:flex;margin-bottom:24px;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.1);}
@@ -104,56 +75,27 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-h
 .auth-select{width:100%;padding:13px 15px;border-radius:12px;border:1px solid rgba(255,255,255,0.15);background:rgba(30,40,70,0.9);color:white;font-family:'Cairo',sans-serif;font-size:14px;outline:none;margin-bottom:10px;cursor:pointer;}
 .auth-btn{width:100%;padding:14px;border-radius:12px;border:none;background:var(--orange);color:white;font-family:'Cairo',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:0.2s;margin-top:6px;}
 .auth-btn:hover{background:#d97706;}
-.google-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:13px;border:none;border-radius:12px;background:white;color:#333;font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.2);transition:0.2s;margin-top:8px;}
+/* ===== FIX: Google button - pointer cursor, no form submit ===== */
+.google-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:13px;border:none;border-radius:12px;background:white;color:#333;font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.2);transition:0.2s;margin-top:8px;position:relative;z-index:1;}
 .google-btn:hover{background:#f5f5f5;transform:translateY(-1px);}
+.google-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
 .divider-row{display:flex;align-items:center;margin:14px 0;}
 .divider-row div{flex:1;height:1px;background:rgba(255,255,255,0.15);}
 .divider-row span{margin:0 10px;color:#94a3b8;font-size:12px;}
 #auth-msg{color:var(--red);font-size:12px;margin-top:8px;min-height:18px;text-align:center;}
 #auth-loading{display:none;text-align:center;padding:10px;color:#94a3b8;font-size:13px;}
 
-/* ===== TOP NAV ===== */
-.top-nav{
-  background:rgba(15,23,42,0.97);
-  backdrop-filter:blur(20px);
-  color:white;padding:10px 16px;
-  display:flex;justify-content:space-between;align-items:center;
-  position:sticky;top:0;z-index:1000;
-  box-shadow:0 1px 0 rgba(255,255,255,0.06),0 4px 20px rgba(0,0,0,0.3);
-  border-bottom:1px solid rgba(255,255,255,0.05);
-}
+/* TOP NAV */
+.top-nav{background:rgba(15,23,42,0.97);backdrop-filter:blur(20px);color:white;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1000;box-shadow:0 1px 0 rgba(255,255,255,0.06),0 4px 20px rgba(0,0,0,0.3);border-bottom:1px solid rgba(255,255,255,0.05);}
 .nav-brand{font-size:15px;font-weight:900;background:linear-gradient(135deg,#f59e0b,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px;}
 .nav-stats{display:flex;gap:8px;align-items:center;}
 .buy-btn{background:linear-gradient(135deg,#f59e0b,#f97316);color:white;border:none;padding:6px 14px;border-radius:50px;font-family:'Cairo',sans-serif;font-size:11px;font-weight:700;cursor:pointer;box-shadow:0 2px 10px rgba(245,158,11,0.3);transition:0.2s;}
 .buy-btn:hover{transform:scale(1.05);}
 
-/* ===== BOTTOM NAV ===== */
-.bottom-nav{
-  position:fixed;bottom:0;width:100%;
-  background:rgba(15,23,42,0.97);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-  display:flex;justify-content:space-around;align-items:center;
-  padding:8px 6px 18px;
-  box-shadow:0 -1px 0 rgba(255,255,255,0.07),0 -8px 32px rgba(0,0,0,0.25);
-  z-index:1000;
-  border-top:1px solid rgba(255,255,255,0.06);
-  height:var(--nav-h);
-}
-.nav-btn{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
-  background:none;border:none;cursor:pointer;
-  font-family:'Cairo',sans-serif;font-size:9.5px;font-weight:700;
-  color:rgba(148,163,184,0.7);
-  transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);
-  padding:0;flex:1;position:relative;border-radius:14px;height:52px;
-}
-.nav-btn .nav-icon-wrap{
-  width:42px;height:42px;border-radius:14px;
-  display:flex;align-items:center;justify-content:center;
-  background:transparent;
-  transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);
-}
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;width:100%;background:rgba(15,23,42,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;justify-content:space-around;align-items:center;padding:8px 6px 18px;box-shadow:0 -1px 0 rgba(255,255,255,0.07),0 -8px 32px rgba(0,0,0,0.25);z-index:1000;border-top:1px solid rgba(255,255,255,0.06);height:var(--nav-h);}
+.nav-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:none;border:none;cursor:pointer;font-family:'Cairo',sans-serif;font-size:9.5px;font-weight:700;color:rgba(148,163,184,0.7);transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);padding:0;flex:1;position:relative;border-radius:14px;height:52px;}
+.nav-btn .nav-icon-wrap{width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:transparent;transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);}
 .nav-btn .nav-icon{font-size:20px;transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1);}
 .nav-btn span.nav-label{font-size:9.5px;letter-spacing:0.2px;}
 .nav-btn.active{color:white;}
@@ -164,11 +106,11 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-h
 .nav-btn:not(.active):hover .nav-icon-wrap{background:rgba(255,255,255,0.07);}
 .nav-btn:active .nav-icon{transform:scale(0.9);}
 
-/* ===== TABS ===== */
+/* TABS */
 .tab{display:none;padding-bottom:85px;}
 .tab.active{display:block;}
 
-/* ===== PROFILE TAB ===== */
+/* PROFILE */
 .profile-hero{background:linear-gradient(135deg,var(--navy) 0%,#1e3a5f 100%);padding:25px 20px 30px;color:white;position:relative;overflow:hidden;}
 .profile-hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(59,130,246,0.15) 0%,transparent 70%);}
 .profile-avatar-wrap{display:flex;align-items:center;gap:15px;position:relative;z-index:1;}
@@ -181,10 +123,7 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-h
 .pstat{flex:1;background:white;border-radius:14px;padding:14px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
 .pstat-num{font-size:1.5rem;font-weight:900;color:var(--blue);}
 .pstat-lbl{font-size:11px;color:var(--muted);margin-top:2px;}
-
-/* Gem stats special */
 .pstat.gem-stat .pstat-num{background:var(--gem-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-
 .profile-info-card{background:white;margin:0 15px 15px;border-radius:18px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
 .profile-info-card h3{color:var(--blue);font-size:14px;margin-bottom:14px;border-bottom:1px solid var(--border);padding-bottom:8px;}
 .info-field{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f8fafc;}
@@ -193,30 +132,10 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-h
 .info-field span{font-size:13px;font-weight:700;color:var(--text);}
 .edit-profile-btn{width:calc(100% - 30px);margin:0 15px 15px;padding:13px;border:2px solid var(--blue);border-radius:14px;background:white;color:var(--blue);font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:0.2s;}
 .edit-profile-btn:hover{background:#eff6ff;}
-
-/* ===== LOGOUT BUTTON — FIXED & IMPROVED ===== */
-.logout-btn{
-  width:calc(100% - 30px);margin:0 15px 10px;padding:13px;
-  border:2px solid #fca5a5;border-radius:14px;
-  background:linear-gradient(135deg,#fff1f2,#fee2e2);
-  color:var(--red);font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;
-  cursor:pointer;transition:all 0.2s;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-}
+.logout-btn{width:calc(100% - 30px);margin:0 15px 10px;padding:13px;border:2px solid #fca5a5;border-radius:14px;background:linear-gradient(135deg,#fff1f2,#fee2e2);color:var(--red);font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
 .logout-btn:hover{background:linear-gradient(135deg,#fee2e2,#fecaca);border-color:#f87171;transform:translateY(-1px);box-shadow:0 4px 12px rgba(239,68,68,0.2);}
-.logout-btn:active{transform:translateY(0);}
 
-/* ===== EDIT PROFILE MODAL ===== */
-#edit-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:8500;align-items:flex-end;justify-content:center;}
-#edit-modal.show{display:flex;}
-.edit-sheet{background:white;border-radius:24px 24px 0 0;padding:25px 20px 40px;width:100%;max-width:500px;max-height:85vh;overflow-y:auto;}
-.edit-sheet h3{font-size:16px;font-weight:900;color:var(--text);margin-bottom:18px;text-align:center;}
-.edit-input{width:100%;padding:13px;border:2px solid var(--border);border-radius:12px;font-family:'Cairo',sans-serif;font-size:14px;outline:none;margin-bottom:10px;color:var(--text);background:#f8fafc;transition:0.2s;}
-.edit-input:focus{border-color:var(--blue);background:white;}
-.edit-select{width:100%;padding:13px;border:2px solid var(--border);border-radius:12px;font-family:'Cairo',sans-serif;font-size:14px;outline:none;margin-bottom:10px;color:var(--text);background:#f8fafc;cursor:pointer;}
-.save-edit-btn{width:100%;padding:14px;border:none;border-radius:14px;background:var(--blue);color:white;font-family:'Cairo',sans-serif;font-size:15px;font-weight:700;cursor:pointer;}
-
-/* ===== SETTINGS TAB ===== */
+/* SETTINGS */
 .settings-section{margin-bottom:20px;}
 .settings-section-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;padding-right:4px;}
 .settings-card{background:#f8fafc;border-radius:16px;overflow:hidden;border:1px solid var(--border);}
@@ -228,18 +147,11 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-h
 .settings-row-label{font-size:14px;font-weight:700;color:var(--text);}
 .settings-row-sub{font-size:11px;color:var(--muted);margin-top:2px;}
 .settings-row-action{color:var(--muted);font-size:18px;}
-/* FONT SIZE CONTROLS — FIXED */
 .font-size-controls{display:flex;align-items:center;gap:8px;}
-.fsize-btn{
-  width:30px;height:30px;border-radius:8px;border:1.5px solid var(--border);
-  background:white;cursor:pointer;font-weight:900;font-size:16px;
-  display:flex;align-items:center;justify-content:center;
-  color:var(--text);transition:0.15s;user-select:none;flex-shrink:0;
-}
+.fsize-btn{width:30px;height:30px;border-radius:8px;border:1.5px solid var(--border);background:white;cursor:pointer;font-weight:900;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--text);transition:0.15s;user-select:none;flex-shrink:0;}
 .fsize-btn:hover{background:#eff6ff;border-color:var(--blue);color:var(--blue);}
 .fsize-btn:active{transform:scale(0.9);}
 .fsize-value{font-weight:700;font-size:13px;color:var(--blue);min-width:28px;text-align:center;}
-/* Toggle switch */
 .toggle-wrap{position:relative;width:46px;height:26px;flex-shrink:0;}
 .toggle-wrap input{opacity:0;width:0;height:0;position:absolute;}
 .toggle-slider{position:absolute;inset:0;background:#cbd5e1;border-radius:26px;cursor:pointer;transition:0.3s;}
@@ -247,7 +159,7 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-h
 .toggle-wrap input:checked + .toggle-slider{background:var(--blue);}
 .toggle-wrap input:checked + .toggle-slider:before{transform:translateX(20px);}
 
-/* ===== STUDY TAB ===== */
+/* STUDY */
 .profile-bar{background:white;margin:15px;border-radius:18px;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
 .avatar{font-size:36px;cursor:pointer;border:2.5px solid var(--blue);border-radius:50%;padding:6px;transition:0.2s;}
 .avatar:hover{transform:scale(1.1);}
@@ -255,7 +167,6 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-h
 .xp-bar-wrap{height:6px;background:#e2e8f0;border-radius:6px;overflow:hidden;margin-top:6px;}
 .xp-bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--purple));border-radius:6px;transition:width 0.5s;}
 
-/* Systems & sections */
 #systems-view{padding:0 15px 10px;}
 .systems-header{font-size:13px;color:var(--muted);font-weight:700;margin-bottom:12px;padding-top:4px;display:flex;align-items:center;gap:6px;}
 .system-card{background:white;border-radius:20px;margin-bottom:12px;box-shadow:0 2px 10px rgba(0,0,0,0.07);overflow:hidden;border:2px solid transparent;transition:0.2s;cursor:pointer;}
@@ -297,10 +208,11 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-h
 .sec-btn.study-btn:hover{background:#d97706;}
 .sec-btn.quiz-btn{background:#eff6ff;color:var(--blue);border:1.5px solid var(--blue);}
 .sec-btn.quiz-btn:hover{background:#dbeafe;}
-.sec-btn.locked-btn{background:#f1f5f9;color:#94a3b8;cursor:not-allowed;}
+/* ===== FIX: locked quiz btn should not look clickable ===== */
+.sec-btn.locked-btn{background:#f1f5f9;color:#94a3b8;cursor:not-allowed;opacity:0.6;}
 .section-locked-msg{padding:8px 16px 12px;font-size:11px;color:#94a3b8;text-align:center;}
 
-/* ===== LESSON LIST ===== */
+/* LESSON LIST */
 #lesson-list-screen{display:none;position:fixed;inset:0;background:var(--bg);z-index:4000;overflow-y:auto;padding-bottom:20px;}
 .lesson-list-header{background:linear-gradient(135deg,var(--navy),#1e3a5f);padding:16px 15px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10;}
 .lesson-list-back{background:rgba(255,255,255,0.15);border:none;border-radius:10px;width:38px;height:38px;cursor:pointer;color:white;font-size:18px;display:flex;align-items:center;justify-content:center;}
@@ -316,13 +228,15 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-h
 .lesson-card-sub{font-size:11px;color:var(--muted);margin-top:3px;}
 .lesson-card-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;}
 .final-quiz-card{background:linear-gradient(135deg,#0f172a,#1e3a5f);border-radius:16px;margin-bottom:10px;padding:16px;cursor:pointer;display:flex;align-items:center;gap:12px;border:2px solid var(--orange);}
+.final-quiz-card.locked-quiz{opacity:0.5;cursor:not-allowed;border-color:#475569;}
 .final-quiz-card-icon{width:48px;height:48px;border-radius:12px;background:rgba(245,158,11,0.2);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
 .final-quiz-card-info{flex:1;}
 .final-quiz-card-name{font-size:14px;font-weight:800;color:white;}
 .final-quiz-card-sub{font-size:11px;color:#94a3b8;margin-top:3px;}
 .final-quiz-card-badge{background:var(--orange);color:white;font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;}
+.final-quiz-card.locked-quiz .final-quiz-card-badge{background:#475569;}
 
-/* ===== LESSON SCREEN ===== */
+/* LESSON SCREEN */
 #lesson-screen{display:none;position:fixed;inset:0;background:white;z-index:5000;overflow-y:auto;}
 .lesson-header{display:flex;align-items:center;gap:10px;padding:13px 15px;border-bottom:1px solid #f1f5f9;position:sticky;top:0;background:white;z-index:10;}
 .close-btn{background:#f1f5f9;border:none;border-radius:10px;width:38px;height:38px;cursor:pointer;color:#64748b;font-size:18px;display:flex;align-items:center;justify-content:center;transition:0.15s;flex-shrink:0;}
@@ -335,7 +249,7 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-h
 .action-btn{width:100%;padding:16px;border:none;border-radius:14px;background:var(--orange);color:white;font-family:'Cairo',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:0.2s;}
 .action-btn:disabled{background:#e2e8f0;color:#94a3b8;cursor:not-allowed;}
 
-/* ===== PHARMA CARD ===== */
+/* PHARMA CARD */
 .pharma-card{background:#f8fafc;border-radius:20px;padding:20px;}
 .pharma-card-header{display:flex;align-items:center;gap:10px;margin-bottom:15px;border-bottom:2px solid #e2e8f0;padding-bottom:12px;}
 .pharma-sci-name{color:var(--blue);font-size:1.05rem;font-weight:900;}
@@ -355,7 +269,7 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-h
 .speaking{animation:speakPulse 0.5s ease-in-out infinite;}
 @keyframes speakPulse{0%,100%{opacity:1}50%{opacity:0.6}}
 
-/* ===== QUIZ ===== */
+/* QUIZ */
 .quiz-wrap{padding:10px 0;}
 .quiz-q{font-size:1.05rem;font-weight:700;margin-bottom:20px;line-height:1.6;color:var(--text);background:linear-gradient(135deg,#f0f9ff,#e0f2fe);padding:16px;border-radius:14px;border-right:4px solid var(--blue);}
 .quiz-progress-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
@@ -378,7 +292,7 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-h
 .quiz-score-lbl{color:#94a3b8;font-size:13px;margin-top:4px;}
 .quiz-retry-btn{margin-top:20px;padding:12px 28px;border:none;border-radius:12px;background:var(--orange);color:white;font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;}
 
-/* ===== AI SEARCH ===== */
+/* AI SEARCH */
 .search-wrap{padding:15px;}
 .search-box{background:white;border-radius:20px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,0.07);margin-bottom:15px;}
 .search-box-header{display:flex;align-items:center;gap:10px;margin-bottom:15px;}
@@ -401,9 +315,13 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-h
 .ai-warn{background:#fff1f2;border-right:4px solid var(--red);border-radius:10px;padding:12px;font-size:13px;color:#991b1b;line-height:1.7;}
 .ai-loading{text-align:center;padding:30px;color:var(--muted);}
 .ai-loading .spinner{display:inline-block;width:30px;height:30px;border:3px solid #e2e8f0;border-top-color:var(--blue);border-radius:50%;animation:spin 0.8s linear infinite;margin-bottom:10px;}
+/* ===== FIX: AI error box ===== */
+.ai-error-box{background:#fff1f2;border:2px solid var(--red);border-radius:14px;padding:16px;text-align:center;}
+.ai-error-box p{color:var(--red);font-size:13px;line-height:1.7;}
+.ai-error-box .retry-btn{margin-top:12px;padding:10px 24px;border:none;border-radius:10px;background:var(--red);color:white;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
-/* ===== RX CHAT ===== */
+/* RX CHAT */
 .rx-header{background:linear-gradient(135deg,var(--navy),#1e3a5f);padding:20px 15px 15px;color:white;}
 .rx-header-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
 .rx-logo{font-size:32px;}
@@ -435,7 +353,7 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-h
 .online-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
 
-/* ===== LEADERBOARD ===== */
+/* LEADERBOARD */
 .board-wrap{padding:15px;}
 .board-hero{background:linear-gradient(135deg,var(--navy),#1e3a5f);border-radius:20px;padding:20px;color:white;margin-bottom:15px;text-align:center;}
 .board-hero h2{font-size:1.2rem;font-weight:900;color:var(--orange);}
@@ -450,7 +368,7 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-h
 .rank-xp{font-weight:900;color:var(--orange);font-size:14px;}
 .rank-row.me-row{background:#eff6ff;border-radius:10px;padding:12px 8px;margin:2px -8px;}
 
-/* ===== CERTIFICATE ===== */
+/* CERTIFICATE */
 #cert-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:8000;align-items:center;justify-content:center;padding:20px;}
 #cert-overlay.show{display:flex;}
 .cert-card{background:white;border:8px double var(--orange);border-radius:20px;padding:35px;max-width:420px;width:100%;text-align:center;box-shadow:0 0 50px rgba(245,158,11,0.5);animation:certPop 0.5s cubic-bezier(0.34,1.56,0.64,1);}
@@ -463,14 +381,23 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-h
 .confetti-piece{position:fixed;width:10px;height:10px;border-radius:2px;animation:confettiFall 1.5s ease-out forwards;z-index:9999;pointer-events:none;}
 @keyframes confettiFall{to{transform:translateY(110vh) rotate(720deg);opacity:0;}}
 
-/* ===== LOADING ===== */
+/* EDIT MODAL */
+#edit-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:8500;align-items:flex-end;justify-content:center;}
+#edit-modal.show{display:flex;}
+.edit-sheet{background:white;border-radius:24px 24px 0 0;padding:25px 20px 40px;width:100%;max-width:500px;max-height:85vh;overflow-y:auto;}
+.edit-sheet h3{font-size:16px;font-weight:900;color:var(--text);margin-bottom:18px;text-align:center;}
+.edit-input{width:100%;padding:13px;border:2px solid var(--border);border-radius:12px;font-family:'Cairo',sans-serif;font-size:14px;outline:none;margin-bottom:10px;color:var(--text);background:#f8fafc;transition:0.2s;}
+.edit-input:focus{border-color:var(--blue);background:white;}
+.edit-select{width:100%;padding:13px;border:2px solid var(--border);border-radius:12px;font-family:'Cairo',sans-serif;font-size:14px;outline:none;margin-bottom:10px;color:var(--text);background:#f8fafc;cursor:pointer;}
+.save-edit-btn{width:100%;padding:14px;border:none;border-radius:14px;background:var(--blue);color:white;font-family:'Cairo',sans-serif;font-size:15px;font-weight:700;cursor:pointer;}
+
+/* LOADING */
 #global-loading{display:flex;position:fixed;inset:0;z-index:99999;background:#0a0f1e;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
 #global-loading .spinner-big{width:50px;height:50px;border:4px solid rgba(255,255,255,0.1);border-top-color:var(--orange);border-radius:50%;animation:spin 0.8s linear infinite;}
 #global-loading p{color:#94a3b8;font-size:14px;}
-
 .saving-indicator{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(34,197,94,0.9);color:white;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;z-index:9000;transition:opacity 0.3s;pointer-events:none;}
 
-/* ===== DARK MODE ===== */
+/* DARK MODE */
 body.dark-mode{--bg:#0f172a;--card:#1e293b;--border:#334155;--text:#f1f5f9;--muted:#94a3b8;}
 body.dark-mode .profile-bar,body.dark-mode .system-card,body.dark-mode .section-item,body.dark-mode .lesson-card,body.dark-mode .search-box,body.dark-mode .ai-result-card,body.dark-mode .board-card,body.dark-mode .pstat,body.dark-mode .profile-info-card{background:#1e293b;border-color:#334155;}
 body.dark-mode .opt{background:#1e293b;border-color:#334155;color:#f1f5f9;}
@@ -479,7 +406,7 @@ body.dark-mode .pharma-card{background:#0f172a;}
 body.dark-mode #lesson-screen{background:#0f172a;}
 body.dark-mode .lesson-header{background:#0f172a;border-color:#334155;}
 body.dark-mode .lesson-footer{background:#0f172a;border-color:#334155;}
-body.dark-mode .edit-sheet,.dark-mode .settings-sheet{background:#1e293b;color:#f1f5f9;}
+body.dark-mode .edit-sheet{background:#1e293b;color:#f1f5f9;}
 body.dark-mode .edit-input,body.dark-mode .edit-select{background:#0f172a;border-color:#334155;color:#f1f5f9;}
 body.dark-mode .settings-card{background:#0f172a;border-color:#334155;}
 body.dark-mode .settings-row{border-color:#334155;}
@@ -495,17 +422,17 @@ body.dark-mode .sections-topbar{background:#1e293b;border-color:#334155;}
 body.dark-mode .fsize-btn{background:#334155;border-color:#475569;color:#f1f5f9;}
 body.dark-mode .logout-btn{background:linear-gradient(135deg,#3f0f0f,#450a0a);border-color:#7f1d1d;}
 body.dark-mode .edit-profile-btn{background:#1e293b;}
+body.dark-mode .ai-section-body{background:#0f172a;}
 </style>
 </head>
 <body>
 
-<!-- ===== GLOBAL LOADING ===== -->
 <div id="global-loading">
   <div class="spinner-big"></div>
   <p>جاري التحميل...</p>
 </div>
 
-<!-- ===== INTRO ===== -->
+<!-- INTRO -->
 <div id="intro-screen">
   <div class="intro-logo">💊</div>
   <div class="intro-title">PharmaMaster Pro</div>
@@ -519,10 +446,7 @@ body.dark-mode .edit-profile-btn{background:#1e293b;}
     <div style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);border-radius:14px;padding:14px 16px;animation:nodeReveal 0.4s 0.3s ease forwards;opacity:0;transform:scale(0.9)">
       <div style="display:flex;align-items:center;gap:10px">
         <span style="font-size:22px">🫀</span>
-        <div style="flex:1">
-          <div style="color:#f59e0b;font-weight:900;font-size:13px">الجهاز الهضمي — GIT</div>
-          <div style="color:#94a3b8;font-size:10px;margin-top:2px">6 أصناف دوائية · عشرات الدروس</div>
-        </div>
+        <div style="flex:1"><div style="color:#f59e0b;font-weight:900;font-size:13px">الجهاز الهضمي — GIT</div><div style="color:#94a3b8;font-size:10px;margin-top:2px">6 أصناف دوائية · عشرات الدروس</div></div>
         <span style="background:#f59e0b;color:white;font-size:10px;padding:2px 8px;border-radius:5px;font-weight:700">متاح ✅</span>
       </div>
     </div>
@@ -538,7 +462,7 @@ body.dark-mode .edit-profile-btn{background:#1e293b;}
   <button class="intro-enter-btn" onclick="enterFromIntro()">دخول الأكاديمية ←</button>
 </div>
 
-<!-- ===== AUTH ===== -->
+<!-- AUTH -->
 <div id="auth-screen" style="display:none">
   <div class="auth-card">
     <span class="logo-big">👨‍⚕️</span>
@@ -553,7 +477,8 @@ body.dark-mode .edit-profile-btn{background:#1e293b;}
       <input class="auth-input" type="password" id="login-pass" placeholder="كلمة المرور">
       <button class="auth-btn" onclick="handleLogin()">دخول ←</button>
       <div class="divider-row"><div></div><span>أو</span><div></div></div>
-      <button type="button" class="google-btn" onclick="signInWithGoogle()">
+      <!-- FIX: type="button" prevents form submission, id added for disabling -->
+      <button type="button" id="google-login-btn" class="google-btn" onclick="signInWithGoogle()">
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" alt="Google">
         <span>متابعة باستخدام Google</span>
       </button>
@@ -571,7 +496,7 @@ body.dark-mode .edit-profile-btn{background:#1e293b;}
       <input class="auth-input" type="text" id="reg-city" placeholder="المدينة / الجامعة">
       <button class="auth-btn" onclick="handleRegister()">إنشاء الحساب ←</button>
       <div class="divider-row"><div></div><span>أو</span><div></div></div>
-      <button type="button" class="google-btn" onclick="signInWithGoogle()">
+      <button type="button" id="google-reg-btn" class="google-btn" onclick="signInWithGoogle()">
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" alt="Google">
         <span>متابعة باستخدام Google</span>
       </button>
@@ -581,16 +506,14 @@ body.dark-mode .edit-profile-btn{background:#1e293b;}
   </div>
 </div>
 
-<!-- ===== TOP NAV ===== -->
+<!-- TOP NAV -->
 <div class="top-nav" style="display:none" id="main-nav">
   <div class="nav-brand">💊 PharmaMaster</div>
-  <div class="nav-stats" id="nav-stats-container">
-    <!-- Capsules injected by JS -->
-  </div>
+  <div class="nav-stats" id="nav-stats-container"></div>
   <button class="buy-btn" onclick="buyLife()">شراء ❤️</button>
 </div>
 
-<!-- ===== STUDY TAB ===== -->
+<!-- STUDY TAB -->
 <div id="tab-study" class="tab active" style="display:none">
   <div class="profile-bar">
     <div class="avatar" id="ui-emoji" onclick="changeEmoji()">👨‍⚕️</div>
@@ -614,7 +537,7 @@ body.dark-mode .edit-profile-btn{background:#1e293b;}
   </div>
 </div>
 
-<!-- ===== SEARCH TAB ===== -->
+<!-- SEARCH TAB -->
 <div id="tab-search" class="tab" style="display:none">
   <div class="search-wrap">
     <div class="search-box">
@@ -630,13 +553,13 @@ body.dark-mode .edit-profile-btn{background:#1e293b;}
         <button class="stype-btn" data-type="inter" onclick="setSearchType(this,'inter')">التداخلات</button>
         <button class="stype-btn" data-type="compare" onclick="setSearchType(this,'compare')">مقارنة</button>
       </div>
-      <button class="search-btn" onclick="runSearch()">🔍 بحث بالذكاء الاصطناعي</button>
+      <button class="search-btn" id="main-search-btn" onclick="runSearch()">🔍 بحث بالذكاء الاصطناعي</button>
     </div>
     <div id="search-results"></div>
   </div>
 </div>
 
-<!-- ===== RX CHAT TAB ===== -->
+<!-- RX CHAT TAB -->
 <div id="tab-chat" class="tab" style="display:none">
   <div class="rx-header">
     <div class="rx-header-top">
@@ -646,7 +569,7 @@ body.dark-mode .edit-profile-btn{background:#1e293b;}
         <div class="online-indicator"><div class="online-dot"></div><span id="online-count">يتصل...</span></div>
       </div>
     </div>
-    <div class="rx-notice">📋 هذه المحادثة لمناقشة الوصفات الطبية بين المتدربين.</div>
+    <div class="rx-notice">📋 هذه المحادثة لمناقشة الوصفات الطبية بين المتدربين — رسائلك تظهر لجميع المسجلين.</div>
   </div>
   <div class="chat-wrap">
     <div class="chat-messages" id="chat-box"></div>
@@ -660,7 +583,7 @@ body.dark-mode .edit-profile-btn{background:#1e293b;}
   </div>
 </div>
 
-<!-- ===== LEADERBOARD TAB ===== -->
+<!-- LEADERBOARD TAB -->
 <div id="tab-board" class="tab" style="display:none">
   <div class="board-wrap">
     <div class="board-hero">
@@ -672,7 +595,7 @@ body.dark-mode .edit-profile-btn{background:#1e293b;}
   </div>
 </div>
 
-<!-- ===== PROFILE TAB ===== -->
+<!-- PROFILE TAB -->
 <div id="tab-profile" class="tab" style="display:none">
   <div class="profile-hero">
     <div class="profile-avatar-wrap">
@@ -698,27 +621,21 @@ body.dark-mode .edit-profile-btn{background:#1e293b;}
     <div class="info-field"><label>تاريخ الانضمام</label><span id="pinfo-joined">---</span></div>
   </div>
   <button class="edit-profile-btn" onclick="openEditModal()">✏️ تعديل الملف الشخصي</button>
-  <!-- FIXED LOGOUT BUTTON -->
   <button class="logout-btn" id="profile-logout-btn">🚪 تسجيل الخروج</button>
 </div>
 
-<!-- ===== SETTINGS TAB ===== -->
+<!-- SETTINGS TAB -->
 <div id="tab-settings" class="tab" style="display:none;padding:15px;padding-bottom:85px;">
   <div style="background:linear-gradient(135deg,var(--navy),#1e3a5f);border-radius:20px;padding:20px;margin-bottom:15px;color:white;display:flex;align-items:center;gap:12px;">
     <span style="font-size:36px">⚙️</span>
     <div><div style="font-size:1.1rem;font-weight:900;color:var(--orange)">الإعدادات</div><div style="font-size:12px;color:#94a3b8;margin-top:2px">تخصيص تجربتك</div></div>
   </div>
-
-  <!-- Appearance -->
   <div class="settings-section">
     <div class="settings-section-title">المظهر</div>
     <div class="settings-card">
       <div class="settings-row" onclick="toggleDarkMode()">
         <div class="settings-row-icon" style="background:#1e293b;">🌙</div>
-        <div class="settings-row-text">
-          <div class="settings-row-label">الوضع الليلي</div>
-          <div class="settings-row-sub">تغيير إلى خلفية داكنة</div>
-        </div>
+        <div class="settings-row-text"><div class="settings-row-label">الوضع الليلي</div><div class="settings-row-sub">تغيير إلى خلفية داكنة</div></div>
         <label class="toggle-wrap" onclick="event.stopPropagation()">
           <input type="checkbox" id="dark-toggle" onchange="toggleDarkMode()">
           <div class="toggle-slider"></div>
@@ -726,22 +643,15 @@ body.dark-mode .edit-profile-btn{background:#1e293b;}
       </div>
       <div class="settings-row">
         <div class="settings-row-icon" style="background:#fef3c7;">🔊</div>
-        <div class="settings-row-text">
-          <div class="settings-row-label">أصوات التنبيه</div>
-          <div class="settings-row-sub">صوت الإجابة الصحيحة والخطأ</div>
-        </div>
+        <div class="settings-row-text"><div class="settings-row-label">أصوات التنبيه</div><div class="settings-row-sub">صوت الإجابة الصحيحة والخطأ</div></div>
         <label class="toggle-wrap" onclick="event.stopPropagation()">
           <input type="checkbox" id="sound-toggle" checked onchange="saveSettings()">
           <div class="toggle-slider"></div>
         </label>
       </div>
-      <!-- FIXED FONT SIZE CONTROLS -->
       <div class="settings-row">
         <div class="settings-row-icon" style="background:#dcfce7;">🔤</div>
-        <div class="settings-row-text">
-          <div class="settings-row-label">حجم الخط</div>
-          <div class="settings-row-sub" id="font-size-desc">الحجم الحالي: 14px</div>
-        </div>
+        <div class="settings-row-text"><div class="settings-row-label">حجم الخط</div><div class="settings-row-sub" id="font-size-desc">الحجم الحالي: 14px</div></div>
         <div class="font-size-controls">
           <button class="fsize-btn" id="fsize-minus" onclick="changeFontSize(-1)">−</button>
           <span class="fsize-value" id="fsize-display">14</span>
@@ -750,17 +660,12 @@ body.dark-mode .edit-profile-btn{background:#1e293b;}
       </div>
     </div>
   </div>
-
-  <!-- Notifications -->
   <div class="settings-section">
     <div class="settings-section-title">التذكيرات</div>
     <div class="settings-card">
       <div class="settings-row">
         <div class="settings-row-icon" style="background:#ede9fe;">🔔</div>
-        <div class="settings-row-text">
-          <div class="settings-row-label">تذكير يومي بالدراسة</div>
-          <div class="settings-row-sub">تنبيه يومي لمراجعة الدروس</div>
-        </div>
+        <div class="settings-row-text"><div class="settings-row-label">تذكير يومي بالدراسة</div><div class="settings-row-sub">تنبيه يومي لمراجعة الدروس</div></div>
         <label class="toggle-wrap" onclick="event.stopPropagation()">
           <input type="checkbox" id="notif-toggle" onchange="saveSettings()">
           <div class="toggle-slider"></div>
@@ -768,10 +673,7 @@ body.dark-mode .edit-profile-btn{background:#1e293b;}
       </div>
       <div class="settings-row">
         <div class="settings-row-icon" style="background:#fee2e2;">❤️</div>
-        <div class="settings-row-text">
-          <div class="settings-row-label">تنبيه استعادة القلوب</div>
-          <div class="settings-row-sub">عند اكتمال القلوب مجدداً</div>
-        </div>
+        <div class="settings-row-text"><div class="settings-row-label">تنبيه استعادة القلوب</div><div class="settings-row-sub">عند اكتمال القلوب مجدداً</div></div>
         <label class="toggle-wrap" onclick="event.stopPropagation()">
           <input type="checkbox" id="hearts-notif-toggle" checked onchange="saveSettings()">
           <div class="toggle-slider"></div>
@@ -779,17 +681,12 @@ body.dark-mode .edit-profile-btn{background:#1e293b;}
       </div>
     </div>
   </div>
-
-  <!-- Study -->
   <div class="settings-section">
     <div class="settings-section-title">الدراسة</div>
     <div class="settings-card">
       <div class="settings-row">
         <div class="settings-row-icon" style="background:#dbeafe;">🔀</div>
-        <div class="settings-row-text">
-          <div class="settings-row-label">خلط الأسئلة</div>
-          <div class="settings-row-sub">عرض الأسئلة بترتيب عشوائي</div>
-        </div>
+        <div class="settings-row-text"><div class="settings-row-label">خلط الأسئلة</div><div class="settings-row-sub">عرض الأسئلة بترتيب عشوائي</div></div>
         <label class="toggle-wrap" onclick="event.stopPropagation()">
           <input type="checkbox" id="shuffle-toggle" checked onchange="saveSettings()">
           <div class="toggle-slider"></div>
@@ -797,10 +694,7 @@ body.dark-mode .edit-profile-btn{background:#1e293b;}
       </div>
       <div class="settings-row">
         <div class="settings-row-icon" style="background:#fef3c7;">💡</div>
-        <div class="settings-row-text">
-          <div class="settings-row-label">إظهار التفسير فوراً</div>
-          <div class="settings-row-sub">عرض شرح الإجابة تلقائياً</div>
-        </div>
+        <div class="settings-row-text"><div class="settings-row-label">إظهار التفسير فوراً</div><div class="settings-row-sub">عرض شرح الإجابة تلقائياً</div></div>
         <label class="toggle-wrap" onclick="event.stopPropagation()">
           <input type="checkbox" id="explain-toggle" checked onchange="saveSettings()">
           <div class="toggle-slider"></div>
@@ -808,45 +702,30 @@ body.dark-mode .edit-profile-btn{background:#1e293b;}
       </div>
     </div>
   </div>
-
-  <!-- Data -->
   <div class="settings-section">
     <div class="settings-section-title">البيانات والحساب</div>
     <div class="settings-card">
       <div class="settings-row" onclick="openEditModal()">
         <div class="settings-row-icon" style="background:#dbeafe;">✏️</div>
-        <div class="settings-row-text">
-          <div class="settings-row-label">تعديل الملف الشخصي</div>
-          <div class="settings-row-sub">تغيير الاسم والتخصص والمدينة</div>
-        </div>
+        <div class="settings-row-text"><div class="settings-row-label">تعديل الملف الشخصي</div><div class="settings-row-sub">تغيير الاسم والتخصص والمدينة</div></div>
         <div class="settings-row-action">›</div>
       </div>
       <div class="settings-row" onclick="confirmResetProgress()">
         <div class="settings-row-icon" style="background:#fee2e2;">🔄</div>
-        <div class="settings-row-text">
-          <div class="settings-row-label">إعادة تعيين التقدم</div>
-          <div class="settings-row-sub">حذف كل الدروس المكتملة</div>
-        </div>
+        <div class="settings-row-text"><div class="settings-row-label">إعادة تعيين التقدم</div><div class="settings-row-sub">حذف كل الدروس المكتملة</div></div>
         <div class="settings-row-action" style="color:var(--red)">›</div>
       </div>
-      <!-- FIXED SETTINGS LOGOUT -->
       <div class="settings-row" id="settings-logout-row">
         <div class="settings-row-icon" style="background:#fee2e2;">🚪</div>
-        <div class="settings-row-text">
-          <div class="settings-row-label">تسجيل الخروج</div>
-          <div class="settings-row-sub" id="settings-email-display">---</div>
-        </div>
+        <div class="settings-row-text"><div class="settings-row-label">تسجيل الخروج</div><div class="settings-row-sub" id="settings-email-display">---</div></div>
         <div class="settings-row-action" style="color:var(--red)">›</div>
       </div>
     </div>
   </div>
-
-  <div style="text-align:center;color:var(--muted);font-size:11px;padding:10px 0 5px;">
-    PharmaMaster Pro v3.0 · أكاديمية الصيدلة التفاعلية
-  </div>
+  <div style="text-align:center;color:var(--muted);font-size:11px;padding:10px 0 5px;">PharmaMaster Pro v3.1 · أكاديمية الصيدلة التفاعلية</div>
 </div>
 
-<!-- ===== BOTTOM NAV ===== -->
+<!-- BOTTOM NAV -->
 <div class="bottom-nav" style="display:none" id="main-bottom-nav">
   <button class="nav-btn active" id="btn-study" onclick="switchTab('study')">
     <div class="nav-icon-wrap"><span class="nav-icon">📚</span></div>
@@ -874,7 +753,7 @@ body.dark-mode .edit-profile-btn{background:#1e293b;}
   </button>
 </div>
 
-<!-- ===== LESSON LIST SCREEN ===== -->
+<!-- LESSON LIST -->
 <div id="lesson-list-screen">
   <div class="lesson-list-header">
     <button class="lesson-list-back" onclick="closeLessonList()">✕</button>
@@ -883,7 +762,7 @@ body.dark-mode .edit-profile-btn{background:#1e293b;}
   <div class="lesson-list-body" id="lesson-list-body"></div>
 </div>
 
-<!-- ===== LESSON SCREEN ===== -->
+<!-- LESSON SCREEN -->
 <div id="lesson-screen">
   <div class="lesson-header">
     <button class="close-btn" onclick="closeLesson()">✕</button>
@@ -900,7 +779,7 @@ body.dark-mode .edit-profile-btn{background:#1e293b;}
   </div>
 </div>
 
-<!-- ===== EDIT PROFILE MODAL ===== -->
+<!-- EDIT MODAL -->
 <div id="edit-modal">
   <div class="edit-sheet">
     <h3>✏️ تعديل الملف الشخصي</h3>
@@ -917,7 +796,7 @@ body.dark-mode .edit-profile-btn{background:#1e293b;}
   </div>
 </div>
 
-<!-- ===== CERTIFICATE ===== -->
+<!-- CERTIFICATE -->
 <div id="cert-overlay">
   <div class="cert-card">
     <h2>📜 شهادة احتراف 📜</h2>
@@ -932,58 +811,119 @@ body.dark-mode .edit-profile-btn{background:#1e293b;}
 
 <script>
 // ============================================================
-//  FIREBASE CONFIG
+//  ⚙️ FIREBASE CONFIG — استبدل بإعدادات مشروعك
 // ============================================================
 const firebaseConfig = {
-  // apiKey: "YOUR_API_KEY",
-  // authDomain: "YOUR_PROJECT.firebaseapp.com",
-  // projectId: "YOUR_PROJECT_ID",
-  // storageBucket: "YOUR_PROJECT.appspot.com",
-  // messagingSenderId: "YOUR_SENDER_ID",
-  // appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDmVRRnpVBkxGZ8p3CITaIMh1VoNKCtEYc",
+  authDomain: "pharmamaster-pro.firebaseapp.com",
+  projectId: "pharmamaster-pro",
+  storageBucket: "pharmamaster-pro.firebasestorage.app",
+  messagingSenderId: "59936874446",
+  appId: "1:59936874446:web:427097b769e6f3f8da159f",
+  measurementId: "G-3CJ1TZ5GE3"
 };
 
 let db = null, auth = null, firebaseReady = false;
 try {
-  if (firebaseConfig.apiKey) {
-    firebase.initializeApp(firebaseConfig);
-    db = firebase.firestore();
-    auth = firebase.auth();
-    firebaseReady = true;
-  }
-} catch(e) { console.warn('Firebase init error:', e); }
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+  auth = firebase.auth();
+  firebaseReady = true;
+  console.log('✅ Firebase connected');
+} catch(e) {
+  console.warn('Firebase init error:', e);
+}
 
 // ============================================================
-//  GOOGLE SIGN-IN
+//  GOOGLE SIGN-IN — FIX: proper error handling + button disable
 // ============================================================
 async function signInWithGoogle() {
-  if (!firebaseReady) { showAuthMsg('❌ يجب ضبط Firebase أولاً'); return; }
+  if (!firebaseReady) {
+    showAuthMsg('❌ Firebase غير متصل، تحقق من الإعدادات');
+    return;
+  }
+
+  // Disable both Google buttons during auth
+  ['google-login-btn','google-reg-btn'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.disabled = true; el.innerHTML = '<span>⏳ جاري التسجيل...</span>'; }
+  });
+
   setAuthLoading(true);
   document.getElementById('auth-msg').textContent = '';
+
   try {
     const provider = new firebase.auth.GoogleAuthProvider();
+    provider.addScope('email');
+    provider.addScope('profile');
     provider.setCustomParameters({ prompt: 'select_account' });
-    const result = await auth.signInWithPopup(provider);
+
+    let result;
+    // Try popup first, fallback to redirect on mobile
+    try {
+      result = await auth.signInWithPopup(provider);
+    } catch(popupErr) {
+      if (popupErr.code === 'auth/popup-blocked' || popupErr.code === 'auth/popup-closed-by-user') {
+        throw popupErr;
+      }
+      // Fallback to redirect for other errors
+      await auth.signInWithRedirect(provider);
+      return;
+    }
+
     const fbUser = result.user;
     const existingData = await loadUserFromDb(fbUser.uid);
+
     if (!existingData) {
-      const newUser = { uid:fbUser.uid, email:fbUser.email, fullname:fbUser.displayName||fbUser.email.split('@')[0], role:'غير محدد', city:'غير محدد', gems:20, lives:5, xp:0, emoji:'👨‍⚕️', completedLessons:{}, completedSections:{}, lastHeartTime:Date.now(), joined:new Date().toLocaleDateString('ar-IQ') };
+      const newUser = {
+        uid: fbUser.uid,
+        email: fbUser.email,
+        fullname: fbUser.displayName || fbUser.email.split('@')[0],
+        role: 'غير محدد',
+        city: 'غير محدد',
+        gems: 20, lives: 5, xp: 0,
+        emoji: '👨‍⚕️',
+        completedLessons: {},
+        completedSections: {},
+        lastHeartTime: Date.now(),
+        joined: new Date().toLocaleDateString('ar-IQ')
+      };
       user = newUser;
-      if (firebaseReady) await db.collection('users').doc(fbUser.uid).set({ ...newUser, _created: new Date() });
+      await db.collection('users').doc(fbUser.uid).set({ ...newUser, _created: new Date() });
     } else {
       user = { ...existingData, uid: fbUser.uid };
       if (!user.completedLessons) user.completedLessons = {};
       if (!user.completedSections) user.completedSections = {};
     }
+
     setAuthLoading(false);
     showMainApp();
+
   } catch(e) {
     setAuthLoading(false);
-    const codes = { 'auth/popup-closed-by-user':'❌ تم إغلاق نافذة تسجيل الدخول', 'auth/popup-blocked':'❌ المتصفح حجب النافذة', 'auth/cancelled-popup-request':'', 'auth/network-request-failed':'❌ خطأ في الشبكة' };
-    const errMsg = codes[e.code] || ('❌ ' + (e.message||'خطأ غير معروف'));
-    if (errMsg) showAuthMsg(errMsg);
+    // Re-enable buttons
+    ['google-login-btn','google-reg-btn'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.disabled = false;
+        el.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" alt="Google"><span>متابعة باستخدام Google</span>';
+      }
+    });
+
+    const codes = {
+      'auth/popup-closed-by-user': '',
+      'auth/cancelled-popup-request': '',
+      'auth/popup-blocked': '❌ المتصفح حجب النافذة — أعطِ الإذن أو استخدم البريد الإلكتروني',
+      'auth/network-request-failed': '❌ خطأ في الاتصال بالشبكة',
+      'auth/unauthorized-domain': '❌ هذا الدومين غير مصرح في Firebase — أضفه في Authentication > Authorized domains',
+      'auth/operation-not-allowed': '❌ تسجيل Google غير مفعّل في Firebase Console',
+    };
+    const msg = codes[e.code];
+    if (msg === undefined) showAuthMsg('❌ ' + (e.message || 'خطأ غير معروف'));
+    else if (msg) showAuthMsg(msg);
   }
 }
+
 function showAuthMsg(msg) { document.getElementById('auth-msg').textContent = msg; }
 
 // ============================================================
@@ -1046,7 +986,6 @@ function applySettings() {
   syncToggle('hearts-notif-toggle', appSettings.heartsNotif);
   syncToggle('shuffle-toggle', appSettings.shuffle);
   syncToggle('explain-toggle', appSettings.showExplain);
-  // Update font size display
   const display = document.getElementById('fsize-display');
   if (display) display.textContent = appSettings.fontSize;
   const desc = document.getElementById('font-size-desc');
@@ -1058,15 +997,10 @@ function toggleDarkMode() {
   else appSettings.darkMode = !appSettings.darkMode;
   saveSettings();
 }
-
-// FIXED FONT SIZE: increment/decrement buttons
 function changeFontSize(delta) {
   const min=12, max=22;
   appSettings.fontSize = Math.max(min, Math.min(max, appSettings.fontSize + delta));
   saveSettings();
-  // Visual feedback
-  const btn = delta > 0 ? document.getElementById('fsize-plus') : document.getElementById('fsize-minus');
-  if (btn) { btn.style.background='#eff6ff'; btn.style.borderColor='var(--blue)'; setTimeout(()=>{ btn.style.background=''; btn.style.borderColor=''; }, 200); }
 }
 function confirmResetProgress() {
   if (!confirm('⚠️ هذا سيحذف كل تقدمك. هل أنت متأكد؟')) return;
@@ -1091,7 +1025,7 @@ async function saveUserToDb() {
 }
 async function loadUserFromDb(uid) {
   if (!firebaseReady) { const l=localStorage.getItem('pharma_user_'+uid); if(l){try{return JSON.parse(l);}catch(e){}} return null; }
-  try { const doc=await db.collection('users').doc(uid).get(); if(doc.exists) return doc.data(); const l=localStorage.getItem('pharma_user_'+uid); if(l){try{return JSON.parse(l);}catch(e){}} return null; }
+  try { const doc=await db.collection('users').doc(uid).get(); if(doc.exists) return doc.data(); return null; }
   catch(e) { const l=localStorage.getItem('pharma_user_'+uid); if(l){try{return JSON.parse(l);}catch(e){}} return null; }
 }
 
@@ -1102,37 +1036,48 @@ window.addEventListener('load', () => {
   loadSettings();
   showLoading('تحقق من الجلسة...');
 
-  // FIXED: Attach logout buttons after DOM is ready
-  attachLogoutButtons();
+  // Attach logout buttons
+  document.getElementById('profile-logout-btn').addEventListener('click', handleLogout);
+  document.getElementById('settings-logout-row').addEventListener('click', handleLogout);
 
   if (firebaseReady) {
+    // Handle redirect result first (for mobile Google sign-in)
+    auth.getRedirectResult().then(result => {
+      if (result && result.user) {
+        // handled by onAuthStateChanged
+      }
+    }).catch(e => console.warn('Redirect result:', e));
+
     auth.onAuthStateChanged(async (fbUser) => {
       if (fbUser) {
         const data = await loadUserFromDb(fbUser.uid);
-        if (data) { user={...data,uid:fbUser.uid}; if(!user.completedLessons)user.completedLessons={}; if(!user.completedSections)user.completedSections={}; }
-        else { user.uid=fbUser.uid; user.email=fbUser.email; }
+        if (data) {
+          user = {...data, uid:fbUser.uid};
+          if (!user.completedLessons) user.completedLessons = {};
+          if (!user.completedSections) user.completedSections = {};
+        } else {
+          user.uid = fbUser.uid;
+          user.email = fbUser.email;
+        }
         showMainApp();
-      } else { hideLoading(); document.getElementById('auth-screen').style.display='flex'; }
+      } else {
+        hideLoading();
+        document.getElementById('auth-screen').style.display='flex';
+      }
     });
   } else {
-    const savedUid=localStorage.getItem('pharma_session');
+    const savedUid = localStorage.getItem('pharma_session');
     if (savedUid) {
       loadUserFromDb(savedUid).then(d => {
         if (d) { user=d; showMainApp(); }
         else { hideLoading(); document.getElementById('auth-screen').style.display='flex'; }
       });
-    } else { hideLoading(); document.getElementById('auth-screen').style.display='flex'; }
+    } else {
+      hideLoading();
+      document.getElementById('auth-screen').style.display='flex';
+    }
   }
 });
-
-// FIXED: Proper logout button attachment using addEventListener
-function attachLogoutButtons() {
-  const profileLogout = document.getElementById('profile-logout-btn');
-  if (profileLogout) profileLogout.addEventListener('click', handleLogout);
-
-  const settingsLogout = document.getElementById('settings-logout-row');
-  if (settingsLogout) settingsLogout.addEventListener('click', handleLogout);
-}
 
 function showMainApp() {
   hideLoading();
@@ -1140,7 +1085,7 @@ function showMainApp() {
   document.getElementById('main-nav').style.display='flex';
   document.getElementById('main-bottom-nav').style.display='flex';
   ['study','search','chat','board','profile','settings'].forEach(t=>{
-    document.getElementById('tab-'+t).style.display=t==='study'?'block':'none';
+    document.getElementById('tab-'+t).style.display = t==='study' ? 'block' : 'none';
   });
   document.getElementById('intro-screen').style.display='flex';
   updateUI();
@@ -1154,8 +1099,8 @@ function showMainApp() {
 // ============================================================
 function switchAuthTab(mode) {
   document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&mode==='login')||(i===1&&mode==='register')));
-  document.getElementById('login-form').style.display=mode==='login'?'block':'none';
-  document.getElementById('register-form').style.display=mode==='register'?'block':'none';
+  document.getElementById('login-form').style.display = mode==='login' ? 'block' : 'none';
+  document.getElementById('register-form').style.display = mode==='register' ? 'block' : 'none';
   document.getElementById('auth-msg').textContent='';
 }
 function setAuthLoading(on) { document.getElementById('auth-loading').style.display=on?'block':'none'; }
@@ -1170,7 +1115,7 @@ async function handleLogin() {
     try{ await auth.signInWithEmailAndPassword(email,pass); }
     catch(e){
       setAuthLoading(false);
-      const codes={'auth/user-not-found':'❌ لا يوجد حساب!','auth/wrong-password':'❌ كلمة المرور خاطئة!','auth/invalid-email':'❌ البريد غير صحيح!','auth/too-many-requests':'❌ محاولات كثيرة.','auth/invalid-credential':'❌ البريد أو كلمة المرور غير صحيحة!'};
+      const codes={'auth/user-not-found':'❌ لا يوجد حساب!','auth/wrong-password':'❌ كلمة المرور خاطئة!','auth/invalid-email':'❌ البريد غير صحيح!','auth/too-many-requests':'❌ محاولات كثيرة، انتظر قليلاً.','auth/invalid-credential':'❌ البريد أو كلمة المرور غير صحيحة!'};
       msg.textContent=codes[e.code]||('❌ '+e.message);
     }
   } else {
@@ -1214,12 +1159,11 @@ async function handleRegister() {
   }
 }
 
-// FIXED LOGOUT: proper async function, no issues with event binding
 async function handleLogout() {
   if (!confirm('هل تريد تسجيل الخروج؟')) return;
-  try { if(firebaseReady&&auth) await auth.signOut(); } catch(e){console.warn(e);}
+  try { if(firebaseReady && auth) await auth.signOut(); } catch(e){ console.warn(e); }
   localStorage.removeItem('pharma_session');
-  user={uid:'',email:'',fullname:'',role:'',city:'',gems:0,lives:5,xp:0,emoji:'👨‍⚕️',completedLessons:{},completedSections:{},lastHeartTime:Date.now(),joined:''};
+  user = {uid:'',email:'',fullname:'',role:'',city:'',gems:0,lives:5,xp:0,emoji:'👨‍⚕️',completedLessons:{},completedSections:{},lastHeartTime:Date.now(),joined:''};
   document.getElementById('main-nav').style.display='none';
   document.getElementById('main-bottom-nav').style.display='none';
   ['study','search','chat','board','profile','settings'].forEach(t=>document.getElementById('tab-'+t).style.display='none');
@@ -1261,17 +1205,16 @@ function renderNavCapsules() {
 //  UI UPDATE
 // ============================================================
 function updateUI() {
-  const done=Object.keys(user.completedSections||{}).length;
-  const ranks=["مبتدئ","مساعد صيدلي","صيدلي متمكن","خبير الأكاديمية","أستاذ صيدلي"];
-  const rank=ranks[Math.min(Math.floor(done/2),4)];
-  const setEl=(id,val)=>{const el=document.getElementById(id);if(el)el.textContent=val;};
+  const done = Object.keys(user.completedSections||{}).length;
+  const ranks = ["مبتدئ","مساعد صيدلي","صيدلي متمكن","خبير الأكاديمية","أستاذ صيدلي"];
+  const rank = ranks[Math.min(Math.floor(done/2),4)];
+  const setEl = (id,val) => { const el=document.getElementById(id); if(el) el.textContent=val; };
   setEl('ui-gems',user.gems); setEl('pstat-gems',user.gems);
   setEl('ui-lives',user.lives);
   setEl('ui-xp',user.xp); setEl('pstat-xp',user.xp);
   setEl('pstat-sections',done);
-  // Lives capsule pulse warning
-  const livesCapsule=document.getElementById('lives-capsule');
-  if(livesCapsule){livesCapsule.classList.toggle('pulse-warn',user.lives<=1);}
+  const livesCapsule = document.getElementById('lives-capsule');
+  if(livesCapsule) livesCapsule.classList.toggle('pulse-warn',user.lives<=1);
   ['ui-emoji','profile-emoji'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=user.emoji;});
   setEl('ui-name',user.fullname||user.email||'مجهول');
   setEl('profile-name',user.fullname||user.email||'---');
@@ -1283,7 +1226,8 @@ function updateUI() {
   setEl('pinfo-email',user.email||'---');
   setEl('pinfo-joined',user.joined||'---');
   setEl('settings-email-display',user.email||'---');
-  const xpBar=document.getElementById('xp-bar'); if(xpBar)xpBar.style.width=Math.min((user.xp%500)/500*100,100)+'%';
+  const xpBar = document.getElementById('xp-bar');
+  if(xpBar) xpBar.style.width=Math.min((user.xp%500)/500*100,100)+'%';
 }
 
 // ============================================================
@@ -1294,7 +1238,15 @@ function isLessonDone(sysId,secId,lessonId){return!!(user.completedLessons&&user
 function isSectionDone(sysId,secId){return!!(user.completedSections&&user.completedSections[sysId+'_'+secId]);}
 function markLessonDone(sysId,secId,lessonId){if(!user.completedLessons)user.completedLessons={};user.completedLessons[sysId+'_'+secId+'_'+lessonId]=true;}
 function markSectionDone(sysId,secId){if(!user.completedSections)user.completedSections={};user.completedSections[sysId+'_'+secId]=true;}
-function isAllLessonsDone(sysIdx,secIdx){const sys=SYSTEMS[sysIdx],sec=sys.sections[secIdx];return sec.lessons.every(l=>isLessonDone(sys.id,sec.id,l.id));}
+
+// ===== FIX: isAllLessonsDone — checks ALL lessons in the section =====
+function isAllLessonsDone(sysIdx, secIdx) {
+  const sys = SYSTEMS[sysIdx];
+  const sec = sys.sections[secIdx];
+  if (!sec || !sec.lessons || sec.lessons.length === 0) return false;
+  return sec.lessons.every(l => isLessonDone(sys.id, sec.id, l.id));
+}
+
 function getDoneSectionsInSystem(sysIdx){const sys=SYSTEMS[sysIdx];return sys.sections.filter(s=>isSectionDone(sys.id,s.id)).length;}
 function getSectionUnlocked(sysIdx,secIdx){if(secIdx===0)return true;const sys=SYSTEMS[sysIdx];return isSectionDone(sys.id,sys.sections[secIdx-1].id);}
 
@@ -1306,13 +1258,26 @@ function renderSystems(){
     const pillsHtml=sys.available?sys.sections.map(s=>`<span class="section-pill ${isSectionDone(sys.id,s.id)?'done':''}">${s.name.replace('أدوية','').trim().split('(')[0].trim().substring(0,15)}</span>`).join(''):'';
     const card=document.createElement('div');card.className='system-card';
     card.innerHTML=`<div class="system-card-header"><span class="system-icon">${sys.icon}</span><div style="flex:1"><div class="system-title">${sys.title} <span style="color:#94a3b8;font-size:12px;font-weight:400">${sys.subtitle}</span></div><div class="system-meta">${sys.available?total+' أصناف دوائية':'قيد التطوير'}</div>${sys.available?`<div class="system-progress-wrap" style="width:140px"><div class="system-progress-fill" style="width:${pct}%"></div></div>`:''}</div><span class="system-badge ${sys.available?'':'locked'}">${sys.available?done+'/'+total+' ✅':'🔒 قريباً'}</span></div>${sys.available&&pillsHtml?`<div class="section-pills">${pillsHtml}</div>`:''}`
-    if(sys.available)card.onclick=()=>openSystem(sysIdx);
-    else{card.style.cursor='default';card.onclick=()=>alert('🔒 هذا الجهاز سيُضاف قريباً!');}
+    if(sys.available) card.onclick=()=>openSystem(sysIdx);
+    else { card.style.cursor='default'; card.onclick=()=>alert('🔒 هذا الجهاز سيُضاف قريباً!'); }
     c.appendChild(card);
   });
 }
-function openSystem(sysIdx){currentSystemIdx=sysIdx;const sys=SYSTEMS[sysIdx];document.getElementById('sections-system-title').textContent=sys.icon+' '+sys.title;renderSections(sysIdx);document.getElementById('systems-view').style.display='none';document.getElementById('sections-view').style.display='block';}
-function showSystemsView(){document.getElementById('sections-view').style.display='none';document.getElementById('systems-view').style.display='block';renderSystems();}
+
+function openSystem(sysIdx){
+  currentSystemIdx=sysIdx;
+  const sys=SYSTEMS[sysIdx];
+  document.getElementById('sections-system-title').textContent=sys.icon+' '+sys.title;
+  renderSections(sysIdx);
+  document.getElementById('systems-view').style.display='none';
+  document.getElementById('sections-view').style.display='block';
+}
+function showSystemsView(){
+  document.getElementById('sections-view').style.display='none';
+  document.getElementById('systems-view').style.display='block';
+  renderSystems();
+}
+
 function renderSections(sysIdx){
   const sys=SYSTEMS[sysIdx],c=document.getElementById('sections-container');if(!c)return;c.innerHTML='';
   sys.sections.forEach((sec,secIdx)=>{
@@ -1320,8 +1285,21 @@ function renderSections(sysIdx){
     const prog=getSectionProgress(sys.id,sec.id);
     const item=document.createElement('div');item.className=`section-item${done?' done-border':''}${!unlocked?' locked-item':''}`;
     const iconBg=done?'done-icon':(unlocked?'active-icon':'locked-icon');
-    const allLessonsDone=isAllLessonsDone(sysIdx,secIdx);
-    const actionBtns=unlocked?`<div class="sec-action"><button class="sec-btn study-btn" onclick="openLessonList(${sysIdx},${secIdx})">📖 الدروس (${prog.doneLessons}/${prog.total})</button>${allLessonsDone?`<button class="sec-btn quiz-btn" onclick="startFinalQuiz(${sysIdx},${secIdx})">🏆 اختبار شامل</button>`:''}</div>`:`<div class="section-locked-msg">🔒 أكمل الصنف السابق أولاً</div>`;
+
+    // ===== FIX: allLessonsDone check BEFORE rendering quiz button =====
+    const allLessonsDone = isAllLessonsDone(sysIdx, secIdx);
+
+    let actionBtns;
+    if (unlocked) {
+      // Quiz button: enabled only when ALL lessons done
+      const quizBtn = allLessonsDone
+        ? `<button class="sec-btn quiz-btn" onclick="startFinalQuiz(${sysIdx},${secIdx})">🏆 اختبار شامل</button>`
+        : `<button class="sec-btn locked-btn" title="أكمل جميع الدروس أولاً" disabled>🔒 الاختبار الشامل</button>`;
+      actionBtns = `<div class="sec-action"><button class="sec-btn study-btn" onclick="openLessonList(${sysIdx},${secIdx})">📖 الدروس (${prog.doneLessons}/${prog.total})</button>${quizBtn}</div>`;
+    } else {
+      actionBtns = `<div class="section-locked-msg">🔒 أكمل الصنف السابق أولاً</div>`;
+    }
+
     item.innerHTML=`<div class="section-header"><div class="sec-icon ${iconBg}">${done?'✅':(unlocked?sec.icon:'🔒')}</div><div class="sec-info"><div class="sec-name">${sec.name}</div><div class="sec-desc">${sec.desc}</div><div class="sec-stats"><span class="sec-stat${done?' green':''}">📖 ${sec.lessons.length} درس</span><span class="sec-stat${done?' green':''}">🎯 ${sec.finalQuiz.length} سؤال</span>${done?'<span class="sec-stat green">✅ مكتمل</span>':''}</div></div></div>${actionBtns}`;
     c.appendChild(item);
   });
@@ -1330,150 +1308,231 @@ function renderSections(sysIdx){
 // ============================================================
 //  LESSON LIST
 // ============================================================
-function openLessonList(sysIdx,secIdx){
-  currentSystemIdx=sysIdx;currentSectionIdx=secIdx;
-  const sys=SYSTEMS[sysIdx],sec=sys.sections[secIdx];
+function openLessonList(sysIdx, secIdx) {
+  currentSystemIdx=sysIdx; currentSectionIdx=secIdx;
+  const sys=SYSTEMS[sysIdx], sec=sys.sections[secIdx];
   document.getElementById('lesson-list-title').textContent=sec.icon+' '+sec.name;
-  const body=document.getElementById('lesson-list-body');body.innerHTML='';
-  const hdr=document.createElement('div');hdr.className='lesson-grid-title';hdr.textContent='📖 اختر الدرس:';body.appendChild(hdr);
+  const body=document.getElementById('lesson-list-body'); body.innerHTML='';
+  const hdr=document.createElement('div'); hdr.className='lesson-grid-title'; hdr.textContent='📖 اختر الدرس:'; body.appendChild(hdr);
+
   sec.lessons.forEach((lesson,lessonIdx)=>{
     const done=isLessonDone(sys.id,sec.id,lesson.id);
-    const card=document.createElement('div');card.className='lesson-card'+(done?' done-card':'');
+    const card=document.createElement('div'); card.className='lesson-card'+(done?' done-card':'');
     card.innerHTML=`<div class="lesson-card-icon" style="background:${done?'#dcfce7':'#fef3c7'}">${done?'✅':lesson.emoji}</div><div class="lesson-card-info"><div class="lesson-card-name">${lesson.name}</div><div class="lesson-card-sub">${done?'مكتمل — يمكن المراجعة':'اضغط للدراسة'}</div></div><span class="lesson-card-badge" style="background:${done?'#dcfce7':'#fef3c7'};color:${done?'#166534':'#92400e'}">${done?'✅ تم':'جديد'}</span>`;
-    card.onclick=()=>startLessonStudy(sysIdx,secIdx,lessonIdx);body.appendChild(card);
+    card.onclick=()=>startLessonStudy(sysIdx,secIdx,lessonIdx);
+    body.appendChild(card);
   });
-  const allDone=isAllLessonsDone(sysIdx,secIdx);
-  const fqCard=document.createElement('div');fqCard.className='final-quiz-card';fqCard.style.opacity=allDone?'1':'0.5';
-  fqCard.innerHTML=`<div class="final-quiz-card-icon">🏆</div><div class="final-quiz-card-info"><div class="final-quiz-card-name">الاختبار الشامل</div><div class="final-quiz-card-sub">${allDone?sec.finalQuiz.length+' سؤال':'أكمل جميع الدروس أولاً'}</div></div><span class="final-quiz-card-badge">${allDone?'متاح':'🔒'}</span>`;
-  if(allDone)fqCard.onclick=()=>startFinalQuiz(sysIdx,secIdx);
+
+  // ===== FIX: Final quiz card — re-evaluate allLessonsDone here too =====
+  const allDone = isAllLessonsDone(sysIdx, secIdx);
+  const fqCard=document.createElement('div');
+  fqCard.className='final-quiz-card' + (allDone ? '' : ' locked-quiz');
+  fqCard.innerHTML=`<div class="final-quiz-card-icon">🏆</div><div class="final-quiz-card-info"><div class="final-quiz-card-name">الاختبار الشامل</div><div class="final-quiz-card-sub">${allDone ? sec.finalQuiz.length+' سؤال — جاهز!' : 'أكمل جميع الدروس أولاً (' + sec.lessons.filter(l=>isLessonDone(sys.id,sec.id,l.id)).length + '/' + sec.lessons.length + ')'}</div></div><span class="final-quiz-card-badge">${allDone?'✅ متاح':'🔒 مقفل'}</span>`;
+  if (allDone) fqCard.onclick=()=>startFinalQuiz(sysIdx,secIdx);
   body.appendChild(fqCard);
+
   document.getElementById('lesson-list-screen').style.display='block';
 }
-function closeLessonList(){document.getElementById('lesson-list-screen').style.display='none';renderSections(currentSystemIdx);}
+
+function closeLessonList(){
+  document.getElementById('lesson-list-screen').style.display='none';
+  renderSections(currentSystemIdx);
+}
 
 // ============================================================
 //  LESSON ENGINE
 // ============================================================
 function startLessonStudy(sysIdx,secIdx,lessonIdx){
-  currentSystemIdx=sysIdx;currentSectionIdx=secIdx;currentLessonIdx=lessonIdx;
-  isFinalQuiz=false;lessonMode='study';
+  currentSystemIdx=sysIdx; currentSectionIdx=secIdx; currentLessonIdx=lessonIdx;
+  isFinalQuiz=false; lessonMode='study';
   const sys=SYSTEMS[sysIdx],sec=sys.sections[secIdx],lesson=sec.lessons[lessonIdx];
   lessonSteps=[{type:'info',...lesson.slide},...lesson.quizzes.map(q=>({type:'quiz',...q}))];
-  stepIdx=0;quizAnswers=[];
+  stepIdx=0; quizAnswers=[];
   document.getElementById('lesson-section-badge').textContent=lesson.name;
   document.getElementById('lesson-mode-label').textContent='📖 درس + اختبار';
   document.getElementById('action-btn').style.display='block';
   document.getElementById('lesson-screen').style.display='block';
   renderStep();
 }
+
 function startFinalQuiz(sysIdx,secIdx){
-  if(user.lives<=0){alert('💔 نفدت القلوب! انتظر أو اشترِ بالجواهر.');return;}
-  currentSystemIdx=sysIdx;currentSectionIdx=secIdx;currentLessonIdx=-1;
-  isFinalQuiz=true;lessonMode='quiz';
-  const sys=SYSTEMS[sysIdx],sec=sys.sections[secIdx];
-  const shuffled=appSettings.shuffle?[...sec.finalQuiz].sort(()=>Math.random()-0.5):[...sec.finalQuiz];
+  // Guard: check lives and all lessons done
+  if (user.lives<=0) { alert('💔 نفدت القلوب! انتظر أو اشترِ بالجواهر.'); return; }
+  if (!isAllLessonsDone(sysIdx, secIdx)) {
+    const sys=SYSTEMS[sysIdx], sec=sys.sections[secIdx];
+    const done=sec.lessons.filter(l=>isLessonDone(sys.id,sec.id,l.id)).length;
+    alert(`🔒 أكمل جميع الدروس أولاً! (${done}/${sec.lessons.length} مكتمل)`);
+    return;
+  }
+
+  currentSystemIdx=sysIdx; currentSectionIdx=secIdx; currentLessonIdx=-1;
+  isFinalQuiz=true; lessonMode='quiz';
+  const sys=SYSTEMS[sysIdx], sec=sys.sections[secIdx];
+  const shuffled=appSettings.shuffle ? [...sec.finalQuiz].sort(()=>Math.random()-0.5) : [...sec.finalQuiz];
   lessonSteps=shuffled.map(q=>({type:'quiz',...q}));
-  stepIdx=0;quizAnswers=[];
+  stepIdx=0; quizAnswers=[];
   document.getElementById('lesson-section-badge').textContent='🏆 اختبار شامل: '+sec.name;
   document.getElementById('lesson-mode-label').textContent='🎯 اختبار شامل';
   document.getElementById('action-btn').style.display='block';
   document.getElementById('lesson-screen').style.display='block';
   renderStep();
 }
+
 function closeLesson(){
   document.getElementById('lesson-screen').style.display='none';
   const body=document.getElementById('lesson-list-body');
-  if(body.children.length>0)openLessonList(currentSystemIdx,currentSectionIdx);
-  renderSections(currentSystemIdx);renderSystems();
+  if(body.children.length>0) openLessonList(currentSystemIdx,currentSectionIdx);
+  renderSections(currentSystemIdx);
+  renderSystems();
 }
+
 function renderStep(){
   answered=false;
-  const slide=lessonSteps[stepIdx],total=lessonSteps.length;
+  const slide=lessonSteps[stepIdx], total=lessonSteps.length;
   const btn=document.getElementById('action-btn');
   document.getElementById('progress-fill').style.width=((stepIdx/total)*100)+'%';
   document.getElementById('step-counter').textContent=`${stepIdx+1}/${total}`;
+
   if(slide.type==='info'){
-    const sciClean=slide.sciAudio||slide.sci;const tradeClean=slide.tradeAudio||slide.trade;
+    const sciClean=slide.sciAudio||slide.sci;
+    const tradeClean=slide.tradeAudio||slide.trade;
     document.getElementById('lesson-body').innerHTML=`<div class="pharma-card"><div class="pharma-card-header"><div><div class="pharma-sci-name">💊 ${slide.sci}</div><div class="pharma-trade-name">🏷️ ${slide.trade}</div></div></div><div class="info-row highlight-row"><span class="info-icon">✅</span><div class="info-text"><b>متى يُصرف</b>${slide.indication}</div></div><div class="info-row"><span class="info-icon">⚙️</span><div class="info-text"><b>ميكانزم العمل</b>${slide.mech}</div></div><div class="info-row"><span class="info-icon">💊</span><div class="info-text"><b>الجرعة والتوقيت</b>${slide.dose}</div></div><div class="warn-box">⚠️ ${slide.warn}</div><div class="speak-row"><button class="speak-btn sci-btn" id="speak-sci-btn" onclick="speakPro('${sciClean}','sci')">🔊 الاسم العلمي</button><button class="speak-btn trade-btn" id="speak-trade-btn" onclick="speakPro('${tradeClean}','trade')">🔊 الاسم التجاري</button></div></div>`;
-    btn.textContent='فهمت، استمرار ←';btn.disabled=false;btn.onclick=nextStep;
+    btn.textContent='فهمت، استمرار ←';
+    btn.disabled=false;
+    btn.onclick=nextStep;
   } else {
-    const dotsHtml=lessonSteps.map((_,i)=>{let cls='';if(i<quizAnswers.length)cls=quizAnswers[i]?'correct':'wrong';else if(i===stepIdx)cls='current';return`<div class="quiz-dot ${cls}"></div>`;}).join('');
+    const dotsHtml=lessonSteps.map((_,i)=>{
+      let cls='';
+      if(i<quizAnswers.length) cls=quizAnswers[i]?'correct':'wrong';
+      else if(i===stepIdx) cls='current';
+      return`<div class="quiz-dot ${cls}"></div>`;
+    }).join('');
+
     let items=slide.a.map((t,i)=>({text:t,isCorrect:i===slide.c}));
-    if(appSettings.shuffle)items.sort(()=>Math.random()-0.5);
+    if(appSettings.shuffle) items.sort(()=>Math.random()-0.5);
+
     document.getElementById('lesson-body').innerHTML=`<div class="quiz-wrap"><div class="quiz-progress-row"><div class="quiz-dots">${dotsHtml}</div><span style="font-size:11px;color:var(--muted);font-weight:700">${stepIdx+1}/${total}</span></div><div class="quiz-q">🎯 ${slide.q}</div><div id="opts"></div><div class="explanation-box" id="exp-box">${slide.exp||''}</div></div>`;
+
     const container=document.getElementById('opts');
     items.forEach(item=>{
-      const div=document.createElement('div');div.className='opt';div.textContent=item.text;
+      const div=document.createElement('div'); div.className='opt'; div.textContent=item.text;
       div.onclick=()=>handleAnswer(div,item.isCorrect,container,slide.c,slide.a);
       container.appendChild(div);
     });
-    btn.textContent='اختر إجابة أولاً';btn.disabled=true;btn.onclick=null;
+    btn.textContent='اختر إجابة أولاً';
+    btn.disabled=true;
+    btn.onclick=null;
   }
 }
+
 function handleAnswer(el,isCorrect,container,correctIdx,answers){
-  if(answered)return;answered=true;
+  if(answered)return;
+  answered=true;
   container.querySelectorAll('.opt').forEach(o=>o.classList.add('disabled'));
   const btn=document.getElementById('action-btn');
   quizAnswers.push(isCorrect);
   if(appSettings.showExplain){const expBox=document.getElementById('exp-box');if(expBox)expBox.style.display='block';}
   if(isCorrect){
-    el.classList.add('correct');user.gems+=2;user.xp+=8;saveUserToDb();updateUI();
-    if(appSettings.sound)playTone(880,0.15,'sine');
-    btn.textContent='✅ صحيح! استمرار ←';btn.disabled=false;btn.onclick=nextStep;
+    el.classList.add('correct');
+    user.gems+=2; user.xp+=8;
+    saveUserToDb(); updateUI();
+    if(appSettings.sound) playTone(880,0.15,'sine');
+    btn.textContent='✅ صحيح! استمرار ←';
+    btn.disabled=false;
+    btn.onclick=nextStep;
   } else {
     el.classList.add('wrong');
     container.querySelectorAll('.opt').forEach(o=>{if(o.textContent===answers[correctIdx])o.classList.add('correct');});
-    user.lives--;if(user.lives===4)user.lastHeartTime=Date.now();
-    saveUserToDb();updateUI();
-    if(appSettings.sound)playTone(220,0.15,'sawtooth');
+    user.lives--;
+    if(user.lives===4) user.lastHeartTime=Date.now();
+    saveUserToDb(); updateUI();
+    if(appSettings.sound) playTone(220,0.15,'sawtooth');
     if(user.lives<=0){setTimeout(()=>{alert('💔 نفدت القلوب!');closeLesson();},800);return;}
-    btn.textContent='❌ خطأ — الإجابة مُظللة. استمرار ←';btn.disabled=false;btn.onclick=nextStep;
+    btn.textContent='❌ خطأ — الإجابة مُظللة. استمرار ←';
+    btn.disabled=false;
+    btn.onclick=nextStep;
   }
 }
-function nextStep(){stepIdx++;if(stepIdx<lessonSteps.length){renderStep();return;}finishSession();}
+
+function nextStep(){
+  stepIdx++;
+  if(stepIdx<lessonSteps.length){ renderStep(); return; }
+  finishSession();
+}
+
 function finishSession(){
-  const sys=SYSTEMS[currentSystemIdx],sec=sys.sections[currentSectionIdx];
-  if(!isFinalQuiz&&currentLessonIdx>=0){
+  const sys=SYSTEMS[currentSystemIdx], sec=sys.sections[currentSectionIdx];
+
+  if(!isFinalQuiz && currentLessonIdx>=0){
     const lesson=sec.lessons[currentLessonIdx];
-    markLessonDone(sys.id,sec.id,lesson.id);user.gems+=10;user.xp+=30;
-    saveUserToDb();updateUI();closeLesson();launchConfetti();
+    markLessonDone(sys.id,sec.id,lesson.id);
+    user.gems+=10; user.xp+=30;
+    saveUserToDb(); updateUI();
+    closeLesson();
+    launchConfetti();
     setTimeout(()=>alert(`🎊 أكملت درس "${lesson.name}"! +30 XP · +10 💎`),200);
   } else if(isFinalQuiz){
-    const correct=quizAnswers.filter(Boolean).length,total=quizAnswers.length;
-    const pct=Math.round(correct/total*100),passed=pct>=70;
-    if(passed&&!isSectionDone(sys.id,sec.id)){markSectionDone(sys.id,sec.id);user.gems+=30;user.xp+=80;saveUserToDb();updateUI();}
+    const correct=quizAnswers.filter(Boolean).length, total=quizAnswers.length;
+    const pct=Math.round(correct/total*100), passed=pct>=70;
+    if(passed && !isSectionDone(sys.id,sec.id)){
+      markSectionDone(sys.id,sec.id);
+      user.gems+=30; user.xp+=80;
+      saveUserToDb(); updateUI();
+    }
     const emoji=pct===100?'🏆':pct>=80?'🎉':pct>=70?'👍':pct>=50?'😐':'😞';
     document.getElementById('lesson-body').innerHTML=`<div class="quiz-score-card"><div class="quiz-score-emoji">${emoji}</div><div class="quiz-score-num">${correct}/${total}</div><div class="quiz-score-lbl">${pct}% صحيح</div><p style="color:#94a3b8;font-size:13px;margin-top:10px">${passed?'✅ صنف مكتمل! +80 XP · +30 💎':'❌ تحتاج 70% للنجاح.'}</p><button class="quiz-retry-btn" onclick="retryFinalQuiz()">🔄 إعادة الاختبار</button></div>`;
     document.getElementById('action-btn').style.display='none';
     document.getElementById('progress-fill').style.width='100%';
-    if(passed)launchConfetti();
-    const totalSecs=sys.sections.length,doneSecs=getDoneSectionsInSystem(currentSystemIdx);
-    if(doneSecs>=totalSecs){setTimeout(()=>{document.getElementById('cert-name').textContent=user.fullname||user.email;document.getElementById('cert-overlay').classList.add('show');},1000);}
+    if(passed) launchConfetti();
+    // Check if all sections done → certificate
+    const totalSecs=sys.sections.length, doneSecs=getDoneSectionsInSystem(currentSystemIdx);
+    if(doneSecs>=totalSecs){
+      setTimeout(()=>{
+        document.getElementById('cert-name').textContent=user.fullname||user.email;
+        document.getElementById('cert-overlay').classList.add('show');
+      },1000);
+    }
   }
 }
-function retryFinalQuiz(){document.getElementById('action-btn').style.display='block';startFinalQuiz(currentSystemIdx,currentSectionIdx);}
+
+function retryFinalQuiz(){
+  document.getElementById('action-btn').style.display='block';
+  startFinalQuiz(currentSystemIdx,currentSectionIdx);
+}
 
 // ============================================================
 //  HEARTS TIMER
 // ============================================================
 setInterval(()=>{
-  if(user.lives<5&&user.uid){
-    const diff=Date.now()-user.lastHeartTime,period=20*60*1000;
-    if(diff>=period){user.lives++;user.lastHeartTime=Date.now();saveUserToDb();updateUI();}
-    else{const rem=period-diff,m=Math.floor(rem/60000),s=Math.floor((rem%60000)/1000);const el=document.getElementById('ui-timer');if(el)el.textContent=`${m}:${s<10?'0':''}${s}`;}
-  } else {const el=document.getElementById('ui-timer');if(el)el.textContent='';}
+  if(user.lives<5 && user.uid){
+    const diff=Date.now()-user.lastHeartTime, period=20*60*1000;
+    if(diff>=period){
+      user.lives++; user.lastHeartTime=Date.now();
+      saveUserToDb(); updateUI();
+    } else {
+      const rem=period-diff, m=Math.floor(rem/60000), s=Math.floor((rem%60000)/1000);
+      const el=document.getElementById('ui-timer');
+      if(el) el.textContent=`${m}:${s<10?'0':''}${s}`;
+    }
+  } else {
+    const el=document.getElementById('ui-timer');
+    if(el) el.textContent='';
+  }
 },1000);
 
 function buyLife(){
   if(user.lives>=5){alert('القلوب ممتلئة!');return;}
   if(user.gems<25){alert('تحتاج 25 💎!');return;}
-  user.gems-=25;user.lives++;saveUserToDb();updateUI();
-  if(appSettings.sound)playTone(660,0.2,'sine');
+  user.gems-=25; user.lives++;
+  saveUserToDb(); updateUI();
+  if(appSettings.sound) playTone(660,0.2,'sine');
 }
+
 function changeEmoji(){
   const list=["👨‍⚕️","👩‍⚕️","💊","🔬","🦾","🧬","⚗️","🏥","👨‍🔬","👩‍🔬"];
-  const i=list.indexOf(user.emoji);user.emoji=list[(i+1)%list.length];
-  saveUserToDb();updateUI();
+  const i=list.indexOf(user.emoji);
+  user.emoji=list[(i+1)%list.length];
+  saveUserToDb(); updateUI();
 }
 
 // ============================================================
@@ -1481,11 +1540,11 @@ function changeEmoji(){
 // ============================================================
 function switchTab(tab){
   ['study','search','chat','board','profile','settings'].forEach(t=>{
-    const tabEl=document.getElementById('tab-'+t);if(tabEl)tabEl.style.display=t===tab?'block':'none';
-    const btnEl=document.getElementById('btn-'+t);if(btnEl)btnEl.classList.toggle('active',t===tab);
+    const tabEl=document.getElementById('tab-'+t); if(tabEl) tabEl.style.display=t===tab?'block':'none';
+    const btnEl=document.getElementById('btn-'+t); if(btnEl) btnEl.classList.toggle('active',t===tab);
   });
-  if(tab==='board')updateBoard();
-  if(tab==='chat')scrollChatBottom();
+  if(tab==='board') updateBoard();
+  if(tab==='chat') scrollChatBottom();
 }
 
 // ============================================================
@@ -1497,107 +1556,309 @@ function speakPro(text,type){
   const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=0.75;u.pitch=1.0;
   const voices=window.speechSynthesis.getVoices();
   const pref=voices.find(v=>v.lang.startsWith('en')&&(v.name.includes('Google')||v.name.includes('Premium')))||voices.find(v=>v.lang.startsWith('en'));
-  if(pref)u.voice=pref;
-  const btnId='speak-'+(type==='sci'?'sci':'trade')+'-btn';const btn=document.getElementById(btnId);
+  if(pref) u.voice=pref;
+  const btnId='speak-'+(type==='sci'?'sci':'trade')+'-btn';
+  const btn=document.getElementById(btnId);
   if(btn){btn.classList.add('speaking');btn.textContent='🔊 جاري...';}
   u.onend=()=>{currentSpeaking=null;if(btn){btn.classList.remove('speaking');btn.textContent=type==='sci'?'🔊 الاسم العلمي':'🔊 الاسم التجاري';}};
   u.onerror=()=>{if(btn){btn.classList.remove('speaking');btn.textContent=type==='sci'?'🔊 الاسم العلمي':'🔊 الاسم التجاري';}};
-  currentSpeaking=u;window.speechSynthesis.speak(u);
+  currentSpeaking=u;
+  window.speechSynthesis.speak(u);
 }
-function playTone(freq,vol,type){try{const ctx=new AudioContext();const osc=ctx.createOscillator();const gain=ctx.createGain();osc.connect(gain);gain.connect(ctx.destination);osc.type=type;osc.frequency.value=freq;gain.gain.value=vol;osc.start();osc.stop(ctx.currentTime+0.18);}catch(e){}}
+function playTone(freq,vol,type){
+  try{const ctx=new AudioContext();const osc=ctx.createOscillator();const gain=ctx.createGain();osc.connect(gain);gain.connect(ctx.destination);osc.type=type;osc.frequency.value=freq;gain.gain.value=vol;osc.start();osc.stop(ctx.currentTime+0.18);}catch(e){}
+}
 
 // ============================================================
-//  AI SEARCH
+//  AI SEARCH — FIX: proper error handling + loading state
 // ============================================================
-function setSearchType(btn,type){searchType=type;document.querySelectorAll('.stype-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
-async function runSearch(){
-  const q=document.getElementById('search-q').value.trim();if(!q)return;
-  const res=document.getElementById('search-results');
-  res.innerHTML=`<div class="ai-loading"><div class="spinner"></div><p>🤖 يحلل الذكاء الاصطناعي "${q}"...</p></div>`;
-  const typePrompts={full:`أنت صيدلاني متخصص. قدم معلومات شاملة عن دواء "${q}" باللغة العربية بـ JSON فقط: {"sci":"الاسم العلمي","trade":"الأسماء التجارية","class":"التصنيف","indication":"متى يُصرف","mech":"ميكانزم العمل","dose":"الجرعات والتوقيت","se":"الآثار الجانبية","interactions":"التداخلات المهمة","warn":"تحذيرات وموانع","storage":"التخزين","notes":"ملاحظات صيدلانية"}`,dose:`صيدلاني خبير. اعطِ معلومات الجرعات لـ "${q}" بـ JSON فقط: {"sci":"الاسم العلمي","trade":"الاسم التجاري","indication":"الحالات","adult_dose":"جرعة البالغين","child_dose":"جرعة الأطفال","timing":"التوقيت","max_dose":"الحد الأقصى","renal":"القصور الكلوي","hepatic":"القصور الكبدي","notes":"ملاحظات"}`,inter:`صيدلاني متخصص. حلل التداخلات لـ "${q}" بـ JSON فقط: {"sci":"الاسم العلمي","indication":"متى يصرف","major":"تداخلات خطيرة","moderate":"تداخلات معتدلة","minor":"تداخلات بسيطة","food":"تداخلات مع الطعام","mech":"آلية التداخل"}`,compare:`صيدلاني. قارن "${q}" مع الأدوية المشابهة بـ JSON فقط: {"sci":"الاسم العلمي","class":"الصنف","indication":"متى يُفضل","advantages":"المزايا","disadvantages":"العيوب","vs":"مقارنة مع البدائل","preferred_in":"يُفضل في","avoid_in":"يُتجنب في"}`};
-  try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:typePrompts[searchType]}]})});
-    const data=await resp.json();const raw=data.content.map(i=>i.text||'').join('');const clean=raw.replace(/```json|```/g,'').trim();const info=JSON.parse(clean);renderAIResult(info);
-  }catch(e){res.innerHTML=`<div class="ai-result-card" style="border-top-color:var(--red)"><p style="color:var(--red);font-size:13px">⚠️ تعذر الاتصال. تحقق من الاتصال والـ API Key.</p></div>`;}
+function setSearchType(btn,type){
+  searchType=type;
+  document.querySelectorAll('.stype-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
 }
+
+async function runSearch(){
+  const q=document.getElementById('search-q').value.trim();
+  if(!q){ alert('اكتب اسم الدواء أولاً'); return; }
+
+  const res=document.getElementById('search-results');
+  const searchBtn=document.getElementById('main-search-btn');
+
+  // Disable button during search
+  searchBtn.disabled=true;
+  searchBtn.textContent='⏳ جاري البحث...';
+
+  res.innerHTML=`<div class="ai-loading"><div class="spinner"></div><p>🤖 يحلل الذكاء الاصطناعي <b>"${q}"</b>...</p></div>`;
+
+  const typePrompts={
+    full:`أنت صيدلاني متخصص. قدم معلومات شاملة عن دواء "${q}" باللغة العربية بـ JSON فقط بدون أي نص خارجه: {"sci":"الاسم العلمي","trade":"الأسماء التجارية","class":"التصنيف الدوائي","indication":"الاستخدامات والمؤشرات","mech":"ميكانزم العمل","dose":"الجرعات والتوقيت والطريقة","se":"الآثار الجانبية الشائعة والخطيرة","interactions":"التداخلات الدوائية المهمة","warn":"تحذيرات وموانع الاستخدام","storage":"شروط التخزين","notes":"ملاحظات صيدلانية مهمة"}`,
+    dose:`صيدلاني خبير. أعطِ معلومات الجرعات لـ "${q}" باللغة العربية بـ JSON فقط: {"sci":"الاسم العلمي","trade":"الاسم التجاري","indication":"الحالات المعالجة","adult_dose":"جرعة البالغين","child_dose":"جرعة الأطفال","timing":"وقت وطريقة الأخذ","max_dose":"الحد الأقصى للجرعة","renal":"تعديل الجرعة في القصور الكلوي","hepatic":"تعديل الجرعة في القصور الكبدي","notes":"ملاحظات على الجرعات"}`,
+    inter:`صيدلاني متخصص. حلل التداخلات الدوائية لـ "${q}" باللغة العربية بـ JSON فقط: {"sci":"الاسم العلمي","indication":"الاستخدام الرئيسي","major":"تداخلات خطيرة تستوجب التجنب","moderate":"تداخلات معتدلة تحتاج متابعة","minor":"تداخلات بسيطة","food":"تداخلات مع الطعام والمشروبات","mech":"آلية التداخل الرئيسية","warn":"تحذيرات خاصة بالتداخلات"}`,
+    compare:`صيدلاني. قارن "${q}" مع الأدوية المشابهة في نفس الفئة باللغة العربية بـ JSON فقط: {"sci":"الاسم العلمي","class":"الصنف الدوائي","indication":"متى يُفضل هذا الدواء","advantages":"المزايا الرئيسية","disadvantages":"العيوب والقيود","vs":"مقارنة مختصرة مع أبرز البدائل","preferred_in":"الحالات التي يُفضل فيها","avoid_in":"الحالات التي يُتجنب فيها"}`
+  };
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role:'user', content: typePrompts[searchType] }]
+      })
+    });
+
+    if (!resp.ok) {
+      throw new Error('HTTP ' + resp.status + ': ' + resp.statusText);
+    }
+
+    const data = await resp.json();
+
+    if (data.error) {
+      throw new Error(data.error.message || 'API Error');
+    }
+
+    const raw = data.content.map(i=>i.text||'').join('');
+    const clean = raw.replace(/```json|```/g,'').trim();
+
+    // Find JSON object in response
+    const jsonMatch = clean.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('لم يتم الحصول على بيانات صحيحة');
+
+    const info = JSON.parse(jsonMatch[0]);
+    renderAIResult(info);
+
+  } catch(e) {
+    console.error('AI Search error:', e);
+    res.innerHTML=`<div class="ai-error-box"><p>⚠️ حدث خطأ أثناء البحث:<br><small>${e.message}</small></p><p style="margin-top:8px;font-size:12px;color:#64748b">تأكد من الاتصال بالإنترنت وأن الموقع يعمل بشكل صحيح</p><button class="retry-btn" onclick="runSearch()">🔄 إعادة المحاولة</button></div>`;
+  } finally {
+    // Re-enable button
+    searchBtn.disabled=false;
+    searchBtn.textContent='🔍 بحث بالذكاء الاصطناعي';
+  }
+}
+
 function renderAIResult(info){
   const res=document.getElementById('search-results');
-  const fields={full:[{key:'indication',icon:'✅',label:'متى يُصرف'},{key:'class',icon:'🏷️',label:'التصنيف'},{key:'mech',icon:'⚙️',label:'ميكانزم العمل'},{key:'dose',icon:'💊',label:'الجرعات'},{key:'se',icon:'⚡',label:'الآثار الجانبية'},{key:'interactions',icon:'🔗',label:'التداخلات'},{key:'storage',icon:'🌡️',label:'التخزين'},{key:'notes',icon:'📝',label:'ملاحظات'}],dose:[{key:'indication',icon:'✅',label:'متى يصرف'},{key:'adult_dose',icon:'👤',label:'جرعة البالغين'},{key:'child_dose',icon:'👶',label:'جرعة الأطفال'},{key:'timing',icon:'⏰',label:'التوقيت'},{key:'max_dose',icon:'⚠️',label:'الحد الأقصى'},{key:'renal',icon:'🫘',label:'القصور الكلوي'}],inter:[{key:'indication',icon:'✅',label:'متى يصرف'},{key:'major',icon:'🔴',label:'تداخلات خطيرة'},{key:'moderate',icon:'🟠',label:'معتدلة'},{key:'minor',icon:'🟡',label:'بسيطة'},{key:'food',icon:'🍎',label:'مع الطعام'},{key:'mech',icon:'⚙️',label:'آلية التداخل'}],compare:[{key:'indication',icon:'✅',label:'متى يُفضل'},{key:'advantages',icon:'✅',label:'المزايا'},{key:'disadvantages',icon:'❌',label:'العيوب'},{key:'vs',icon:'⚖️',label:'مقارنة مع البدائل'},{key:'preferred_in',icon:'👍',label:'يُفضَّل في'},{key:'avoid_in',icon:'🚫',label:'يُتجنب في'}]};
+  const fields={
+    full:[{key:'indication',icon:'✅',label:'متى يُصرف'},{key:'class',icon:'🏷️',label:'التصنيف'},{key:'mech',icon:'⚙️',label:'ميكانزم العمل'},{key:'dose',icon:'💊',label:'الجرعات'},{key:'se',icon:'⚡',label:'الآثار الجانبية'},{key:'interactions',icon:'🔗',label:'التداخلات'},{key:'storage',icon:'🌡️',label:'التخزين'},{key:'notes',icon:'📝',label:'ملاحظات'}],
+    dose:[{key:'indication',icon:'✅',label:'متى يصرف'},{key:'adult_dose',icon:'👤',label:'جرعة البالغين'},{key:'child_dose',icon:'👶',label:'جرعة الأطفال'},{key:'timing',icon:'⏰',label:'التوقيت'},{key:'max_dose',icon:'⚠️',label:'الحد الأقصى'},{key:'renal',icon:'🫘',label:'القصور الكلوي'},{key:'hepatic',icon:'🫀',label:'القصور الكبدي'}],
+    inter:[{key:'indication',icon:'✅',label:'متى يصرف'},{key:'major',icon:'🔴',label:'تداخلات خطيرة'},{key:'moderate',icon:'🟠',label:'معتدلة'},{key:'minor',icon:'🟡',label:'بسيطة'},{key:'food',icon:'🍎',label:'مع الطعام'},{key:'mech',icon:'⚙️',label:'آلية التداخل'}],
+    compare:[{key:'indication',icon:'✅',label:'متى يُفضل'},{key:'advantages',icon:'✅',label:'المزايا'},{key:'disadvantages',icon:'❌',label:'العيوب'},{key:'vs',icon:'⚖️',label:'مقارنة مع البدائل'},{key:'preferred_in',icon:'👍',label:'يُفضَّل في'},{key:'avoid_in',icon:'🚫',label:'يُتجنب في'}]
+  };
   const sel=fields[searchType]||fields.full;
   const fieldHtml=sel.filter(f=>info[f.key]).map(f=>`<div class="ai-section"><div class="ai-section-title">${f.icon} ${f.label}</div><div class="ai-section-body">${info[f.key]}</div></div>`).join('');
-  res.innerHTML=`<div class="ai-result-card"><h3>${info.sci||''}</h3><div class="trade-name">🏷️ ${info.trade||''}</div>${fieldHtml}${info.warn?`<div class="ai-warn">⚠️ ${info.warn}</div>`:''}<span style="display:inline-block;background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;margin-top:12px">✨ مدعوم بالذكاء الاصطناعي</span></div>`;
+  res.innerHTML=`<div class="ai-result-card"><h3>${info.sci||'غير محدد'}</h3><div class="trade-name">🏷️ ${info.trade||'غير محدد'}</div>${fieldHtml}${info.warn?`<div class="ai-warn">⚠️ ${info.warn}</div>`:''}<span style="display:inline-block;background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;margin-top:12px">✨ مدعوم بالذكاء الاصطناعي</span></div>`;
 }
 
 // ============================================================
-//  RX CHAT
+//  RX CHAT — FIX: real-time between all users via Firebase
 // ============================================================
 function initChatFirebase(){
-  if(!firebaseReady){initChatLocal();return;}
-  const chatRef=db.collection('rx_chat').orderBy('timestamp','desc').limit(50);
-  chatUnsubscribe=chatRef.onSnapshot(snapshot=>{
-    chatMsgMap={};
-    snapshot.forEach(doc=>{chatMsgMap[doc.id]={id:doc.id,...doc.data()};});
-    const msgs=Object.values(chatMsgMap).sort((a,b)=>{const ta=a.timestamp?.seconds||0,tb=b.timestamp?.seconds||0;return ta-tb;});
+  if(!firebaseReady){ initChatLocal(); return; }
+
+  // Real-time listener for ALL users
+  const chatRef = db.collection('rx_chat').orderBy('timestamp','asc').limitToLast(100);
+
+  if (chatUnsubscribe) chatUnsubscribe(); // Cleanup old listener
+
+  chatUnsubscribe = chatRef.onSnapshot(snapshot => {
+    const msgs = [];
+    snapshot.forEach(doc => {
+      msgs.push({ id: doc.id, ...doc.data() });
+    });
+    chatMsgMap = {};
+    msgs.forEach(m => chatMsgMap[m.id] = m);
     renderChatMessages(msgs);
+
+    // Update online count from recent activity (last 5 min)
+    const fiveMinAgo = Date.now() - 5*60*1000;
+    const activeUsers = new Set(
+      msgs
+        .filter(m => !m.system && m.timestamp?.seconds && m.timestamp.seconds*1000 > fiveMinAgo)
+        .map(m => m.from)
+    );
+    const el = document.getElementById('online-count');
+    if (el) el.textContent = activeUsers.size > 0 ? `${activeUsers.size} نشط الآن` : 'قناة RX';
+  }, err => {
+    console.error('Chat listener error:', err);
   });
-  setTimeout(async()=>{try{const snap=await db.collection('rx_chat').limit(1).get();if(snap.empty)db.collection('rx_chat').add({from:'نظام PharmaMaster',emoji:'💊',text:'مرحباً في قناة RX! 🩺',system:true,timestamp:firebase.firestore.FieldValue.serverTimestamp()});}catch(e){}},1000);
+
+  // Welcome message if empty
+  setTimeout(async () => {
+    try {
+      const snap = await db.collection('rx_chat').limit(1).get();
+      if (snap.empty) {
+        db.collection('rx_chat').add({
+          from: 'نظام PharmaMaster',
+          emoji: '💊',
+          text: 'مرحباً في قناة RX! 🩺 هذه القناة تربط جميع المتدربين المسجلين لمناقشة الوصفات الطبية.',
+          system: true,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }
+    } catch(e){}
+  }, 1000);
 }
-function initChatLocal(){loadChatLocal();const msgs=getChatLocal();if(msgs.length===0){saveMsgLocal({from:'نظام PharmaMaster',emoji:'💊',text:'مرحباً في قناة RX!',system:true,time:nowTime()});loadChatLocal();}setInterval(loadChatLocal,3000);}
+
+function initChatLocal(){
+  loadChatLocal();
+  const msgs=getChatLocal();
+  if(msgs.length===0){
+    saveMsgLocal({from:'نظام PharmaMaster',emoji:'💊',text:'مرحباً في قناة RX!',system:true,time:nowTime()});
+    loadChatLocal();
+  }
+  setInterval(loadChatLocal,3000);
+}
 function getChatLocal(){try{return JSON.parse(localStorage.getItem('pharma_rx_chat')||'[]');}catch{return[];}}
 function saveMsgLocal(msg){const msgs=getChatLocal();msgs.push(msg);if(msgs.length>100)msgs.splice(0,msgs.length-100);localStorage.setItem('pharma_rx_chat',JSON.stringify(msgs));}
 function loadChatLocal(){renderChatMessages(getChatLocal());}
-function escapeHtml(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+
+function escapeHtml(s){
+  if(!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
 
 function renderChatMessages(msgs){
-  const box=document.getElementById('chat-box');if(!box)return;
-  const wasAtBottom=box.scrollHeight-box.clientHeight<=box.scrollTop+80;
+  const box=document.getElementById('chat-box'); if(!box) return;
+  const wasAtBottom = box.scrollHeight-box.clientHeight <= box.scrollTop+80;
   box.innerHTML='';
+
   msgs.forEach(m=>{
-    if(m.system){const d=document.createElement('div');d.style.cssText='text-align:center;font-size:11px;color:#94a3b8;padding:5px 0';d.textContent=m.text;box.appendChild(d);return;}
-    const isMe=(m.from===user.email||m.from===user.fullname||m.from===user.uid);
-    const msgId=m.id||m._localId||'';
-    const w=document.createElement('div');w.className='bubble-wrap'+(isMe?' me':'');w.dataset.msgid=msgId;
-    const contentHtml=m.img?`<img src="${m.img}" style="max-width:180px;border-radius:10px;display:block">`:escapeHtml(m.text||'');
-    w.innerHTML=`<div class="bubble-avatar">${escapeHtml(m.emoji||'👤')}</div><div class="bubble-content"><div class="bubble-name">${escapeHtml(m.from||'')}</div><div class="${isMe?'user-bubble':'bot-bubble'}" id="bubble-text-${msgId}">${contentHtml}</div>${isMe?`<div class="bubble-actions"><button class="bubble-action-btn" onclick="startEditMsg('${msgId}')">✏️ تعديل</button><button class="bubble-action-btn del-btn" onclick="deleteMsg('${msgId}')">🗑️ حذف</button></div>`:''}<div class="bubble-time">${m.time||''}</div></div>`;
+    if(m.system){
+      const d=document.createElement('div');
+      d.style.cssText='text-align:center;font-size:11px;color:#94a3b8;padding:5px 0;';
+      d.textContent=m.text;
+      box.appendChild(d);
+      return;
+    }
+
+    // Identify own messages by uid OR email OR fullname
+    const isMe = (m.uid && m.uid===user.uid) || (m.from===user.email) || (m.from===user.fullname);
+    const msgId = m.id || m._localId || '';
+
+    const w=document.createElement('div');
+    w.className='bubble-wrap'+(isMe?' me':'');
+    w.dataset.msgid=msgId;
+
+    const contentHtml = m.img
+      ? `<img src="${m.img}" style="max-width:180px;border-radius:10px;display:block">`
+      : escapeHtml(m.text||'');
+
+    w.innerHTML=`
+      <div class="bubble-avatar">${escapeHtml(m.emoji||'👤')}</div>
+      <div class="bubble-content">
+        <div class="bubble-name">${escapeHtml(m.from||'')}</div>
+        <div class="${isMe?'user-bubble':'bot-bubble'}" id="bubble-text-${msgId}">${contentHtml}</div>
+        ${isMe?`<div class="bubble-actions">
+          <button class="bubble-action-btn" onclick="startEditMsg('${msgId}')">✏️ تعديل</button>
+          <button class="bubble-action-btn del-btn" onclick="deleteMsg('${msgId}')">🗑️ حذف</button>
+        </div>`:''}
+        <div class="bubble-time">${m.time||''}</div>
+      </div>`;
     box.appendChild(w);
   });
-  if(wasAtBottom)scrollChatBottom();
-  const names=new Set(msgs.filter(m=>!m.system&&m.from).map(m=>m.from));
-  const el=document.getElementById('online-count');if(el)el.textContent=`${names.size} متدرب في القناة`;
+
+  if(wasAtBottom) scrollChatBottom();
 }
+
 function startEditMsg(msgId){
-  const wrap=document.querySelector(`.bubble-wrap[data-msgid="${msgId}"]`);if(!wrap)return;
-  const bubbleText=wrap.querySelector(`#bubble-text-${msgId}`);if(!bubbleText)return;
-  const existing=wrap.querySelector('.msg-edit-input');if(existing){existing.remove();return;}
+  const wrap=document.querySelector(`.bubble-wrap[data-msgid="${msgId}"]`); if(!wrap) return;
+  const bubbleText=wrap.querySelector(`#bubble-text-${msgId}`); if(!bubbleText) return;
+  const existing=wrap.querySelector('.msg-edit-input'); if(existing){existing.remove();return;}
   const currentText=bubbleText.textContent||'';
-  const input=document.createElement('input');input.className='msg-edit-input';input.value=currentText;input.placeholder='اكتب الرسالة المعدلة...';
-  input.onkeydown=async(e)=>{if(e.key==='Enter'){const newText=input.value.trim();if(!newText){input.remove();return;}await doEditMsg(msgId,newText);input.remove();}if(e.key==='Escape')input.remove();};
-  bubbleText.after(input);input.focus();
+  const input=document.createElement('input');
+  input.className='msg-edit-input';
+  input.value=currentText;
+  input.placeholder='اكتب الرسالة المعدلة...';
+  input.onkeydown=async(e)=>{
+    if(e.key==='Enter'){const newText=input.value.trim();if(!newText){input.remove();return;}await doEditMsg(msgId,newText);input.remove();}
+    if(e.key==='Escape') input.remove();
+  };
+  bubbleText.after(input);
+  input.focus();
 }
 async function doEditMsg(msgId,newText){
-  if(firebaseReady&&msgId&&!msgId.startsWith('local_')){try{await db.collection('rx_chat').doc(msgId).update({text:newText});}catch(e){console.warn('Edit failed:',e);}}
-  else{const msgs=getChatLocal();const m=msgs.find(m=>m._localId===msgId||m.id===msgId);if(m){m.text=newText;localStorage.setItem('pharma_rx_chat',JSON.stringify(msgs));loadChatLocal();}}
-}
-async function deleteMsg(msgId){
-  if(!msgId||!confirm('حذف هذه الرسالة؟'))return;
-  if(firebaseReady&&msgId&&!msgId.startsWith('local_')){
-    try{await db.collection('rx_chat').doc(msgId).delete();const wrap=document.querySelector(`.bubble-wrap[data-msgid="${msgId}"]`);if(wrap)wrap.remove();}
-    catch(e){console.warn('Delete failed:',e);alert('❌ فشل الحذف: '+e.message);}
+  if(firebaseReady && msgId && !msgId.startsWith('local_')){
+    try{ await db.collection('rx_chat').doc(msgId).update({text:newText}); }
+    catch(e){ console.warn('Edit failed:',e); }
   } else {
-    const msgs=getChatLocal().filter(m=>m._localId!==msgId&&m.id!==msgId);localStorage.setItem('pharma_rx_chat',JSON.stringify(msgs));
-    const wrap=document.querySelector(`.bubble-wrap[data-msgid="${msgId}"]`);if(wrap)wrap.remove();
+    const msgs=getChatLocal();
+    const m=msgs.find(m=>m._localId===msgId||m.id===msgId);
+    if(m){m.text=newText;localStorage.setItem('pharma_rx_chat',JSON.stringify(msgs));loadChatLocal();}
   }
 }
+async function deleteMsg(msgId){
+  if(!msgId||!confirm('حذف هذه الرسالة؟')) return;
+  if(firebaseReady && msgId && !msgId.startsWith('local_')){
+    try{ await db.collection('rx_chat').doc(msgId).delete(); }
+    catch(e){ console.warn('Delete failed:',e); alert('❌ فشل الحذف: '+e.message); }
+  } else {
+    const msgs=getChatLocal().filter(m=>m._localId!==msgId&&m.id!==msgId);
+    localStorage.setItem('pharma_rx_chat',JSON.stringify(msgs));
+    const wrap=document.querySelector(`.bubble-wrap[data-msgid="${msgId}"]`);
+    if(wrap) wrap.remove();
+  }
+}
+
 async function sendMsg(){
-  const i=document.getElementById('chat-input');const t=i.value.trim();if(!t)return;
-  const msgData={from:user.fullname||user.email||'مجهول',emoji:user.emoji,text:t,time:nowTime()};i.value='';
-  if(firebaseReady){try{await db.collection('rx_chat').add({...msgData,timestamp:firebase.firestore.FieldValue.serverTimestamp()});}catch(e){saveMsgLocal({...msgData,_localId:'local_'+Date.now()});}}
-  else{saveMsgLocal({...msgData,_localId:'local_'+Date.now()});loadChatLocal();}
+  const i=document.getElementById('chat-input');
+  const t=i.value.trim();
+  if(!t) return;
+
+  const msgData={
+    uid: user.uid || user.email,  // Store UID for ownership check
+    from: user.fullname||user.email||'مجهول',
+    emoji: user.emoji,
+    text: t,
+    time: nowTime()
+  };
+  i.value='';
+
+  if(firebaseReady){
+    try{
+      await db.collection('rx_chat').add({
+        ...msgData,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }catch(e){
+      saveMsgLocal({...msgData,_localId:'local_'+Date.now()});
+    }
+  } else {
+    saveMsgLocal({...msgData,_localId:'local_'+Date.now()});
+    loadChatLocal();
+  }
 }
+
 async function triggerImageUpload(){
-  const i=document.createElement('input');i.type='file';i.accept='image/*';
-  i.onchange=e=>{const f=e.target.files[0];const r=new FileReader();r.onload=async ev=>{const imgData={from:user.fullname||user.email,emoji:user.emoji,img:ev.target.result,time:nowTime()};if(firebaseReady){try{await db.collection('rx_chat').add({...imgData,timestamp:firebase.firestore.FieldValue.serverTimestamp()});}catch(er){saveMsgLocal({...imgData,_localId:'local_'+Date.now()});loadChatLocal();}}else{saveMsgLocal({...imgData,_localId:'local_'+Date.now()});loadChatLocal();}};r.readAsDataURL(f);};i.click();
+  const i=document.createElement('input');
+  i.type='file'; i.accept='image/*';
+  i.onchange=e=>{
+    const f=e.target.files[0];
+    const r=new FileReader();
+    r.onload=async ev=>{
+      const imgData={
+        uid: user.uid||user.email,
+        from: user.fullname||user.email,
+        emoji: user.emoji,
+        img: ev.target.result,
+        time: nowTime()
+      };
+      if(firebaseReady){
+        try{
+          await db.collection('rx_chat').add({...imgData,timestamp:firebase.firestore.FieldValue.serverTimestamp()});
+        }catch(er){saveMsgLocal({...imgData,_localId:'local_'+Date.now()});loadChatLocal();}
+      } else {
+        saveMsgLocal({...imgData,_localId:'local_'+Date.now()});
+        loadChatLocal();
+      }
+    };
+    r.readAsDataURL(f);
+  };
+  i.click();
 }
+
 function scrollChatBottom(){const b=document.getElementById('chat-box');if(b)setTimeout(()=>b.scrollTop=b.scrollHeight,50);}
 function nowTime(){return new Date().toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'});}
 
@@ -1605,26 +1866,77 @@ function nowTime(){return new Date().toLocaleTimeString('ar',{hour:'2-digit',min
 //  LEADERBOARD
 // ============================================================
 async function updateBoard(){
-  const list=document.getElementById('board-list');if(!list)return;
+  const list=document.getElementById('board-list'); if(!list) return;
   list.innerHTML='<p style="color:#94a3b8;text-align:center;padding:20px">جاري التحميل...</p>';
   let scores=[];
-  if(firebaseReady){try{const snap=await db.collection('users').orderBy('xp','desc').limit(10).get();snap.forEach(doc=>{const d=doc.data();if(d.fullname||d.email)scores.push({name:d.fullname||d.email,email:d.email,xp:d.xp||0,done:Object.keys(d.completedSections||{}).length,emoji:d.emoji||'👤',role:d.role||''});});}catch(e){scores=getLocalScores();}}
-  else{scores=getLocalScores();}
-  if(!scores.length){list.innerHTML='<p style="color:#94a3b8;text-align:center;padding:20px">لا يوجد لاعبون بعد</p>';return;}
+  if(firebaseReady){
+    try{
+      const snap=await db.collection('users').orderBy('xp','desc').limit(20).get();
+      snap.forEach(doc=>{
+        const d=doc.data();
+        if(d.fullname||d.email) scores.push({
+          name:d.fullname||d.email,
+          email:d.email,
+          uid:d.uid||doc.id,
+          xp:d.xp||0,
+          done:Object.keys(d.completedSections||{}).length,
+          emoji:d.emoji||'👤',
+          role:d.role||''
+        });
+      });
+    }catch(e){ scores=getLocalScores(); }
+  } else { scores=getLocalScores(); }
+
+  if(!scores.length){
+    list.innerHTML='<p style="color:#94a3b8;text-align:center;padding:20px">لا يوجد لاعبون بعد</p>';
+    return;
+  }
   const medals=['🥇','🥈','🥉'];
-  list.innerHTML=scores.map((s,i)=>`<div class="rank-row ${(s.email===user.email)?'me-row':''}"><div class="rank-num">${medals[i]||'#'+(i+1)}</div><div class="rank-avatar">${escapeHtml(s.emoji)}</div><div class="rank-info"><div class="rank-name">${escapeHtml(s.name)}${(s.email===user.email)?' <span style="color:var(--blue);font-size:11px">(أنت)</span>':''}</div><div class="rank-detail">${escapeHtml(s.role||'')} · ${s.done} صنف</div></div><div class="rank-xp">${s.xp} XP</div></div>`).join('');
+  list.innerHTML=scores.map((s,i)=>`
+    <div class="rank-row ${(s.uid===user.uid||s.email===user.email)?'me-row':''}">
+      <div class="rank-num">${medals[i]||'#'+(i+1)}</div>
+      <div class="rank-avatar">${escapeHtml(s.emoji)}</div>
+      <div class="rank-info">
+        <div class="rank-name">${escapeHtml(s.name)}${(s.uid===user.uid||s.email===user.email)?' <span style="color:var(--blue);font-size:11px">(أنت)</span>':''}</div>
+        <div class="rank-detail">${escapeHtml(s.role||'')} · ${s.done} صنف مكتمل</div>
+      </div>
+      <div class="rank-xp">${s.xp} XP</div>
+    </div>
+  `).join('');
 }
-function getLocalScores(){const scores=[];for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(key&&key.startsWith('pharma_user_')&&!key.includes('email')){try{const d=JSON.parse(localStorage.getItem(key));if(d&&(d.fullname||d.email))scores.push({name:d.fullname||d.email,email:d.email||'',xp:d.xp||0,done:Object.keys(d.completedSections||{}).length,emoji:d.emoji||'👤',role:d.role||''});}catch(e){}}}return scores.sort((a,b)=>b.xp-a.xp).slice(0,10);}
+
+function getLocalScores(){
+  const scores=[];
+  for(let i=0;i<localStorage.length;i++){
+    const key=localStorage.key(i);
+    if(key&&key.startsWith('pharma_user_')&&!key.includes('email')){
+      try{const d=JSON.parse(localStorage.getItem(key));if(d&&(d.fullname||d.email))scores.push({name:d.fullname||d.email,email:d.email||'',uid:d.uid||'',xp:d.xp||0,done:Object.keys(d.completedSections||{}).length,emoji:d.emoji||'👤',role:d.role||''});}catch(e){}
+    }
+  }
+  return scores.sort((a,b)=>b.xp-a.xp).slice(0,10);
+}
 
 // ============================================================
 //  EDIT PROFILE
 // ============================================================
-function openEditModal(){document.getElementById('edit-fullname').value=user.fullname||'';document.getElementById('edit-role').value=user.role||'';document.getElementById('edit-city').value=user.city||'';document.getElementById('edit-modal').classList.add('show');}
+function openEditModal(){
+  document.getElementById('edit-fullname').value=user.fullname||'';
+  document.getElementById('edit-role').value=user.role||'';
+  document.getElementById('edit-city').value=user.city||'';
+  document.getElementById('edit-modal').classList.add('show');
+}
 function closeEditModal(){document.getElementById('edit-modal').classList.remove('show');}
 async function saveEdit(){
-  const fn=document.getElementById('edit-fullname').value.trim();const rl=document.getElementById('edit-role').value;const ct=document.getElementById('edit-city').value.trim();
-  if(fn)user.fullname=fn;if(rl)user.role=rl;if(ct)user.city=ct;
-  await saveUserToDb();updateUI();closeEditModal();alert('✅ تم حفظ التغييرات!');
+  const fn=document.getElementById('edit-fullname').value.trim();
+  const rl=document.getElementById('edit-role').value;
+  const ct=document.getElementById('edit-city').value.trim();
+  if(fn) user.fullname=fn;
+  if(rl) user.role=rl;
+  if(ct) user.city=ct;
+  await saveUserToDb();
+  updateUI();
+  closeEditModal();
+  alert('✅ تم حفظ التغييرات!');
 }
 
 // ============================================================
@@ -1632,7 +1944,13 @@ async function saveEdit(){
 // ============================================================
 function launchConfetti(){
   const colors=['#f59e0b','#3b82f6','#22c55e','#8b5cf6','#ef4444','#14b8a6'];
-  for(let i=0;i<40;i++){const p=document.createElement('div');p.className='confetti-piece';p.style.cssText=`left:${Math.random()*100}vw;top:-10px;background:${colors[Math.floor(Math.random()*colors.length)]};transform:rotate(${Math.random()*360}deg);animation-delay:${Math.random()*0.5}s;animation-duration:${1+Math.random()*0.8}s`;document.body.appendChild(p);setTimeout(()=>p.remove(),2000);}
+  for(let i=0;i<40;i++){
+    const p=document.createElement('div');
+    p.className='confetti-piece';
+    p.style.cssText=`left:${Math.random()*100}vw;top:-10px;background:${colors[Math.floor(Math.random()*colors.length)]};transform:rotate(${Math.random()*360}deg);animation-delay:${Math.random()*0.5}s;animation-duration:${1+Math.random()*0.8}s`;
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),2000);
+  }
 }
 </script>
 </body>
