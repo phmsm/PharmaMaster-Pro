@@ -3231,19 +3231,14 @@ setInterval(render, 1000);
             await rtdb.ref(`${CHAT_PATH}/${msgId}`).remove();
         } catch (e) { alert("فشل الحذف"); }
     };
-
-    // تشغيل الربط فوراً
-    initChatFirebase();
-})();
-// ===== Leaderboard Override (Show All + Highlight Top 10) =====
+// ===== Upgrade Leaderboard: Show All + Highlight Top 10 =====
 
 (async function () {
   try {
-    const leaderboardContainer = document.getElementById("leaderboard");
+    const board = document.getElementById("board-list");
+    if (!board) return;
 
-    if (!leaderboardContainer) return;
-
-    // استدعاء المستخدمين من Firebase Firestore
+    // جلب المستخدمين من فايربيس
     const snapshot = await firebase.firestore().collection("users").get();
 
     let users = [];
@@ -3251,42 +3246,51 @@ setInterval(render, 1000);
     snapshot.forEach(doc => {
       const data = doc.data();
       users.push({
-        name: data.name || "Unknown",
-        points: data.points || 0
+        name: data.fullname || data.name || "Unknown",
+        xp: data.xp || data.points || 0
       });
     });
 
-    // ترتيب تنازلي حسب النقاط
-    users.sort((a, b) => b.points - a.points);
+    // ترتيب تنازلي
+    users.sort((a, b) => b.xp - a.xp);
 
-    // تفريغ المحتوى القديم
-    leaderboardContainer.innerHTML = "";
+    // مسح القديم
+    board.innerHTML = "";
 
-    // عرض كل المستخدمين
+    // عرض الكل
     users.forEach((user, index) => {
-      const div = document.createElement("div");
+
+      const row = document.createElement("div");
+      row.className = "rank-row";
 
       // تمييز أفضل 10
       if (index < 10) {
-        div.style.background = "linear-gradient(90deg, gold, orange)";
-        div.style.fontWeight = "bold";
+        row.style.background = "linear-gradient(90deg,#fff7ed,#ffedd5)";
+        row.style.borderRadius = "10px";
+        row.style.margin = "4px 0";
       }
 
-      div.style.padding = "10px";
-      div.style.margin = "5px 0";
-      div.style.borderRadius = "8px";
+      // ميداليات لأول 3
+      let medal = "";
+      if (index === 0) medal = "🥇";
+      else if (index === 1) medal = "🥈";
+      else if (index === 2) medal = "🥉";
 
-      div.innerHTML = `
-        <span>#${index + 1}</span> - 
-        <span>${user.name}</span> 
-        (<span>${user.points}</span> pts)
+      row.innerHTML = `
+        <div class="rank-num">${medal || "#" + (index + 1)}</div>
+        <div class="rank-avatar">👤</div>
+        <div class="rank-info">
+          <div class="rank-name">${user.name}</div>
+          <div class="rank-detail">متدرب</div>
+        </div>
+        <div class="rank-xp">${user.xp} XP</div>
       `;
 
-      leaderboardContainer.appendChild(div);
+      board.appendChild(row);
     });
 
-  } catch (error) {
-    console.error("Leaderboard Error:", error);
+  } catch (err) {
+    console.error("Leaderboard error:", err);
   }
 })();
 </script>
