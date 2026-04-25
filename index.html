@@ -3235,7 +3235,60 @@ setInterval(render, 1000);
     // تشغيل الربط فوراً
     initChatFirebase();
 })();
+// ===== Leaderboard Override (Show All + Highlight Top 10) =====
 
+(async function () {
+  try {
+    const leaderboardContainer = document.getElementById("leaderboard");
+
+    if (!leaderboardContainer) return;
+
+    // استدعاء المستخدمين من Firebase Firestore
+    const snapshot = await firebase.firestore().collection("users").get();
+
+    let users = [];
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      users.push({
+        name: data.name || "Unknown",
+        points: data.points || 0
+      });
+    });
+
+    // ترتيب تنازلي حسب النقاط
+    users.sort((a, b) => b.points - a.points);
+
+    // تفريغ المحتوى القديم
+    leaderboardContainer.innerHTML = "";
+
+    // عرض كل المستخدمين
+    users.forEach((user, index) => {
+      const div = document.createElement("div");
+
+      // تمييز أفضل 10
+      if (index < 10) {
+        div.style.background = "linear-gradient(90deg, gold, orange)";
+        div.style.fontWeight = "bold";
+      }
+
+      div.style.padding = "10px";
+      div.style.margin = "5px 0";
+      div.style.borderRadius = "8px";
+
+      div.innerHTML = `
+        <span>#${index + 1}</span> - 
+        <span>${user.name}</span> 
+        (<span>${user.points}</span> pts)
+      `;
+
+      leaderboardContainer.appendChild(div);
+    });
+
+  } catch (error) {
+    console.error("Leaderboard Error:", error);
+  }
+})();
 </script>
 </body>
 </html>
