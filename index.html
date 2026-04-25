@@ -3114,181 +3114,80 @@ function render(){
 setInterval(render, 1000);
 
 })();
-  // ============================================================
-// 🚀 إصلاح قناة RX الشامل - محمد كمال
+// ============================================================
+// 🏆 تحديث لوحة الشرف لإظهار الجميع وتمييز التوب 10
 // ============================================================
 (function() {
-    // التأكد من أن المسار ثابت لكل المستخدمين
-    const CHAT_PATH = 'rx_global_messages';
+    window.updateBoard = async function() {
+        const list = document.getElementById('board-list');
+        if (!list) return;
 
-    window.sendMsg = async function() {
-        const input = document.getElementById('chat-input');
-        const text = input.value.trim();
-        
-        if (!text || !firebaseReady || !rtdb) return;
+        list.innerHTML = '<p style="color:#94a3b8;text-align:center;padding:20px">⏳ جاري جلب قائمة الأبطال...</p>';
 
-        const msgData = {
-            uid: user.uid,
-            from: user.fullname || user.email,
-            emoji: user.emoji || '👨‍⚕️',
-            text: text,
-            // التاريخ والوقت بتنسيق عراقي جميل
-            time: new Date().toLocaleString('ar-IQ', { 
-                hour: '2-digit', minute: '2-digit', 
-                day: '2-digit', month: '2-digit' 
-            }),
-            timestamp: firebase.database.ServerValue.TIMESTAMP,
-            edited: false
-        };
+        let allUsers = [];
 
-        try {
-            input.value = ''; // مسح الحقل فوراً
-            await rtdb.ref(CHAT_PATH).push(msgData);
-            scrollChatBottom();
-        } catch (e) {
-            console.error("خطأ إرسال:", e);
-            input.value = text; 
-        }
-    };
-
-    // إعادة تعريف وظيفة جلب الرسائل لتعمل عند كل المستخدمين
-    window.initChatFirebase = function() {
-        if (!firebaseReady || !rtdb) return;
-
-        const messagesRef = rtdb.ref(CHAT_PATH);
-        
-        // تنظيف المستمعات القديمة لمنع التكرار
-        messagesRef.off();
-
-        messagesRef.orderByChild('timestamp').limitToLast(50).on('value', (snapshot) => {
-            const data = snapshot.val();
-            const msgs = [];
-            for (let key in data) {
-                msgs.push({ id: key, ...data[key] });
+        if (firebaseReady) {
+            try {
+                // جلب جميع المستخدمين (بدون ليميت 10)
+                const snap = await db.collection('users').orderBy('xp', 'desc').get();
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    if (d.fullname || d.email) {
+                        allUsers.push({
+                            name: d.fullname || d.email,
+                            uid: d.uid || doc.id,
+                            xp: d.xp || 0,
+                            done: Object.keys(d.completedSections || {}).length,
+                            emoji: d.emoji || '👤',
+                            role: d.role || ''
+                        });
+                    }
+                });
+            } catch (e) {
+                console.warn('Leaderboard Error:', e);
+                allUsers = getLocalScores(); // العودة للتخزين المحلي في حال فشل السيرفر
             }
-            // ترتيب تصاعدي حسب الوقت
-            msgs.sort((a, b) => a.timestamp - b.timestamp);
-            renderChatMessages(msgs);
-        });
-    };
+        } else {
+            allUsers = getLocalScores();
+        }
 
-    // تحديث دالة العرض لإظهار التاريخ وكلمة "عدلت"
-    window.renderChatMessages = function(msgs) {
-        const box = document.getElementById('chat-box');
-        if (!box) return;
-        
-        const wasAtBottom = box.scrollHeight - box.clientHeight <= box.scrollTop + 100;
-        box.innerHTML = '';
+        if (!allUsers.length) {
+            list.innerHTML = '<p style="color:#94a3b8;text-align:center;padding:20px">لا يوجد متنافسون بعد 🚀</p>';
+            return;
+        }
 
-        msgs.forEach(m => {
-            const isMe = m.uid === user.uid;
-            const msgId = m.id;
-            const editedTag = m.edited ? '<span style="font-size:9px; color:var(--blue); margin-right:5px;">(تم تعديلها)</span>' : '';
+        const medals = ['🥇', '🥈', '🥉', '🏅', '🏅', '🏅', '🏅', '🏅', '🏅', '🏅'];
+
+        list.innerHTML = allUsers.map((s, i) => {
+            const isTop10 = i < 10;
+            const isMe = (s.uid === user.uid);
             
-            const div = document.createElement('div');
-            div.className = `bubble-wrap ${isMe ? 'me' : ''}`;
-            div.dataset.msgid = msgId;
-            
-            div.innerHTML = `
-                <div class="bubble-avatar">${m.emoji}</div>
-                <div class="bubble-content">
-                    <div class="bubble-name">${m.from}</div>
-                    <div class="${isMe ? 'user-bubble' : 'bot-bubble'}" id="bubble-text-${msgId}">
-                        ${escapeHtml(m.text)}
+            return `
+                <div class="rank-row ${isMe ? 'me-row' : ''}" 
+                     style="${isTop10 ? 'border-right: 4px solid var(--orange);' : 'opacity: 0.8;'}">
+                    <div class="rank-num" style="${isTop10 ? 'font-weight: 900; color: var(--orange);' : 'font-size: 12px;'}">
+                        ${medals[i] || '#' + (i + 1)}
                     </div>
-                    <div class="bubble-time" style="font-size:9px; margin-top:4px;">
-                        ${m.time} ${editedTag}
+                    <div class="rank-avatar" style="${isTop10 ? 'font-size: 28px;' : 'font-size: 20px;'}">
+                        ${escapeHtml(s.emoji)}
                     </div>
-                    ${isMe ? `
-                    <div class="bubble-actions">
-                        <button class="bubble-action-btn" onclick="startEditMsg('${msgId}')">✏️</button>
-                        <button class="bubble-action-btn del-btn" onclick="deleteMsg('${msgId}')">🗑️</button>
-                    </div>` : ''}
+                    <div class="rank-info">
+                        <div class="rank-name" style="${isTop10 ? 'font-weight: 900;' : ''}">
+                            ${escapeHtml(s.name)} ${isMe ? '<span style="color:var(--blue); font-size:10px;">(أنت)</span>' : ''}
+                        </div>
+                        <div class="rank-detail">
+                            ${isTop10 ? '⭐ نُخبة الأكاديمية · ' : ''} ${s.done} صنف مكتمل
+                        </div>
+                    </div>
+                    <div class="rank-xp" style="${isTop10 ? 'font-size: 16px; color: var(--orange);' : 'font-size: 13px;'}">
+                        ${s.xp} <small style="font-size: 9px;">XP</small>
+                    </div>
                 </div>
             `;
-            box.appendChild(div);
-        });
-
-        if (wasAtBottom) scrollChatBottom();
+        }).join('');
     };
+})();
 
-    // إصلاح وظيفة التعديل لتحدث الحالة في السيرفر
-    window.doEditMsg = async function(msgId, newText) {
-        if (!firebaseReady || !rtdb || !msgId) return;
-        try {
-            await rtdb.ref(`${CHAT_PATH}/${msgId}`).update({
-                text: newText,
-                edited: true,
-                editTime: new Date().toLocaleTimeString('ar-IQ')
-            });
-        } catch (e) { console.error("فشل التعديل:", e); }
-    };
-
-    // إصلاح وظيفة الحذف
-    window.deleteMsg = async function(msgId) {
-        if (!msgId || !confirm('هل تريد حذف رسالتك؟')) return;
-        try {
-            await rtdb.ref(`${CHAT_PATH}/${msgId}`).remove();
-        } catch (e) { alert("فشل الحذف"); }
-    };
-// ===== FORCE Leaderboard Fix (Override Any Old Code) =====
-
-window.addEventListener("load", () => {
-  setTimeout(() => {
-
-    const board = document.getElementById("board-list");
-    if (!board) return;
-
-    firebase.firestore().collection("users")
-    .orderBy("xp", "desc")
-    .onSnapshot(snapshot => {
-
-      board.innerHTML = "";
-
-      let index = 0;
-
-      snapshot.forEach(doc => {
-        const data = doc.data();
-
-        const name = data.fullname || data.name || "Unknown";
-        const xp = data.xp || data.points || 0;
-
-        const row = document.createElement("div");
-        row.className = "rank-row";
-
-        // تمييز Top 10
-        if (index < 10) {
-          row.style.background = "linear-gradient(90deg,#fff7ed,#ffedd5)";
-          row.style.borderRadius = "10px";
-          row.style.margin = "4px 0";
-        }
-
-        // ميداليات
-        let medal = "";
-        if (index === 0) medal = "🥇";
-        else if (index === 1) medal = "🥈";
-        else if (index === 2) medal = "🥉";
-
-        row.innerHTML = `
-          <div class="rank-num">${medal || "#" + (index + 1)}</div>
-          <div class="rank-avatar">👤</div>
-          <div class="rank-info">
-            <div class="rank-name">${name}</div>
-            <div class="rank-detail">متدرب</div>
-          </div>
-          <div class="rank-xp">${xp} XP</div>
-        `;
-
-        board.appendChild(row);
-        index++;
-
-      });
-
-    });
-
-  }, 1000); // ننتظر ثانية حتى نكسر الكود القديم
-
-});
 </script>
 </body>
 </html>
