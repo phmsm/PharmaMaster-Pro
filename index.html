@@ -3231,68 +3231,64 @@ setInterval(render, 1000);
             await rtdb.ref(`${CHAT_PATH}/${msgId}`).remove();
         } catch (e) { alert("فشل الحذف"); }
     };
-// ===== Upgrade Leaderboard: Show All + Highlight Top 10 =====
+// ===== FORCE Leaderboard Fix (Override Any Old Code) =====
 
-(async function () {
-  try {
+window.addEventListener("load", () => {
+  setTimeout(() => {
+
     const board = document.getElementById("board-list");
     if (!board) return;
 
-    // جلب المستخدمين من فايربيس
-    const snapshot = await firebase.firestore().collection("users").get();
+    firebase.firestore().collection("users")
+    .orderBy("xp", "desc")
+    .onSnapshot(snapshot => {
 
-    let users = [];
+      board.innerHTML = "";
 
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      users.push({
-        name: data.fullname || data.name || "Unknown",
-        xp: data.xp || data.points || 0
+      let index = 0;
+
+      snapshot.forEach(doc => {
+        const data = doc.data();
+
+        const name = data.fullname || data.name || "Unknown";
+        const xp = data.xp || data.points || 0;
+
+        const row = document.createElement("div");
+        row.className = "rank-row";
+
+        // تمييز Top 10
+        if (index < 10) {
+          row.style.background = "linear-gradient(90deg,#fff7ed,#ffedd5)";
+          row.style.borderRadius = "10px";
+          row.style.margin = "4px 0";
+        }
+
+        // ميداليات
+        let medal = "";
+        if (index === 0) medal = "🥇";
+        else if (index === 1) medal = "🥈";
+        else if (index === 2) medal = "🥉";
+
+        row.innerHTML = `
+          <div class="rank-num">${medal || "#" + (index + 1)}</div>
+          <div class="rank-avatar">👤</div>
+          <div class="rank-info">
+            <div class="rank-name">${name}</div>
+            <div class="rank-detail">متدرب</div>
+          </div>
+          <div class="rank-xp">${xp} XP</div>
+        `;
+
+        board.appendChild(row);
+        index++;
+
       });
+
     });
 
-    // ترتيب تنازلي
-    users.sort((a, b) => b.xp - a.xp);
+  }, 1000); // ننتظر ثانية حتى نكسر الكود القديم
 
-    // مسح القديم
-    board.innerHTML = "";
-
-    // عرض الكل
-    users.forEach((user, index) => {
-
-      const row = document.createElement("div");
-      row.className = "rank-row";
-
-      // تمييز أفضل 10
-      if (index < 10) {
-        row.style.background = "linear-gradient(90deg,#fff7ed,#ffedd5)";
-        row.style.borderRadius = "10px";
-        row.style.margin = "4px 0";
-      }
-
-      // ميداليات لأول 3
-      let medal = "";
-      if (index === 0) medal = "🥇";
-      else if (index === 1) medal = "🥈";
-      else if (index === 2) medal = "🥉";
-
-      row.innerHTML = `
-        <div class="rank-num">${medal || "#" + (index + 1)}</div>
-        <div class="rank-avatar">👤</div>
-        <div class="rank-info">
-          <div class="rank-name">${user.name}</div>
-          <div class="rank-detail">متدرب</div>
-        </div>
-        <div class="rank-xp">${user.xp} XP</div>
-      `;
-
-      board.appendChild(row);
-    });
-
-  } catch (err) {
-    console.error("Leaderboard error:", err);
-  }
-})();
+});
 </script>
 </body>
 </html>
